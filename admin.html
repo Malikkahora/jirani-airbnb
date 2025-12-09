@@ -513,72 +513,93 @@
             document.getElementById('edit-modal').classList.remove('open');
         }
 
-        // Handle file selection (Append to existing)
+        // Handle file selection (Compress and Append)
         document.getElementById('edit-image').addEventListener('change', function (e) {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
+            // Show loading state if many files
+            const label = this.previousElementSibling.previousElementSibling; // The "Photos" label
+            const originalText = label.innerText;
+            label.innerText = "Photos (Processing...)";
+
             let processedCount = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (readerEvent) {
-                    currentEditingImages.push(readerEvent.target.result);
-                    processedCount++;
-                    if (processedCount === files.length) {
-                        renderPreviewImages();
-                        // Clear input so same file can be selected again if needed
-                        document.getElementById('edit-image').value = '';
-                    }
-                }
-                reader.readAsDataURL(file);
+            const promises = files.map(file => compressImage(file, 800, 800, 0.7));
+
+            Promise.all(promises).then(compressedDataUrls => {
+                compressedDataUrls.forEach(url => {
+                    currentEditingImages.push(url);
+                });
+                renderPreviewImages();
+                document.getElementById('edit-image').value = '';
+                label.innerText = originalText;
+            }).catch(err => {
+                console.error("Compression error:", err);
+                alert("Error processing images.");
+                label.innerText = originalText;
             });
         });
 
         document.getElementById('edit-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const idVal = document.getElementById('edit-id').value;
-            const type = document.getElementById('edit-type').value;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = "Saving...";
+            submitBtn.disabled = true;
 
-            const formData = {
-                title: document.getElementById('edit-title').value,
-                location: document.getElementById('edit-location').value,
-                price: parseInt(document.getElementById('edit-price').value),
-                rooms: document.getElementById('edit-rooms').value,
-                amenities: document.getElementById('edit-amenities').value,
-                images: currentEditingImages, // Use the state array
-                image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
-            };
+            // Small timeout to allow UI to update
+            setTimeout(() => {
+                try {
+                    const idVal = document.getElementById('edit-id').value;
+                    const type = document.getElementById('edit-type').value;
 
-            if (idVal) {
-                // Update
-                const id = parseInt(idVal);
-                const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
-                const originalItem = items.find(i => i.id === id);
-                const newItem = { ...originalItem, ...formData };
+                    const formData = {
+                        title: document.getElementById('edit-title').value,
+                        location: document.getElementById('edit-location').value,
+                        price: parseInt(document.getElementById('edit-price').value),
+                        rooms: document.getElementById('edit-rooms').value,
+                        amenities: document.getElementById('edit-amenities').value,
+                        images: currentEditingImages, // Use the state array
+                        image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
+                    };
 
-                if (type === 'airbnb') JiraniData.updateAirbnb(newItem);
-                else JiraniData.updateProperty(newItem);
-            } else {
-                // Create
-                const newItem = {
-                    ...formData,
-                    desc: "New Listing",
-                    rating: "New",
+                    if (idVal) {
+                        // Update
+                        const id = parseInt(idVal);
+                        const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
+                        const originalItem = items.find(i => i.id === id);
+                        const newItem = { ...originalItem, ...formData };
 
-                    imageColor: "#ddd",
-                    type: type === 'airbnb' ? undefined : (Math.random() > 0.5 ? 'rent' : 'buy')
-                };
+                        if (type === 'airbnb') JiraniData.updateAirbnb(newItem);
+                        else JiraniData.updateProperty(newItem);
+                    } else {
+                        // Create
+                        const newItem = {
+                            ...formData,
+                            desc: "New Listing",
+                            rating: "New",
 
-                if (type === 'property' && !newItem.type) newItem.type = 'rent';
+                            imageColor: "#ddd",
+                            type: type === 'airbnb' ? undefined : (Math.random() > 0.5 ? 'rent' : 'buy')
+                        };
 
-                if (type === 'airbnb') JiraniData.addAirbnb(newItem);
-                else JiraniData.addProperty(newItem);
-            }
+                        if (type === 'property' && !newItem.type) newItem.type = 'rent';
 
-            if (type === 'airbnb') renderAirbnbs();
-            else renderProperties();
+                        if (type === 'airbnb') JiraniData.addAirbnb(newItem);
+                        else JiraniData.addProperty(newItem);
+                    }
 
-            closeModal();
+                    if (type === 'airbnb') renderAirbnbs();
+                    else renderProperties();
+
+                    closeModal();
+                } catch (error) {
+                    alert(error.message);
+                } finally {
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            }, 50);
         });
 
         // Export Modal Functions
@@ -597,6 +618,44 @@
             textarea.select();
             document.execCommand('copy');
             alert('Code copied to clipboard! Now paste it into js/data.js');
+        }
+
+        // Image Compression Helper
+        function compressImage(file, maxWidth, maxHeight, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width *= maxHeight / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Force JPEG for better compression
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         }
     </script>
 </body>
