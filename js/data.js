@@ -1,4 +1,4 @@
-﻿const savedExportData = {
+﻿ï»¿const savedExportData = {
     "airbnbs": [
         {
             "id": "1_0",
