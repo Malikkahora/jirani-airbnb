@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Jirani Verify</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #222;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Verification Status</h1>
+    <div>Airbnbs: <span id="airbnb-count">...</span></div>
+    <div>Properties: <span id="property-count">...</span></div>
+    <div>LocalStorage Usage: <span id="ls-usage">...</span></div>
+
+    <script>
+        // Clear keys to force re-init with new optimized data
+        localStorage.removeItem('jirani_10x_seed_v2');
+        localStorage.removeItem('jirani_10x_seed');
+        localStorage.removeItem('jirani_airbnbs');
+        localStorage.removeItem('jirani_properties');
+        console.log('Cleared storage for re-seeding.');
+    </script>
+    <script src="js/data.js"></script>
+    <script>
+        const airbnbs = JiraniData.getAirbnbs();
+        const properties = JiraniData.getProperties();
+
+        document.getElementById('airbnb-count').textContent = airbnbs.length;
+        document.getElementById('property-count').textContent = properties.length;
+        document.getElementById('ls-usage').textContent = JSON.stringify(localStorage).length + " characters";
+        console.log('Verification Complete');
+    </script>
+</body>
+
+</html>

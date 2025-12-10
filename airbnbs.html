@@ -197,7 +197,6 @@
         .hero__container {
             position: relative;
             z-index: 2;
-            /* Text above overlay */
             text-align: center;
         }
 
@@ -212,7 +211,6 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
         }
 
-        /* Dark overlay to make text readable */
         .hero::after {
             content: '';
             position: absolute;
@@ -233,11 +231,38 @@
             <nav class="nav">
                 <ul class="nav__list">
                     <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
-                    <li class="nav__item"><a href="#properties" class="nav__link">Stays</a></li>
-                    <li class="nav__item"><a href="#experiences" class="nav__link">Experiences</a></li>
+                    <li class="nav__item"><a href="properties.html" class="nav__link">Stays</a></li>
                     <li class="nav__item"><a href="contact.html" class="nav__link">Contact</a></li>
                 </ul>
             </nav>
+            <div class="header__socials">
+                <a href="https://wa.me/254725833232" class="header__social-link" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-message-circle">
+                        <path
+                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                        </path>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/jirani.bnb" class="header__social-link" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-instagram">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@jirani.properties" class="header__social-link" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-video">
+                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                </a>
+            </div>
             <div class="header__actions"><a href="login.html" class="btn btn--secondary">Log in</a></div><button
                 class="menu-toggle" aria-label="Toggle menu"><span class="menu-toggle__bar"></span><span
                     class="menu-toggle__bar"></span><span class="menu-toggle__bar"></span></button>
@@ -246,13 +271,11 @@
     <main>
         <section class="hero">
             <div class="hero-slider" id="hero-slider">
-                < !-- Slides will be inserted here by JS or hardcoded -->
-                    <div class="hero-slide active" style="background-image: url('images/IMG-20251208-WA0014.jpg');">
-                    </div>
-                    <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0015.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0016.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0017.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0018.jpg');"></div>
+                <div class="hero-slide active" style="background-image: url('images/IMG-20251208-WA0014.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0015.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0016.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0017.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('images/IMG-20251208-WA0018.jpg');"></div>
             </div>
             <div class="container hero__container">
                 <div class="hero__content">
@@ -301,132 +324,190 @@
                 </div>
             </div>
         </section>
-        <section class="featured" id="properties">
+        <section class="featured" id="airbnbs">
             <div class="container">
-                <h2 class="section-title">Inspiration for your next trip</h2>
+                <h2 class="section-title">Latest Airbnb Listings</h2>
                 <div class="property-grid" id="airbnb-grid">
-                    < !-- Loaded via JS -->
+                    <!-- Loaded via JS -->
                 </div>
             </div>
         </section>
     </main>
-    < !-- Detail Modal -->
-        <div id="detail-modal" class="detail-modal" onclick="closeDetailModal(event)">
-            <div class="detail-content" onclick="event.stopPropagation()"><button class="detail-close"
-                    onclick="closeDetailModal()">&times;
-                </button>
-                <div id="modal-gallery" class="detail-gallery">
-                    < !-- Gallery content -->
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="detail-modal" onclick="closeDetailModal(event)">
+        <div class="detail-content" onclick="event.stopPropagation()">
+            <button class="detail-close" onclick="closeDetailModal()">&times;</button>
+            <div id="modal-gallery" class="detail-gallery">
+                <!-- Gallery content -->
+            </div>
+            <div class="detail-info">
+                <h2 id="modal-title" class="detail-title">Title</h2>
+                <div class="detail-meta"><span id="modal-location">Location</span>&bull;
+                    <span id="modal-rating">Rating</span>
                 </div>
-                <div class="detail-info">
-                    <h2 id="modal-title" class="detail-title">Title</h2>
-                    <div class="detail-meta"><span id="modal-location">Location</span>&bull;
-                        <span id="modal-rating">Rating</span>
-                    </div>
-                    <div id="modal-desc" class="detail-description">Description</div>
-                    <div class="detail-amenities">
-                        <h4>What this place offers</h4>
-                        <ul id="modal-amenities">
-                            < !-- Amenities list -->
-                        </ul>
-                    </div>
-                    <div class="detail-price-box">
-                        <div class="detail-price">KES <span id="modal-price">100</span><span
-                                style="font-size:1rem; font-weight:400; color:#666;">night</span></div><a
-                            href="contact.html" class="btn btn--primary" onclick="closeDetailModal()">Reserve</a>
+                <div id="modal-desc" class="detail-description">Description</div>
+                <div class="detail-amenities">
+                    <h4>What this place offers</h4>
+                    <ul id="modal-amenities">
+                        <!-- Amenities list -->
+                    </ul>
+                </div>
+                <div class="detail-price-box">
+                    <div class="detail-price">KES <span id="modal-price">100</span><span
+                            style="font-size:1rem; font-weight:400; color:#666;">night</span></div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn--secondary" onclick="shareListing()">Share</button>
+                        <a href="contact.html" class="btn btn--primary">Book</a>
                     </div>
                 </div>
             </div>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <p>&copy;
+    </div>
 
-                    2024 Jirani Airbnb. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://wa.me/254725833232" class="social-link" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-message-circle">
+                        <path
+                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                        </path>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/jirani.bnb" class="social-link" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-instagram">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@jirani.properties" class="social-link" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-video">
+                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                </a>
             </div>
-        </footer>
-        <script src="js/data.js"></script>
-        <script src="js/app.js"></script>
-        <script>function openDetailModal(id) {
-                const items = JiraniData.getAirbnbs();
-                const item = items.find(i => i.id === id);
-                if (!item) return;
+            <p>&copy; 2024 Jirani Group. All rights reserved.</p>
+        </div>
+    </footer>
 
-                document.getElementById('modal-title').innerText = item.title;
-                document.getElementById('modal-location').innerText = item.location.charAt(0).toUpperCase() + item.location.slice(1);
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        function openDetailModal(id) {
+            const items = JiraniData.getAirbnbs();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
 
-                document.getElementById('modal-rating').innerText = `★ ${item.rating}`;
-                document.getElementById('modal-desc').innerText = `${item.desc}. This beautiful listing in ${item.location} offers a comfortable stay with modern amenities. Perfect for travelers looking for an authentic experience.`;
-                document.getElementById('modal-price').innerText = item.price;
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-location').innerText = item.location.charAt(0).toUpperCase() +
+                item.location.slice(1);
 
-                // Amenities
-                const amList = document.getElementById('modal-amenities');
-                amList.innerHTML = '';
+            document.getElementById('modal-rating').innerText = `★ ${item.rating}`;
+            document.getElementById('modal-desc').innerText = `${item.desc}. This beautiful listing in
+            ${item.location} offers a comfortable stay with modern amenities. Perfect for travelers looking for
+            an authentic experience.`;
+            document.getElementById('modal-price').innerText = item.price;
 
-                if (item.amenities) {
-                    item.amenities.split(',').forEach(am => {
-                        const li = document.createElement('li');
-                        li.innerText = am.trim();
-                        amList.appendChild(li);
-                    });
-                }
+            // Amenities
+            const amList = document.getElementById('modal-amenities');
+            amList.innerHTML = '';
 
-                else {
-                    amList.innerHTML = '<li>Essentials</li><li>Wifi</li>';
-                }
-
-                // Gallery
-                let images = item.images || (item.image ? [item.image] : []);
-                let imageHtml = '';
-                const carouselId = `modal-carousel`;
-
-                if (images.length > 0) {
-                    imageHtml = `<div id="${carouselId}" class="image-carousel" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 100%; width: 100%; scrollbar-width: none;">`;
-
-                    images.forEach(img => {
-                        imageHtml += `<img src="${img}" style="min-width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start;" >`;
-                    });
-                    imageHtml += `</div>`;
-
-                    if (images.length > 1) {
-                        imageHtml += ` <button class="carousel-btn prev" onclick="event.stopPropagation(); scrollCarousel('${carouselId}', -1)">&#10094;
-                    </button><button class="carousel-btn next" onclick="event.stopPropagation(); scrollCarousel('${carouselId}', 1)">&#10095;
-                    </button>`;
-                    }
-                }
-
-                else {
-                    imageHtml = `<div style="width:100%; height:100%; background:${item.imageColor || '#ddd'}; display:flex; align-items:center; justify-content:center; color:#666;">No Photos Available</div>`;
-                }
-
-                document.getElementById('modal-gallery').innerHTML = imageHtml;
-
-                document.getElementById('detail-modal').classList.add('open');
-                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            if (item.amenities) {
+                item.amenities.split(',').forEach(am => {
+                    const li = document.createElement('li');
+                    li.innerText = am.trim();
+                    amList.appendChild(li);
+                });
+            } else {
+                amList.innerHTML = '<li>Essentials</li><li>Wifi</li>';
             }
 
-            function closeDetailModal(e) {
-                if (e && e.target !== document.getElementById('detail-modal')) return; // handled by stopPropagation on content
-                document.getElementById('detail-modal').classList.remove('open');
-                document.body.style.overflow = '';
+            // Gallery
+            let images = item.images || (item.image ? [item.image] : []);
+            let imageHtml = '';
+            const carouselId = `modal-carousel`;
+
+            if (images.length > 0) {
+                imageHtml = `<div id="${carouselId}" class="image-carousel"
+                style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 100%; width: 100%; scrollbar-width: none;">
+                `;
+
+                images.forEach(img => {
+                    imageHtml += `<img src="${img}"
+                    style="min-width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start;">`;
+                });
+                imageHtml += `</div>`;
+
+                if (images.length > 1) {
+                    imageHtml += ` <button class="carousel-btn prev"
+                onclick="event.stopPropagation(); scrollCarousel('${carouselId}', -1)">&#10094;
+            </button><button class="carousel-btn next"
+                onclick="event.stopPropagation(); scrollCarousel('${carouselId}', 1)">&#10095;
+            </button>`;
+                }
+            } else {
+                imageHtml = `<div
+                style="width:100%; height:100%; background:${item.imageColor || '#ddd'}; display:flex; align-items:center; justify-content:center; color:#666;">
+                No Photos Available</div>`;
             }
 
-            // Hero Slider Logic
-            const slides = document.querySelectorAll('.hero-slide');
-            let currentSlide = 0;
+            document.getElementById('modal-gallery').innerHTML = imageHtml;
 
-            function nextSlide() {
-                if (slides.length === 0) return;
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
+            document.getElementById('detail-modal').classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        function closeDetailModal(e) {
+            if (e && e.target !== document.getElementById('detail-modal')) return; // handled by stopPropagation
+            document.getElementById('detail-modal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function shareListing() {
+            const title = document.getElementById('modal-title').innerText;
+            const text = `Check out this listing: ${title}`;
+            const url = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: text,
+                    url: url
+                }).catch((error) => console.log('Error sharing', error));
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
             }
+        }
 
-            if (slides.length > 0) {
-                setInterval(nextSlide, 5000); // Change slide every 5 seconds
-            }
+        // Hero Slider Logic
+        const slides = document.querySelectorAll('.hero-slide');
+        let currentSlide = 0;
 
-        </script>
+        function nextSlide() {
+            if (slides.length === 0) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        if (slides.length > 0) {
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+    </script>
 </body>
 
 </html>

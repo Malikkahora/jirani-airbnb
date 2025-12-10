@@ -303,6 +303,16 @@
                         <option value="6">6 Bedrooms</option>
                     </select>
                 </div>
+                <!-- Property Type (Only for Properties) -->
+                <br>
+                <div class="form-group" id="edit-type-container" style="display:none;">
+                    <label for="edit-property-type">Type</label>
+                    <select id="edit-property-type" class="form-control"
+                        style="width:100%; border:1px solid #ddd; padding:8px;">
+                        <option value="rent">For Rent</option>
+                        <option value="buy">For Sale</option>
+                    </select>
+                </div>
                 <br>
                 <div class="form-group">
                     <label for="edit-amenities">Amenities</label>
@@ -366,12 +376,12 @@
                     <td>${item.location}</td>
                     <td>KES ${item.price.toLocaleString()}</td>
                     <td>
-                        <button class="action-btn" onclick="moveItem('airbnb', ${item.id}, -1)">↑</button>
-                        <button class="action-btn" onclick="moveItem('airbnb', ${item.id}, 1)">↓</button>
+                        <button class="action-btn" onclick="moveItem('airbnb', '${item.id}', -1)">↑</button>
+                        <button class="action-btn" onclick="moveItem('airbnb', '${item.id}', 1)">↓</button>
                     </td>
                     <td>
-                        <button class="action-btn" onclick="openEditModal('airbnb', ${item.id})">Edit</button>
-                        <button class="action-btn" style="color:red; border-color:red;" onclick="deleteItem('airbnb', ${item.id})">Delete</button>
+                        <button class="action-btn" onclick="openEditModal('airbnb', '${item.id}')">Edit</button>
+                        <button class="action-btn" style="color:red; border-color:red;" onclick="deleteItem('airbnb', '${item.id}')">Delete</button>
                     </td>
                 `;
                 list.appendChild(tr);
@@ -403,12 +413,12 @@
                     <td>KES ${item.price.toLocaleString()}</td>
                     <td>${item.type}</td>
                     <td>
-                        <button class="action-btn" onclick="moveItem('property', ${item.id}, -1)">↑</button>
-                        <button class="action-btn" onclick="moveItem('property', ${item.id}, 1)">↓</button>
+                        <button class="action-btn" onclick="moveItem('property', '${item.id}', -1)">↑</button>
+                        <button class="action-btn" onclick="moveItem('property', '${item.id}', 1)">↓</button>
                     </td>
                     <td>
-                        <button class="action-btn" onclick="openEditModal('property', ${item.id})">Edit</button>
-                        <button class="action-btn" style="color:red; border-color:red;" onclick="deleteItem('property', ${item.id})">Delete</button>
+                        <button class="action-btn" onclick="openEditModal('property', '${item.id}')">Edit</button>
+                        <button class="action-btn" style="color:red; border-color:red;" onclick="deleteItem('property', '${item.id}')">Delete</button>
                     </td>
                 `;
                 list.appendChild(tr);
@@ -442,6 +452,15 @@
             currentEditingImages = [];
             renderPreviewImages();
 
+            // Toggle Type Field
+            const typeContainer = document.getElementById('edit-type-container');
+            if (type === 'property') {
+                typeContainer.style.display = 'block';
+                document.getElementById('edit-property-type').value = 'rent'; // Default
+            } else {
+                typeContainer.style.display = 'none';
+            }
+
             document.querySelector('.modal-title').innerText = type === 'airbnb' ? 'Add Airbnb' : 'Add Property';
             document.getElementById('edit-modal').classList.add('open');
         }
@@ -450,7 +469,7 @@
             document.querySelector('.modal-title').innerText = 'Edit Item';
             const modal = document.getElementById('edit-modal');
             const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
-            const item = items.find(i => i.id === id);
+            const item = items.find(i => i.id == id); // Loose equality match
 
             if (!item) return;
 
@@ -461,6 +480,15 @@
             document.getElementById('edit-price').value = item.price;
             document.getElementById('edit-rooms').value = item.rooms || '';
             document.getElementById('edit-amenities').value = item.amenities || '';
+
+            // Handle Type Field
+            const typeContainer = document.getElementById('edit-type-container');
+            if (type === 'property') {
+                typeContainer.style.display = 'block';
+                document.getElementById('edit-property-type').value = item.type || 'rent';
+            } else {
+                typeContainer.style.display = 'none';
+            }
 
             // Load existing images into state
             currentEditingImages = item.images || (item.image ? [item.image] : []);
@@ -513,26 +541,64 @@
             document.getElementById('edit-modal').classList.remove('open');
         }
 
-        // Handle file selection (Append to existing)
+        // Handle file selection (Append to existing) with Compression
         document.getElementById('edit-image').addEventListener('change', function (e) {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
+            // Show loading state if desired, or just process
             let processedCount = 0;
+
             files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (readerEvent) {
-                    currentEditingImages.push(readerEvent.target.result);
+                compressImage(file, 800, 0.7).then(base64 => {
+                    currentEditingImages.push(base64);
                     processedCount++;
                     if (processedCount === files.length) {
                         renderPreviewImages();
-                        // Clear input so same file can be selected again if needed
                         document.getElementById('edit-image').value = '';
                     }
-                }
-                reader.readAsDataURL(file);
+                }).catch(err => {
+                    console.error("Compression error", err);
+                    processedCount++; // Still count to avoid hanging
+                    if (processedCount === files.length) {
+                        renderPreviewImages();
+                        document.getElementById('edit-image').value = '';
+                    }
+                });
             });
         });
+
+        function compressImage(file, maxWidth, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Compress
+                        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                        resolve(dataUrl);
+                    };
+                    img.onerror = error => reject(error);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
 
         document.getElementById('edit-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -549,15 +615,22 @@
                 image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
             };
 
+            // Capture Type for properties
+            if (type === 'property') {
+                formData.type = document.getElementById('edit-property-type').value;
+            }
+
+            let success = false;
+
             if (idVal) {
                 // Update
-                const id = parseInt(idVal);
+                const id = idVal;
                 const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
-                const originalItem = items.find(i => i.id === id);
+                const originalItem = items.find(i => i.id == id);
                 const newItem = { ...originalItem, ...formData };
 
-                if (type === 'airbnb') JiraniData.updateAirbnb(newItem);
-                else JiraniData.updateProperty(newItem);
+                if (type === 'airbnb') success = JiraniData.updateAirbnb(newItem);
+                else success = JiraniData.updateProperty(newItem);
             } else {
                 // Create
                 const newItem = {
@@ -566,13 +639,18 @@
                     rating: "New",
 
                     imageColor: "#ddd",
-                    type: type === 'airbnb' ? undefined : (Math.random() > 0.5 ? 'rent' : 'buy')
+                    // Type is handled above for properties, or ignored for airbnbs
                 };
 
                 if (type === 'property' && !newItem.type) newItem.type = 'rent';
 
-                if (type === 'airbnb') JiraniData.addAirbnb(newItem);
-                else JiraniData.addProperty(newItem);
+                if (type === 'airbnb') success = JiraniData.addAirbnb(newItem);
+                else success = JiraniData.addProperty(newItem);
+            }
+
+            if (!success) {
+                alert("Failed to save! Storage likely full. Please delete some items or photos and try again.");
+                return;
             }
 
             if (type === 'airbnb') renderAirbnbs();
@@ -599,6 +677,40 @@
             alert('Code copied to clipboard! Now paste it into js/data.js');
         }
     </script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://wa.me/254725833232" class="social-link" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-message-circle">
+                        <path
+                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                        </path>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/jirani.bnb" class="social-link" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-instagram">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@jirani.properties" class="social-link" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-video">
+                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                </a>
+            </div>
+            <p>&copy; 2024 Jirani Group. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

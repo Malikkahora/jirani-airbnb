@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div id="status"></div>
+    <script>
+        window.onerror = function (msg, url, line) {
+            document.getElementById('status').innerText += "Error: " + msg + " at line " + line + "\n";
+            return false;
+        }
+    </script>
+    <script src="js/data.js"></script>
+    <script>
+        if (typeof JiraniData !== 'undefined') {
+            document.getElementById('status').innerText += "JiraniData defined.\n";
+            try {
+                // JiraniData.init(); // It is called at end of file usually? YES.
+                document.getElementById('status').innerText += "File executed to end.\n";
+            } catch (e) {
+                document.getElementById('status').innerText += "Runtime Error: " + e.message + "\n";
+            }
+        } else {
+            document.getElementById('status').innerText += "JiraniData NOT defined (Syntax Error likely).\n";
+        }
+    </script>
+</body>
+
+</html>
