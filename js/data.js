@@ -840,12 +840,12 @@
 
 const JiraniData = {
     init: function () {
-        if (!localStorage.getItem('jirani_initialized_v2')) {
+        if (!localStorage.getItem('jirani_initialized_v3')) {
             console.log('Initializing data from export...');
             if (typeof savedExportData !== 'undefined') {
                 if (savedExportData.airbnbs) this.saveAirbnbs(savedExportData.airbnbs);
                 if (savedExportData.properties) this.saveProperties(savedExportData.properties);
-                localStorage.setItem('jirani_initialized_v2', 'true');
+                localStorage.setItem('jirani_initialized_v3', 'true');
             }
         }
     },
