@@ -612,7 +612,16 @@
                         const idVal = document.getElementById('edit-id').value;
                         const type = document.getElementById('edit-type').value;
 
-<<<<<<< HEAD
+                        const formData = {
+                            title: document.getElementById('edit-title').value,
+                            location: document.getElementById('edit-location').value,
+                            price: parseInt(document.getElementById('edit-price').value),
+                            rooms: document.getElementById('edit-rooms').value,
+                            amenities: document.getElementById('edit-amenities').value,
+                            images: currentEditingImages,
+                            image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
+                        };
+
                         // Capture Type for properties
                         if (type === 'property') {
                             formData.type = document.getElementById('edit-property-type').value;
@@ -635,70 +644,30 @@
                                 ...formData,
                                 desc: "New Listing",
                                 rating: "New",
-
                                 imageColor: "#ddd",
-                                // Type is handled above for properties, or ignored for airbnbs
                             };
-=======
-                    const formData = {
-                        title: document.getElementById('edit-title').value,
-                        location: document.getElementById('edit-location').value,
-                        price: parseInt(document.getElementById('edit-price').value),
-                        rooms: document.getElementById('edit-rooms').value,
-                        amenities: document.getElementById('edit-amenities').value,
-                        images: currentEditingImages, // Use the state array
-                        image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
-                    };
 
-                    if (idVal) {
-                        // Update
-                        const id = parseInt(idVal);
-                        const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
-                        const originalItem = items.find(i => i.id === id);
-                        const newItem = { ...originalItem, ...formData };
+                            if (type === 'airbnb') success = JiraniData.addAirbnb(newItem);
+                            else success = JiraniData.addProperty(newItem);
+                        }
 
-                        if (type === 'airbnb') JiraniData.updateAirbnb(newItem);
-                        else JiraniData.updateProperty(newItem);
-                    } else {
-                        // Create
-                        const newItem = {
-                            ...formData,
-                            desc: "New Listing",
-                            rating: "New",
->>>>>>> 0d8154a6e00c42f918fdaee6714729a5b0ddf795
+                        if (!success) {
+                            alert("Failed to save! Storage likely full. Please delete some items or photos and try again.");
+                            return;
+                        }
 
-                            imageColor: "#ddd",
-                                type: type === 'airbnb' ? undefined : (Math.random() > 0.5 ? 'rent' : 'buy')
-                        };
+                        if (type === 'airbnb') renderAirbnbs();
+                        else renderProperties();
 
-<<<<<<< HEAD
-                        if (type === 'airbnb') success = JiraniData.addAirbnb(newItem);
-                        else success = JiraniData.addProperty(newItem);
+                        closeModal();
+                    } catch (error) {
+                        alert(error.message);
+                    } finally {
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
                     }
-
-            if (!success) {
-                        alert("Failed to save! Storage likely full. Please delete some items or photos and try again.");
-                        return;
-                    }
-=======
-                        if (type === 'property' && !newItem.type) newItem.type = 'rent';
->>>>>>> 0d8154a6e00c42f918fdaee6714729a5b0ddf795
-
-                    if (type === 'airbnb') JiraniData.addAirbnb(newItem);
-                    else JiraniData.addProperty(newItem);
-                }
-
-                    if (type === 'airbnb') renderAirbnbs();
-                else renderProperties();
-
-                closeModal();
-            } catch (error) {
-                alert(error.message);
-            } finally {
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-            }
-        }, 50);
+                }, 50);
+            });
         });
 
         // Export Modal Functions
@@ -750,11 +719,9 @@
                         // Force JPEG for better compression
                         resolve(canvas.toDataURL('image/jpeg', quality));
                     };
-                    img.src = event.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
         }
     </script>
     <!-- Footer -->
