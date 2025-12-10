@@ -567,107 +567,78 @@
                 });
             });
 
-            function compressImage(file, maxWidth, quality) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = event => {
-                        const img = new Image();
-                        img.src = event.target.result;
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            let width = img.width;
-                            let height = img.height;
+        });
+        });
 
-                            if (width > maxWidth) {
-                                height *= maxWidth / width;
-                                width = maxWidth;
-                            }
+        document.getElementById('edit-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = "Saving...";
+            submitBtn.disabled = true;
 
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, width, height);
+            // Small timeout to allow UI to update
+            setTimeout(() => {
+                try {
+                    const idVal = document.getElementById('edit-id').value;
+                    const type = document.getElementById('edit-type').value;
 
-                            // Compress
-                            const dataUrl = canvas.toDataURL('image/jpeg', quality);
-                            resolve(dataUrl);
-                        };
-                        img.onerror = error => reject(error);
+                    const formData = {
+                        title: document.getElementById('edit-title').value,
+                        location: document.getElementById('edit-location').value,
+                        price: parseInt(document.getElementById('edit-price').value),
+                        rooms: document.getElementById('edit-rooms').value,
+                        amenities: document.getElementById('edit-amenities').value,
+                        images: currentEditingImages,
+                        image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
                     };
-                    reader.onerror = error => reject(error);
-                });
-            }
 
-            document.getElementById('edit-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const submitBtn = e.target.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.innerText;
-                submitBtn.innerText = "Saving...";
-                submitBtn.disabled = true;
+                    // Capture Type for properties
+                    if (type === 'property') {
+                        formData.type = document.getElementById('edit-property-type').value;
+                    }
 
-                // Small timeout to allow UI to update
-                setTimeout(() => {
-                    try {
-                        const idVal = document.getElementById('edit-id').value;
-                        const type = document.getElementById('edit-type').value;
+                    let success = false;
 
-                        const formData = {
-                            title: document.getElementById('edit-title').value,
-                            location: document.getElementById('edit-location').value,
-                            price: parseInt(document.getElementById('edit-price').value),
-                            rooms: document.getElementById('edit-rooms').value,
-                            amenities: document.getElementById('edit-amenities').value,
-                            images: currentEditingImages,
-                            image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
+                    if (idVal) {
+                        // Update
+                        const id = idVal;
+                        const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
+                        const originalItem = items.find(i => i.id == id);
+                        const newItem = { ...originalItem, ...formData };
+
+                        if (type === 'airbnb') success = JiraniData.updateAirbnb(newItem);
+                        else success = JiraniData.updateProperty(newItem);
+                    } else {
+                        // Create
+                        const newItem = {
+                            ...formData,
+                            desc: "New Listing",
+                            rating: "New",
+                            imageColor: "#ddd",
                         };
 
-                        // Capture Type for properties
-                        if (type === 'property') {
-                            formData.type = document.getElementById('edit-property-type').value;
-                        }
-
-                        let success = false;
-
-                        if (idVal) {
-                            // Update
-                            const id = idVal;
-                            const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
-                            const originalItem = items.find(i => i.id == id);
-                            const newItem = { ...originalItem, ...formData };
-
-                            if (type === 'airbnb') success = JiraniData.updateAirbnb(newItem);
-                            else success = JiraniData.updateProperty(newItem);
-                        } else {
-                            // Create
-                            const newItem = {
-                                ...formData,
-                                desc: "New Listing",
-                                rating: "New",
-                                imageColor: "#ddd",
-                            };
-
-                            if (type === 'airbnb') success = JiraniData.addAirbnb(newItem);
-                            else success = JiraniData.addProperty(newItem);
-                        }
-
-                        if (!success) {
-                            alert("Failed to save! Storage likely full. Please delete some items or photos and try again.");
-                            return;
-                        }
-
-                        if (type === 'airbnb') renderAirbnbs();
-                        else renderProperties();
-
-                        closeModal();
-                    } catch (error) {
-                        alert(error.message);
-                    } finally {
-                        submitBtn.innerText = originalBtnText;
-                        submitBtn.disabled = false;
+                        if (type === 'airbnb') success = JiraniData.addAirbnb(newItem);
+                        else success = JiraniData.addProperty(newItem);
                     }
-                }, 50);
-            });
+
+                    if (!success) {
+                        alert("Failed to save! Storage likely full. Please delete some items or photos and try again.");
+                        return;
+                    }
+
+                    if (type === 'airbnb') renderAirbnbs();
+                    else renderProperties();
+
+                    closeModal();
+                } catch (error) {
+                    alert(error.message);
+                } finally {
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            }, 50);
+        });
         });
 
         // Export Modal Functions
