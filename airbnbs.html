@@ -357,7 +357,6 @@
                 <div class="detail-meta"><span id="modal-location">Location</span>&bull;
                     <span id="modal-rating">Rating</span>
                 </div>
-<<<<<<< HEAD
                 <div id="modal-desc" class="detail-description">Description</div>
                 <div class="detail-amenities">
                     <h4>What this place offers</h4>
@@ -368,45 +367,27 @@
                 <div class="detail-price-box">
                     <div class="detail-price">KES <span id="modal-price">100</span><span
                             style="font-size:1rem; font-weight:400; color:#666;">night</span></div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn btn--secondary" onclick="shareListing()">Share</button>
-                        <a href="contact.html" class="btn btn--primary">Book</a>
-=======
-                <div class="detail-info">
-                    <h2 id="modal-title" class="detail-title">Title</h2>
-                    <div class="detail-meta"><span id="modal-location">Location</span>&bull;
-                        <span id="modal-rating">Rating</span>
-                    </div>
-                    <div id="modal-desc" class="detail-description">Description</div>
-                    <div class="detail-amenities">
-                        <h4>What this place offers</h4>
-                        <ul id="modal-amenities">
-                            < !-- Amenities list -->
-                        </ul>
-                    </div>
-                    <div class="detail-price-box">
-                        <div class="detail-price">KES <span id="modal-price">100</span><span
-                                style="font-size:1rem; font-weight:400; color:#666;">night</span></div>
-                        <div class="detail-actions">
-                            <button id="modal-share-btn" class="btn btn--secondary btn--share">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="18" cy="5" r="3"></circle>
-                                    <circle cx="6" cy="12" r="3"></circle>
-                                    <circle cx="18" cy="19" r="3"></circle>
-                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                                </svg>
-                                Share
-                            </button>
-                            <a href="contact.html" class="btn btn--primary" onclick="closeDetailModal()">Reserve</a>
-                        </div>
->>>>>>> 0d8154a6e00c42f918fdaee6714729a5b0ddf795
+                    <div class="detail-actions" style="display:flex; gap:10px;">
+                        <button id="modal-share-btn" class="btn btn--secondary btn--share"
+                            style="display:flex; align-items:center; gap:5px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                            Share
+                        </button>
+                        <a href="contact.html" class="btn btn--primary">Reserve</a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 
     <!-- Footer -->
@@ -466,7 +447,6 @@
             const amList = document.getElementById('modal-amenities');
             amList.innerHTML = '';
 
-<<<<<<< HEAD
             if (item.amenities) {
                 item.amenities.split(',').forEach(am => {
                     const li = document.createElement('li');
@@ -507,111 +487,68 @@
             }
 
             document.getElementById('modal-gallery').innerHTML = imageHtml;
-=======
-                else {
-                    amList.innerHTML = '<li>Essentials</li><li>Wifi</li>';
-                }
 
-                // Gallery
-                let images = item.images || (item.image ? [item.image] : []);
-                let imageHtml = '';
-                const carouselId = `modal-carousel`;
-
-                if (images.length > 0) {
-                    imageHtml = `<div id="${carouselId}" class="image-carousel" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 100%; width: 100%; scrollbar-width: none;">`;
-
-                    images.forEach(img => {
-                        imageHtml += `<img src="${img}" style="min-width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start;" >`;
-                    });
-                    imageHtml += `</div>`;
-
-                    if (images.length > 1) {
-                        imageHtml += ` <button class="carousel-btn prev" onclick="event.stopPropagation(); scrollCarousel('${carouselId}', -1)">&#10094;
-                    </button><button class="carousel-btn next" onclick="event.stopPropagation(); scrollCarousel('${carouselId}', 1)">&#10095;
-                    </button>`;
-                    }
-                }
-
-                else {
-                    imageHtml = `<div style="width:100%; height:100%; background:${item.imageColor || '#ddd'}; display:flex; align-items:center; justify-content:center; color:#666;">No Photos Available</div>`;
-                }
-
-                document.getElementById('modal-gallery').innerHTML = imageHtml;
-
-                // Update Share Button
-                document.getElementById('modal-share-btn').onclick = () => shareListing(id);
-
-                document.getElementById('detail-modal').classList.add('open');
-                document.body.style.overflow = 'hidden';
+            // Attach Share Handler
+            const shareBtn = document.getElementById('modal-share-btn');
+            if (shareBtn) {
+                shareBtn.onclick = () => shareListing(item.id);
             }
-
-            function closeDetailModal(e) {
-                if (e && e.target !== document.getElementById('detail-modal')) return;
-                document.getElementById('detail-modal').classList.remove('open');
-                document.body.style.overflow = '';
-            }
-
-            function shareListing(id) {
-                const url = new URL(window.location.href);
-                url.searchParams.set('listing_id', id);
-                navigator.clipboard.writeText(url.toString()).then(() => {
-                    const btn = document.getElementById('modal-share-btn');
-                    const originalHTML = btn.innerHTML;
-                    btn.innerText = 'Link Copied!';
-                    setTimeout(() => {
-                        btn.innerHTML = originalHTML;
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            }
-
-            // Check for deep link
-            document.addEventListener('DOMContentLoaded', () => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const listingId = urlParams.get('listing_id');
-                if (listingId) {
-                    const id = Number(listingId);
-                    if (!isNaN(id)) {
-                        openDetailModal(id);
-                    }
-                }
-            });
-
-            // Hero Slider Logic
-            const slides = document.querySelectorAll('.hero-slide');
-            let currentSlide = 0;
->>>>>>> 0d8154a6e00c42f918fdaee6714729a5b0ddf795
 
             document.getElementById('detail-modal').classList.add('open');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
         }
 
+        document.getElementById('detail-modal').classList.add('open');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
         function closeDetailModal(e) {
-            if (e && e.target !== document.getElementById('detail-modal')) return; // handled by stopPropagation
+            if (e && e.target !== document.getElementById('detail-modal')) return;
             document.getElementById('detail-modal').classList.remove('open');
             document.body.style.overflow = '';
         }
 
-        function shareListing() {
-            const title = document.getElementById('modal-title').innerText;
-            const text = `Check out this listing: ${title}`;
-            const url = window.location.href;
-
-            if (navigator.share) {
-                navigator.share({
-                    title: title,
-                    text: text,
-                    url: url
-                }).catch((error) => console.log('Error sharing', error));
-            } else {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert('Link copied to clipboard!');
-                }).catch(err => {
-                    console.error('Could not copy text: ', err);
-                });
-            }
+        function shareListing(id) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('listing_id', id);
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                const btn = document.getElementById('modal-share-btn');
+                const originalHTML = btn.innerHTML;
+                btn.innerText = 'Link Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback
+                alert('Copied link: ' + url.toString());
+            });
         }
+
+        function scrollCarousel(id, direction) {
+            const container = document.getElementById(id);
+            const scrollAmount = container.clientWidth;
+            container.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        // Check for deep link
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const listingId = urlParams.get('listing_id');
+            if (listingId) {
+                const id = Number(listingId);
+                // Wait for data to be loaded? JiraniData might be synchronous from localStorage
+                // But gives a small delay just in case
+                setTimeout(() => {
+                    if (!isNaN(id)) {
+                        openDetailModal(id);
+                    }
+                }, 500);
+            }
+        });
 
         // Hero Slider Logic
         const slides = document.querySelectorAll('.hero-slide');
