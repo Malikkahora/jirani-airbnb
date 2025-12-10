@@ -689,9 +689,11 @@
                         // Force JPEG for better compression
                         resolve(canvas.toDataURL('image/jpeg', quality));
                     };
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });;
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
 
         }
     </script>
