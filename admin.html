@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -178,6 +178,9 @@
                 <div style="display:flex; gap:10px;">
                     <button onclick="openExportModal()" class="btn btn--primary"
                         style="background-color: #28a745; border-color: #28a745;">Export Data</button>
+                    <button onclick="restoreDefaults()" class="btn btn--secondary"
+                        style="background-color: #dc3545; border-color: #dc3545; color: white;">Restore
+                        Defaults</button>
                     <button onclick="sessionStorage.clear(); window.location.href='index.html'"
                         class="btn btn--secondary" style="color:white; border-color:white;">Logout</button>
                 </div>
@@ -343,9 +346,11 @@
         let currentEditingImages = [];
 
         // Init
-        JiraniData.init();
-        renderAirbnbs();
-        renderProperties();
+        (async () => {
+            await JiraniData.init();
+            await renderAirbnbs();
+            await renderProperties();
+        })();
 
         function switchTab(tab) {
             document.querySelectorAll('.admin-nav button').forEach(b => b.classList.remove('active'));
@@ -355,10 +360,10 @@
             document.getElementById('view-properties').style.display = tab === 'properties' ? 'block' : 'none';
         }
 
-        function renderAirbnbs() {
+        async function renderAirbnbs() {
             const list = document.getElementById('airbnb-list');
             list.innerHTML = '';
-            const items = JiraniData.getAirbnbs();
+            const items = await JiraniData.getAirbnbs();
             items.forEach(item => {
                 const tr = document.createElement('tr');
                 let displayImg = '';
@@ -391,10 +396,10 @@
             });
         }
 
-        function renderProperties() {
+        async function renderProperties() {
             const list = document.getElementById('property-list');
             list.innerHTML = '';
-            const items = JiraniData.getProperties();
+            const items = await JiraniData.getProperties();
             items.forEach(item => {
                 const tr = document.createElement('tr');
                 let displayImg = '';
@@ -428,20 +433,20 @@
             });
         }
 
-        function moveItem(type, id, direction) {
-            JiraniData.moveItem(type, id, direction);
-            if (type === 'airbnb') renderAirbnbs();
-            else renderProperties();
+        async function moveItem(type, id, direction) {
+            await JiraniData.moveItem(type, id, direction);
+            if (type === 'airbnb') await renderAirbnbs();
+            else await renderProperties();
         }
 
-        function deleteItem(type, id) {
+        async function deleteItem(type, id) {
             if (confirm('Are you sure you want to delete this listing?')) {
                 if (type === 'airbnb') {
-                    JiraniData.deleteAirbnb(id);
-                    renderAirbnbs();
+                    await JiraniData.deleteAirbnb(id);
+                    await renderAirbnbs();
                 } else {
-                    JiraniData.deleteProperty(id);
-                    renderProperties();
+                    await JiraniData.deleteProperty(id);
+                    await renderProperties();
                 }
             }
         }
@@ -468,10 +473,10 @@
             document.getElementById('edit-modal').classList.add('open');
         }
 
-        function openEditModal(type, id) {
+        async function openEditModal(type, id) {
             document.querySelector('.modal-title').innerText = 'Edit Item';
             const modal = document.getElementById('edit-modal');
-            const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
+            const items = type === 'airbnb' ? await JiraniData.getAirbnbs() : await JiraniData.getProperties();
             const item = items.find(i => i.id == id); // Loose equality match
 
             if (!item) return;
@@ -553,7 +558,7 @@
             let processedCount = 0;
 
             files.forEach(file => {
-                compressImage(file, 800, 0.7).then(base64 => {
+                compressImage(file, 600, 0.6).then(base64 => {
                     currentEditingImages.push(base64);
                     processedCount++;
                     if (processedCount === files.length) {
@@ -572,7 +577,7 @@
 
         });
 
-        document.getElementById('edit-form').addEventListener('submit', (e) => {
+        document.getElementById('edit-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerText;
@@ -580,7 +585,7 @@
             submitBtn.disabled = true;
 
             // Small timeout to allow UI to update
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
                     const idVal = document.getElementById('edit-id').value;
                     const type = document.getElementById('edit-type').value;
@@ -605,12 +610,12 @@
                     if (idVal) {
                         // Update
                         const id = idVal;
-                        const items = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
+                        const items = type === 'airbnb' ? await JiraniData.getAirbnbs() : await JiraniData.getProperties();
                         const originalItem = items.find(i => i.id == id);
                         const newItem = { ...originalItem, ...formData };
 
-                        if (type === 'airbnb') success = JiraniData.updateAirbnb(newItem);
-                        else success = JiraniData.updateProperty(newItem);
+                        if (type === 'airbnb') success = await JiraniData.updateAirbnb(newItem);
+                        else success = await JiraniData.updateProperty(newItem);
                     } else {
                         // Create
                         const newItem = {
@@ -620,17 +625,17 @@
                             imageColor: "#ddd",
                         };
 
-                        if (type === 'airbnb') success = JiraniData.addAirbnb(newItem);
-                        else success = JiraniData.addProperty(newItem);
+                        if (type === 'airbnb') success = await JiraniData.addAirbnb(newItem);
+                        else success = await JiraniData.addProperty(newItem);
                     }
 
                     if (!success) {
-                        alert("Failed to save! Storage likely full. Please delete some items or photos and try again.");
+                        alert("Storage limit exceeded! Remove high-res photos or delete old listings to free up space.");
                         return;
                     }
 
-                    if (type === 'airbnb') renderAirbnbs();
-                    else renderProperties();
+                    if (type === 'airbnb') await await renderAirbnbs();
+                    else await await renderProperties();
 
                     closeModal();
                 } catch (error) {
@@ -643,10 +648,24 @@
         });
 
         // Export Modal Functions
-        function openExportModal() {
-            const code = JiraniData.getExportData();
+        async function openExportModal() {
+            const code = await JiraniData.getExportData();
             document.getElementById('export-code').value = code;
             document.getElementById('export-modal').classList.add('open');
+        }
+
+
+        async function restoreDefaults() {
+            if (confirm('Are you sure you want to restore default data? This will DELETE all existing listings and revert to the original set.')) {
+                try {
+                    await JiraniData.resetData();
+                    alert('Data restored to defaults! Page will reload.');
+                    window.location.reload();
+                } catch (e) {
+                    console.error("Restore failed", e);
+                    alert('Restore failed: ' + e.message);
+                }
+            }
         }
 
         function closeExportModal() {

@@ -1,5 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', async () => {
     console.log('Jirani Airbnb loaded');
+    await JiraniData.init();
+
+    // Initialize DB
+    await JiraniData.init();
 
     // Sticky header shadow
     const header = document.querySelector('.header');
@@ -36,21 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial Render
     if (isAirbnbPage) {
-        renderAirbnbs(JiraniData.getAirbnbs());
+        renderAirbnbs(await JiraniData.getAirbnbs());
     } else if (isPropertyPage) {
-        renderProperties(JiraniData.getProperties());
+        renderProperties(await JiraniData.getProperties());
     }
 
     // Search Handler
     const searchForm = document.querySelector('.search-form');
     if (searchForm) {
-        searchForm.addEventListener('submit', (e) => {
+        searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            handleSearch(isAirbnbPage ? 'airbnb' : 'property');
+            await handleSearch(isAirbnbPage ? 'airbnb' : 'property');
         });
     }
 
-    function handleSearch(type) {
+    async function handleSearch(type) {
         const locationInput = document.getElementById('location');
         const priceInput = document.getElementById('price');
         const typeInput = document.getElementById('type'); // Property page only
@@ -61,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const typeQuery = typeInput ? typeInput.value.toLowerCase() : '';
         const roomsQuery = roomsInput ? roomsInput.value.toLowerCase() : '';
 
-        const allItems = type === 'airbnb' ? JiraniData.getAirbnbs() : JiraniData.getProperties();
+        const allItems = type === 'airbnb' ? await JiraniData.getAirbnbs() : await JiraniData.getProperties();
 
         const filtered = allItems.filter(item => {
             // Text Match (Best Fit logic: check title, location, desc, amenities)
@@ -252,3 +256,4 @@ function renderProperties(items) {
         grid.appendChild(article);
     });
 }
+
