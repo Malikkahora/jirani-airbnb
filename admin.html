@@ -168,6 +168,13 @@
             window.location.href = 'login.html';
         }
     </script>
+        <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- Firebase Config -->
+    <script src="js/firebase-config.js"></script>
     <script src="js/data.js"></script>
 
     <header class="admin-header">
@@ -181,7 +188,7 @@
                     <button onclick="restoreDefaults()" class="btn btn--secondary"
                         style="background-color: #dc3545; border-color: #dc3545; color: white;">Restore
                         Defaults</button>
-                    <button onclick="sessionStorage.clear(); window.location.href='index.html'"
+                    <button onclick="if(typeof auth !== 'undefined') auth.signOut().then(() => { sessionStorage.clear(); window.location.href='index.html'; }); else { sessionStorage.clear(); window.location.href='index.html'; }"
                         class="btn btn--secondary" style="color:white; border-color:white;">Logout</button>
                 </div>
             </div>
@@ -755,3 +762,4 @@
 </body>
 
 </html>
+

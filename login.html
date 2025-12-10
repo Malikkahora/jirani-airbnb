@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -69,8 +69,8 @@
             <div id="error-msg" class="error-msg">Invalid credentials</div>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" required>
+                    <label for="username">Email</label>
+                    <input type="email" id="username" required placeholder="admin@example.com">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -104,21 +104,47 @@
         </div>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             // Init Firebase if available
+             if (typeof initFirebase === 'function') initFirebase();
+        });
+
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const user = document.getElementById('username').value;
+            const email = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none';
+            errorMsg.innerText = "Signing in...";
 
-            // Hardcoded credentials as requested
-            if (user === 'malik' && pass === '1234') {
-                sessionStorage.setItem('jirani_admin_logged_in', 'true');
-                window.location.href = 'admin.html';
-            } else {
-                errorMsg.style.display = 'block';
+            if (!auth) {
+                 errorMsg.innerText = "Firebase not initialized. Check configuration.";
+                 errorMsg.style.display = 'block';
+                 return;
             }
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    // Signed in 
+                    sessionStorage.setItem('jirani_admin_logged_in', 'true');
+                    window.location.href = 'admin.html';
+                })
+                .catch((error) => {
+                    console.error("Login Error:", error);
+                    errorMsg.innerText = "Login failed: " + error.message;
+                    errorMsg.style.display = 'block';
+                });
         });
     </script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- Firebase Config -->
+    <script src="js/firebase-config.js"></script>
 </body>
 
 </html>
+
