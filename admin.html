@@ -168,7 +168,7 @@
             window.location.href = 'login.html';
         }
     </script>
-        <!-- Firebase SDKs -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -188,7 +188,8 @@
                     <button onclick="restoreDefaults()" class="btn btn--secondary"
                         style="background-color: #dc3545; border-color: #dc3545; color: white;">Restore
                         Defaults</button>
-                    <button onclick="if(typeof auth !== 'undefined') auth.signOut().then(() => { sessionStorage.clear(); window.location.href='index.html'; }); else { sessionStorage.clear(); window.location.href='index.html'; }"
+                    <button
+                        onclick="if(typeof auth !== 'undefined') auth.signOut().then(() => { sessionStorage.clear(); window.location.href='index.html'; }); else { sessionStorage.clear(); window.location.href='index.html'; }"
                         class="btn btn--secondary" style="color:white; border-color:white;">Logout</button>
                 </div>
             </div>
@@ -287,6 +288,12 @@
                     <label for="edit-title">Title</label>
                     <input type="text" id="edit-title" required class="form-control"
                         style="width:100%; border:1px solid #ddd; padding:8px;">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="edit-desc">Description</label>
+                    <textarea id="edit-desc" rows="4" class="form-control"
+                        style="width:100%; border:1px solid #ddd; padding:8px; resize: vertical;"></textarea>
                 </div>
                 <br>
                 <div class="form-group">
@@ -491,6 +498,7 @@
             document.getElementById('edit-id').value = item.id;
             document.getElementById('edit-type').value = type;
             document.getElementById('edit-title').value = item.title;
+            document.getElementById('edit-desc').value = item.desc || '';
             document.getElementById('edit-location').value = item.location;
             document.getElementById('edit-price').value = item.price;
             document.getElementById('edit-rooms').value = item.rooms || '';
@@ -599,6 +607,7 @@
 
                     const formData = {
                         title: document.getElementById('edit-title').value,
+                        desc: document.getElementById('edit-desc').value,
                         location: document.getElementById('edit-location').value,
                         price: parseInt(document.getElementById('edit-price').value),
                         rooms: document.getElementById('edit-rooms').value,
@@ -621,28 +630,32 @@
                         const originalItem = items.find(i => i.id == id);
                         const newItem = { ...originalItem, ...formData };
 
-                        if (type === 'airbnb') success = await JiraniData.updateAirbnb(newItem);
-                        else success = await JiraniData.updateProperty(newItem);
+                        if (type === 'airbnb') await JiraniData.updateAirbnb(newItem);
+                        else await JiraniData.updateProperty(newItem);
                     } else {
                         // Create
                         const newItem = {
+                            id: `${type}_${Date.now()}`,
                             ...formData,
-                            desc: "New Listing",
+                            // desc is now in formData
                             rating: "New",
                             imageColor: "#ddd",
                         };
 
-                        if (type === 'airbnb') success = await JiraniData.addAirbnb(newItem);
-                        else success = await JiraniData.addProperty(newItem);
+                        if (type === 'airbnb') await JiraniData.addAirbnb(newItem);
+                        else await JiraniData.addProperty(newItem);
                     }
+
+                    // Assume success if no error thrown
+                    success = true;
 
                     if (!success) {
                         alert("Storage limit exceeded! Remove high-res photos or delete old listings to free up space.");
                         return;
                     }
 
-                    if (type === 'airbnb') await await renderAirbnbs();
-                    else await await renderProperties();
+                    if (type === 'airbnb') await renderAirbnbs();
+                    else await renderProperties();
 
                     closeModal();
                 } catch (error) {
@@ -762,4 +775,3 @@
 </body>
 
 </html>
-
