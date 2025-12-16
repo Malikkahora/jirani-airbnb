@@ -911,30 +911,62 @@ const JiraniData = {
         }
     },
 
+    getAirbnbsCached: function () {
+        const cached = localStorage.getItem(STORE_AIRBNBS);
+        if (cached) {
+            try {
+                return JSON.parse(cached);
+            } catch (e) {
+                console.error("Error parsing cached airbnbs:", e);
+                return [];
+            }
+        }
+        return [];
+    },
+
     getAirbnbs: async function () {
         if (!db) return [];
         try {
             const snapshot = await db.collection(STORE_AIRBNBS).get();
-            return snapshot.docs.map(doc => {
+            const items = snapshot.docs.map(doc => {
                 let data = doc.data();
                 data.id = doc.id; // Ensure ID is part of object
                 return data;
             });
+            // Cache the result
+            localStorage.setItem(STORE_AIRBNBS, JSON.stringify(items));
+            return items;
         } catch (e) {
             console.error("Error getting airbnbs:", e);
             return [];
         }
     },
 
+    getPropertiesCached: function () {
+        const cached = localStorage.getItem(STORE_PROPERTIES);
+        if (cached) {
+            try {
+                return JSON.parse(cached);
+            } catch (e) {
+                console.error("Error parsing cached properties:", e);
+                return [];
+            }
+        }
+        return [];
+    },
+
     getProperties: async function () {
         if (!db) return [];
         try {
             const snapshot = await db.collection(STORE_PROPERTIES).get();
-            return snapshot.docs.map(doc => {
+            const items = snapshot.docs.map(doc => {
                 let data = doc.data();
                 data.id = doc.id;
                 return data;
             });
+            // Cache the result
+            localStorage.setItem(STORE_PROPERTIES, JSON.stringify(items));
+            return items;
         } catch (e) {
             console.error("Error getting properties:", e);
             return [];

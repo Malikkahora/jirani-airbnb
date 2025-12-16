@@ -1,8 +1,8 @@
 :root {
     /* Colors */
-    --color-primary: #ff385c;
-    /* Airbnb-ish red */
-    --color-primary-hover: #d9324e;
+    --color-primary: #FFB300;
+    /* Neon Amber */
+    --color-primary-hover: #FF8F00;
     --color-text-main: #222222;
     --color-text-secondary: #717171;
     --color-bg-white: #ffffff;
@@ -179,8 +179,14 @@ ul {
 }
 
 @media (max-width: 768px) {
-    .header__socials {
+
+    /* .header__socials {
         display: none;
+    } */
+    .header__socials {
+        gap: 8px;
+        /* Reduce gap on mobile */
+        margin-right: 8px;
     }
 }
 
@@ -238,6 +244,10 @@ ul {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     max-width: 850px;
     margin: 0 auto;
+    position: relative;
+    /* Ensure stacking context */
+    z-index: 100;
+    /* Prevent dropdown clipping */
 }
 
 .search-form {
@@ -305,11 +315,50 @@ ul {
 }
 
 .property-card__image-wrapper {
-    aspect-ratio: 1 / 0.95;
+    position: relative;
+    aspect-ratio: 3 / 4;
+    /* Taller portrait size */
     border-radius: var(--radius-md);
     overflow: hidden;
     margin-bottom: var(--spacing-sm);
     background-color: var(--color-bg-light);
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    z-index: 5;
+    transition: all 0.2s;
+}
+
+.favorite-btn:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.favorite-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: transparent;
+    stroke: #222;
+    stroke-width: 2;
+    transition: all 0.2s;
+}
+
+.favorite-btn.active svg {
+    fill: #FF385C;
+    stroke: #FF385C;
 }
 
 .property-card__image-placeholder {
@@ -497,7 +546,11 @@ ul {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-xl) 0;
+    padding: 140px 0 var(--spacing-xl) 0;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/home-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .portal-title {
@@ -505,13 +558,39 @@ ul {
     font-weight: 800;
     text-align: center;
     margin-bottom: var(--spacing-xs);
+    color: #ffffff;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.location-header {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: 600;
+    padding-left: 15px;
+    border-left: 5px solid #FFB300;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
 }
 
 .portal-subtitle {
     text-align: center;
-    color: var(--color-text-secondary);
+    color: #FFB300;
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-xl);
+    font-weight: 500;
 }
 
 .portal-options {
@@ -564,4 +643,254 @@ ul {
     color: var(--color-text-secondary);
     margin-bottom: var(--spacing-md);
     flex: 1;
+}
+
+/* Profile Dropdown Menu */
+.header__profile-menu {
+    position: relative;
+    margin-left: 0;
+}
+
+.header__favorites-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-main);
+    transition: background 0.2s;
+    margin-right: 8px;
+}
+
+.header__favorites-btn:hover {
+    background: #f7f7f7;
+}
+
+.header__profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid #DDDDDD;
+    border-radius: 21px;
+    padding: 5px 5px 5px 12px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    color: var(--color-text-main);
+}
+
+.header__profile-btn:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.header__profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+    min-width: 240px;
+    padding: 8px 0;
+    z-index: 1000;
+    display: none;
+    /* Hidden by default */
+}
+
+.header__profile-dropdown.active {
+    display: block;
+}
+
+.header__profile-link {
+    display: block;
+    padding: 12px 16px;
+    color: #222222;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+/* Multi-Select Styles */
+.multi-select {
+    position: relative;
+    width: 100%;
+}
+
+.select-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    height: 100%;
+    /* Ensure full height clickability */
+}
+
+.select-box span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+}
+
+.checkboxes {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 15px);
+    /* Upward Float */
+    top: auto;
+    left: 0;
+    min-width: 200px;
+    width: max-content;
+    max-width: 300px;
+    background-color: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+/* Tooltip Arrow (Pointing Down) */
+.checkboxes::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    /* At bottom of box */
+    left: 20px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    /* Point down */
+}
+
+.checkboxes.active {
+    display: block;
+}
+
+.checkboxes label {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    /* Larger hit area */
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--color-text-main);
+    transition: background 0.2s;
+}
+
+.checkboxes label:hover {
+    background-color: #f7f7f7;
+}
+
+.checkboxes input {
+    margin-right: 12px;
+    width: 18px;
+    /* Larger checkbox */
+    height: 18px;
+    accent-color: #2d60ff;
+    /* Brand color */
+    cursor: pointer;
+}
+
+/* Share Modal Styles */
+.share-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+}
+
+.share-modal.active {
+    display: block;
+}
+
+.share-title {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.share-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: var(--color-text-main);
+}
+
+.share-btn:hover {
+    background: var(--color-bg-light);
+}
+
+.share-btn.whatsapp {
+    color: #25D366;
+    border-color: #25D366;
+}
+
+.share-btn.whatsapp:hover {
+    background: #eafaef;
+}
+
+.share-btn.facebook {
+    color: #1877F2;
+    border-color: #1877F2;
+}
+
+.share-btn.facebook:hover {
+    background: #e8f2ff;
+}
+
+.share-btn.copy {
+    color: #555;
+}
+
+.share-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+}
+
+.share-overlay.active {
+    display: block;
 }
