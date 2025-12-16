@@ -316,8 +316,8 @@ ul {
 
 .property-card__image-wrapper {
     position: relative;
-    aspect-ratio: 3 / 4;
-    /* Taller portrait size */
+    aspect-ratio: 1 / 1;
+    /* Square aspect ratio */
     border-radius: var(--radius-md);
     overflow: hidden;
     margin-bottom: var(--spacing-sm);
@@ -537,16 +537,40 @@ ul {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--spacing-sm);
     }
+
+    /* Mobile Card Sizing for Carousel */
+    .location-section .property-card {
+        min-width: 260px !important;
+        /* Shrink from 300px */
+        width: 75vw !important;
+        /* Responsive width */
+        max-width: 280px !important;
+    }
+
+    /* Reduce padding for header overlap */
+    .portal-main {
+        padding-top: 100px !important;
+        min-height: auto !important;
+    }
+
+    .portal-title {
+        font-size: 2rem !important;
+    }
+
+    .hero {
+        padding: 100px 0 40px 0 !important;
+        /* Reduce top padding */
+    }
 }
 
 /* Portal Page Styles */
 .portal-main {
-    min-height: calc(100vh - 160px);
-    /* Adjust for header/footer */
+    min-height: 65vh;
+    /* Reduced height as requested */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 140px 0 var(--spacing-xl) 0;
+    padding: 110px 0 var(--spacing-xl) 0;
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/home-bg.jpg');
     background-size: cover;
     background-position: center;
@@ -573,16 +597,24 @@ ul {
     100% {
         transform: translateY(0px);
     }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 .location-header {
-    font-size: 1.8rem;
-    color: #333;
-    font-weight: 600;
-    padding-left: 15px;
-    border-left: 5px solid #FFB300;
-    margin-bottom: 10px;
-    animation: float 3s ease-in-out infinite;
+    font-size: 1.5rem;
+    color: #222;
+    font-weight: 700;
+    padding-left: 12px;
+    border-left: 4px solid #FFB300;
+    /* Slightly thinner */
+    margin-bottom: 24px;
+    /* More breathing room */
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
 }
 
 .portal-subtitle {
@@ -598,7 +630,26 @@ ul {
     gap: var(--spacing-lg);
     justify-content: center;
     flex-wrap: wrap;
+    margin-bottom: var(--spacing-xl);
 }
+
+/* Property Card Default (Desktop/Laptop) */
+.property-card {
+    min-width: 280px;
+    width: 280px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: var(--radius-md);
+    /* Ensure radius on card */
+}
+
+.property-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Share Modal Styles */
 
 .portal-card {
     background-color: var(--color-bg-white);

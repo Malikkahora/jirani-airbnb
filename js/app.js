@@ -131,6 +131,12 @@
         } else {
             renderProperties(filtered);
         }
+
+        // Scroll to results
+        const resultsSection = document.getElementById('properties');
+        if (resultsSection) {
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 });
 
@@ -274,8 +280,7 @@ function renderGroupedListings(containerId, items, pageType) {
             const isFav = favorites.includes(String(item.id));
             const article = document.createElement('article');
             article.className = 'property-card';
-            article.style.minWidth = '300px';
-            article.style.width = '300px';
+            // Removed inline widths to allow CSS control
             article.style.flexShrink = '0';
             article.style.scrollSnapAlign = 'start';
             article.onclick = () => openDetailModal(item.id);
