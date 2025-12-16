@@ -1,4 +1,4 @@
-﻿const savedExportData = {
+const savedExportData = {
     "airbnbs": [
         {
             "id": "new_listing_20251210140224",
@@ -934,7 +934,11 @@ const JiraniData = {
                 return data;
             });
             // Cache the result
-            localStorage.setItem(STORE_AIRBNBS, JSON.stringify(items));
+            try {
+                try { localStorage.setItem(STORE_AIRBNBS, JSON.stringify(items)); } catch (e) { console.warn("Cache full"); }
+            } catch (quotaError) {
+                console.warn("LocalStorage full, airbnbs caching skipped:", quotaError);
+            }
             return items;
         } catch (e) {
             console.error("Error getting airbnbs:", e);
@@ -965,7 +969,11 @@ const JiraniData = {
                 return data;
             });
             // Cache the result
-            localStorage.setItem(STORE_PROPERTIES, JSON.stringify(items));
+            try {
+                try { localStorage.setItem(STORE_PROPERTIES, JSON.stringify(items)); } catch (e) { console.warn("Cache full"); }
+            } catch (quotaError) {
+                console.warn("LocalStorage full, properties caching skipped:", quotaError);
+            }
             return items;
         } catch (e) {
             console.error("Error getting properties:", e);
@@ -1060,4 +1068,5 @@ const JiraniData = {
         return `const savedExportData = ${JSON.stringify(data, null, 4)};`;
     }
 };
+
 
