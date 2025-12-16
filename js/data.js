@@ -1067,6 +1067,16 @@ const JiraniData = {
         const data = { airbnbs, properties };
         return `const savedExportData = ${JSON.stringify(data, null, 4)};`;
     }
+,
+    uploadImage: async function(base64Data) {
+        if (!storage) return base64Data;
+        try {
+            const ref = storage.ref().child('images/' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+            await ref.putString(base64Data, 'data_url');
+            return await ref.getDownloadURL();
+        } catch (e) {
+            console.error('Upload failed:', e);
+            throw e;
+        }
+    }
 };
-
-

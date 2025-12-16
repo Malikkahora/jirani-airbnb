@@ -572,8 +572,8 @@
             let processedCount = 0;
 
             files.forEach(file => {
-                // Increased quality and resolution (1200x1200px max, 0.85 quality)
-                compressImage(file, 1200, 1200, 0.85).then(base64 => {
+                // Increased quality and resolution for 5MB+ support (via Storage)
+                compressImage(file, 2048, 2048, 0.90).then(base64 => {
                     currentEditingImages.push(base64);
                     processedCount++;
                     if (processedCount === files.length) {
@@ -596,12 +596,31 @@
             e.preventDefault();
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "Saving...";
+            submitBtn.innerText = "Uploading Images..."; // Updated status
             submitBtn.disabled = true;
 
             // Small timeout to allow UI to update
             setTimeout(async () => {
                 try {
+                    // Upload Images Loop
+                    const uploadedImages = [];
+                    for (let img of currentEditingImages) {
+                        if (img.startsWith('data:')) {
+                            // It's a new Base64 image, upload it
+                            try {
+                                const url = await JiraniData.uploadImage(img);
+                                uploadedImages.push(url);
+                            } catch (err) {
+                                console.error("Upload failed for one image", err);
+                                alert("Failed to upload an image: " + err.message);
+                                throw err;
+                            }
+                        } else {
+                            // Existing URL
+                            uploadedImages.push(img);
+                        }
+                    }
+
                     const idVal = document.getElementById('edit-id').value;
                     const type = document.getElementById('edit-type').value;
 
@@ -612,8 +631,8 @@
                         price: parseInt(document.getElementById('edit-price').value),
                         rooms: document.getElementById('edit-rooms').value,
                         amenities: document.getElementById('edit-amenities').value,
-                        images: currentEditingImages,
-                        image: currentEditingImages.length > 0 ? currentEditingImages[0] : ''
+                        images: uploadedImages,
+                        image: uploadedImages.length > 0 ? uploadedImages[0] : ''
                     };
 
                     // Capture Type for properties
@@ -649,15 +668,11 @@
                     // Assume success if no error thrown
                     success = true;
 
-                    if (!success) {
-                        alert("Storage limit exceeded! Remove high-res photos or delete old listings to free up space.");
-                        return;
-                    }
-
                     if (type === 'airbnb') await renderAirbnbs();
                     else await renderProperties();
 
                     closeModal();
+                    alert("Listing saved successfully!");
                 } catch (error) {
                     alert(error.message);
                 } finally {
