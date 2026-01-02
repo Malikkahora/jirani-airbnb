@@ -294,7 +294,10 @@ function renderGroupedListings(containerId, items, pageType) {
             // Removed inline widths to allow CSS control
             article.style.flexShrink = '0';
             article.style.scrollSnapAlign = 'start';
-            article.onclick = () => openDetailModal(item.id);
+            article.onclick = () => {
+                const url = `listing-details.html?id=${item.id}&type=${pageType}`;
+                window.location.href = url;
+            };
 
             let images = item.images || (item.image ? [item.image] : []);
             let imageHtml = '';

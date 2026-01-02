@@ -1,4 +1,4 @@
-const JiraniData = {
+﻿const JiraniData = {
     // Flag to check if we are using Firebase
     isFirebase: true,
 

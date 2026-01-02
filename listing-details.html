@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details - Jirani</title>
+    <link rel="icon" href="images/home-bg.jpg">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .details-container {
+            max-width: 1100px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+        }
+
+        .gallery-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            height: 500px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .gallery-main {
+            height: 100%;
+            background: #eee;
+            position: relative;
+        }
+
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #f0f0f0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .gallery-item {
+            height: 100%;
+            background: #eee;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .listing-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .listing-title {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .listing-location {
+            color: #666;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .description-section {
+            line-height: 1.8;
+            color: #444;
+            font-size: 1.05rem;
+        }
+
+        .amenities-section {
+            margin-top: 30px;
+        }
+
+        .amenities-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .amenities-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+        }
+
+        .booking-card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 25px;
+            position: sticky;
+            top: 100px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            background: white;
+            height: fit-content;
+        }
+
+        .price-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-reserve {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .btn-share {
+            width: 100%;
+            background: white;
+            border: 1px solid #333;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-share:hover {
+            background: #f7f7f7;
+        }
+
+        /* Improved Gallery Grid */
+        .gallery-container {
+            display: grid;
+            gap: 8px;
+            height: 480px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+
+        .gallery-img:hover {
+            filter: brightness(0.9);
+        }
+
+        /* 1 Image */
+        .gallery-1 {
+            grid-template-columns: 1fr;
+        }
+
+        /* 2 Images */
+        .gallery-2 {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        /* 3 Images */
+        .gallery-3 {
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .gallery-3 img:nth-child(1) {
+            grid-row: 1 / span 2;
+        }
+
+        /* 4 Images */
+        .gallery-4 {
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+
+        .gallery-4 img:nth-child(1) {
+            grid-row: 1 / span 3;
+        }
+
+        /* 5 Images */
+        .gallery-5 {
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .gallery-5 img:nth-child(1) {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gallery-container {
+                height: 300px;
+                display: block;
+                /* Fallback to single image or slider */
+                white-space: nowrap;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+            }
+
+            .gallery-container img {
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+                scroll-snap-align: center;
+            }
+
+            /* Hide grid specifics on mobile */
+            .gallery-1,
+            .gallery-2,
+            .gallery-3,
+            .gallery-4,
+            .gallery-5 {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-prev {
+            left: -60px;
+        }
+
+        .lightbox-next {
+            right: -60px;
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
+            }
+        }
+
+        .lightbox-caption {
+            color: #ccc;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        /* View All Overlay */
+        .view-all-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .view-all-overlay:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Suggested Listings */
+        .suggested-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        .suggested-header {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .suggested-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* Reusing card styles roughly to match app.js but simplified for this page */
+        .s-card {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .s-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .s-card-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .s-card-content {
+            padding: 15px;
+        }
+
+        .s-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #333;
+        }
+
+        .s-card-price {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+
+            /* ... existing responsive styles ... */
+            .gallery-section {
+                height: 300px;
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-card {
+                position: static;
+                margin-top: 30px;
+            }
+
+            .suggested-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container header__container">
+            <a href="index.html" class="logo">Jirani<span class="logo__accent">Group</span></a>
+            <!-- Simplified Nav for Landing -->
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="airbnbs.html" class="nav__link">Airbnbs</a></li>
+                    <li class="nav__item"><a href="properties.html" class="nav__link">Properties</a></li>
+                </ul>
+            </nav>
+            <div class="header__socials">
+                <a href="https://www.facebook.com/" class="header__social-link" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#1877F2">
+                        <path
+                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/jirani.bnb" class="header__social-link" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <defs>
+                            <linearGradient id="insta-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f09433;stop-opacity:1" />
+                                <stop offset="25%" style="stop-color:#e6683c;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#dc2743;stop-opacity:1" />
+                                <stop offset="75%" style="stop-color:#cc2366;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#bc1888;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#insta-gradient)"
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.073-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </a>
+                <a href="https://wa.me/254725833232" class="header__social-link" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#25D366">
+                        <path
+                            d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.892 11.893-11.892 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.968-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.514-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.015-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@jirani.properties" class="header__social-link" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#000000">
+                        <path
+                            d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                    </svg>
+                </a>
+            </div>
+            <div class="header__actions">
+                <button class="header__favorites-btn" onclick="toggleFavoritesFilter()" aria-label="Favorites">
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+                        focusable="false"
+                        style="display: block; fill: none; height: 24px; width: 24px; stroke: currentcolor; stroke-width: 2.5; overflow: visible;">
+                        <path
+                            d="M16 28c-7-4.73-14-10-14-17a6.98 6.98 0 0 1 7-7c1.8 0 3.58.68 4.95 2.05L16 8.1l2.05-2.05a6.98 6.98 0 0 1 9.9 0 6.98 6.98 0 0 1 0 9.9L16 28z">
+                        </path>
+                    </svg>
+                </button>
+                <div class="header__profile-menu">
+                    <button class="header__profile-btn" id="profileBtn" aria-label="Profile Menu">
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                            role="presentation" focusable="false"
+                            style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;">
+                            <g fill="none" fill-rule="nonzero">
+                                <path d="m2 16h28"></path>
+                                <path d="m2 24h28"></path>
+                                <path d="m2 8h28"></path>
+                            </g>
+                        </svg>
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                            role="presentation" focusable="false"
+                            style="display: block; height: 30px; width: 30px; fill: currentcolor;">
+                            <path
+                                d="m16 .7c-8.437 0-15.3 6.863-15.3 15.3s6.863 15.3 15.3 15.3 15.3-6.863 15.3-15.3-6.863-15.3-15.3-15.3zm0 28c-4.021 0-7.605-1.884-9.933-4.81a12.425 12.425 0 0 1 6.451-4.4 6.507 6.507 0 0 1 -3.018-5.49c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5a6.513 6.513 0 0 1 -3.019 5.491 12.42 12.42 0 0 1 6.452 4.4c-2.328 2.925-5.912 4.809-9.933 4.809z">
+                            </path>
+                        </svg>
+                    </button>
+                    <div class="header__profile-dropdown" id="profileDropdown">
+                        <a href="login.html" class="header__profile-link">Log in</a>
+                    </div>
+                </div>
+            </div><button class="menu-toggle" aria-label="Toggle menu"><span class="menu-toggle__bar"></span><span
+                    class="menu-toggle__bar"></span><span class="menu-toggle__bar"></span></button>
+        </div>
+    </header>
+
+    <main id="main-content" style="min-height: 60vh;">
+        <div class="details-container">
+            <div id="loading" style="text-align: center; padding: 50px;">
+                <h2>Loading details...</h2>
+            </div>
+
+            <div id="listing-content" style="display: none;">
+                <div class="listing-header">
+                    <h1 class="listing-title" id="d-title">Listing Title</h1>
+                    <div class="listing-location">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span id="d-location">Location</span>
+                        <span id="d-type"
+                            style="margin-left: 15px; background: #eee; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem;">Type</span>
+                    </div>
+                </div>
+
+                <div class="gallery-section" id="d-gallery">
+                    <!-- Images injected here -->
+                </div>
+
+                <div class="content-grid">
+                    <div class="info-col">
+                        <div class="description-section">
+                            <h3 style="margin-bottom: 10px;">About this place</h3>
+                            <p id="d-desc">Description goes here...</p>
+                        </div>
+
+                        <div class="amenities-section">
+                            <h3>What this place offers</h3>
+                            <ul class="amenities-list" id="d-amenities">
+                                <!-- Amenities -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="booking-col">
+                        <div class="booking-card">
+                            <div class="price-display">
+                                KES <span id="d-price">0</span>
+                                <span class="price-period" id="d-period">/ night</span>
+                            </div>
+
+                            <div class="action-buttons">
+                                <a href="#" id="btn-contact" class="btn btn--primary btn-reserve">
+                                    Contact Host
+                                </a>
+                                <button onclick="shareCurrentPage()" class="btn btn-share">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                        <polyline points="16 6 12 2 8 6"></polyline>
+                                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                                    </svg>
+                                    Share this listing
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Listings -->
+                <div class="suggested-section">
+                    <h2 class="suggested-header">You might also love</h2>
+                    <div id="suggested-grid" class="suggested-grid">
+                        <!-- Suggested items injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="error-msg" style="display: none; text-align: center; padding: 50px; color: red;">
+                <h2>Listing not found</h2>
+                <p>The listing you are looking for does not exist or has been removed.</p>
+                <a href="index.html" class="btn btn--primary" style="margin-top: 20px; display: inline-block;">Go
+                    Home</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- ... footer/lightbox ... -->
+
+
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Jirani Group.</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-nav lightbox-prev" onclick="changeSlide(-1)">&#10094;</button>
+            <img id="lightbox-img" class="lightbox-img" src="" alt="">
+            <button class="lightbox-nav lightbox-next" onclick="changeSlide(1)">&#10095;</button>
+        </div>
+        <div id="lightbox-caption" class="lightbox-caption">1 / 5</div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const type = params.get('type') || 'airbnb'; // default to airbnb
+
+            if (!id) {
+                showError();
+                return;
+            }
+
+            // Fetch data
+            let item = null;
+            try {
+                if (type === 'airbnb') {
+                    const items = await JiraniData.getAirbnbs();
+                    item = items.find(i => String(i.id) === String(id));
+                } else {
+                    const items = await JiraniData.getProperties();
+                    item = items.find(i => String(i.id) === String(id));
+                }
+            } catch (e) {
+                console.error(e);
+            }
+
+            if (!item) {
+                showError();
+                return;
+            }
+
+            renderDetails(item, type);
+        });
+
+        function renderDetails(item, type) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('listing-content').style.display = 'block';
+
+            // Text Data
+            document.getElementById('d-title').innerText = item.title;
+            document.getElementById('d-location').innerText = item.location.charAt(0).toUpperCase() + item.location.slice(1);
+            document.getElementById('d-desc').innerText = item.desc;
+            document.getElementById('d-price').innerText = Number(item.price).toLocaleString();
+
+            // Type & Period
+            if (type === 'airbnb') {
+                document.getElementById('d-type').innerText = 'Airbnb / Short Stay';
+                document.getElementById('d-period').innerText = '/ night';
+            } else {
+                document.getElementById('d-type').innerText = item.type === 'rent' ? 'For Rent' : 'For Sale';
+                document.getElementById('d-period').innerText = item.priceLabel || '';
+            }
+
+            // Images
+            const gallery = document.getElementById('d-gallery');
+            const images = item.images || (item.image ? [item.image] : []);
+
+            // Re-create gallery container to remove old classes if needed
+            const newGallery = document.createElement('div');
+            newGallery.id = 'd-gallery';
+            newGallery.className = 'gallery-container'; // Base class
+
+            if (images.length === 0) {
+                newGallery.innerHTML = `<div style="background:${item.imageColor || '#ddd'}; height:100%; display:flex; align-items:center; justify-content:center;">No Images</div>`;
+            } else {
+                const count = Math.min(images.length, 5); // Max 5 for layout
+                newGallery.classList.add(`gallery-${count}`); // Add specific layout class
+
+                let html = '';
+                for (let i = 0; i < count; i++) {
+                    const imgUrl = optimizeCloudinaryUrl(images[i], i === 0 ? 1000 : 600);
+
+                    // Container for overlay support
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.width = '100%';
+                    wrapper.style.height = '100%';
+                    wrapper.style.overflow = 'hidden';
+
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    img.className = 'gallery-img';
+                    img.alt = `${item.title} - Image ${i + 1}`;
+                    img.onclick = () => openLightbox(i);
+
+                    // CSS Grid Placement Hacks
+                    if (count === 3 && i === 0) wrapper.style.gridRow = '1 / span 2';
+                    if (count === 4 && i === 0) wrapper.style.gridRow = '1 / span 3';
+                    if (count === 5 && i === 0) {
+                        wrapper.style.gridColumn = '1 / 2';
+                        wrapper.style.gridRow = '1 / 3';
+                    }
+
+                    wrapper.appendChild(img);
+
+                    // Add "View All" overlay to the 5th image if there are more
+                    if (i === 4 && images.length > 5) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'view-all-overlay';
+                        overlay.innerText = `+${images.length - 5} photos`;
+                        overlay.onclick = () => openLightbox(4);
+                        wrapper.appendChild(overlay);
+                    }
+
+                    newGallery.appendChild(wrapper);
+                }
+            }
+
+            gallery.parentNode.replaceChild(newGallery, gallery);
+
+            // Store images for lightbox
+            window.currentListingImages = images;
+
+            // Amenities
+            const amList = document.getElementById('d-amenities');
+            if (item.amenities) {
+                item.amenities.split(',').forEach(am => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        ${am.trim()}
+                    `;
+                    amList.appendChild(li);
+                });
+            } else {
+                amList.innerHTML = '<li>Essentials</li>';
+            }
+
+            // Contact Button
+            const btn = document.getElementById('btn-contact');
+            const url = window.location.href;
+            const text = `Beep! Hello Jirani, I am interested in: ${item.title} (${type}). Link: ${url}`;
+            btn.href = `https://wa.me/254725833232?text=${encodeURIComponent(text)}`;
+            btn.target = "_blank";
+
+            // Render Suggested
+            renderSuggested(item, type);
+        }
+
+        async function renderSuggested(currentItem, type) {
+            const container = document.getElementById('suggested-grid');
+            if (!container) return;
+
+            try {
+                const allItems = type === 'airbnb' ? await JiraniData.getAirbnbs() : await JiraniData.getProperties();
+
+                // Filter out current item
+                const others = allItems.filter(i => String(i.id) !== String(currentItem.id));
+
+                if (others.length === 0) {
+                    document.querySelector('.suggested-section').style.display = 'none';
+                    return;
+                }
+
+                // Shuffle and take 3
+                const suggested = others.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+                container.innerHTML = suggested.map(item => {
+                    const img = item.images && item.images.length > 0 ? optimizeCloudinaryUrl(item.images[0], 400) : null;
+                    const imgHtml = img ? `<img src="${img}" class="s-card-img" alt="${item.title}">` : `<div class="s-card-img" style="background:${item.imageColor || '#ddd'}"></div>`;
+                    const priceLabel = type === 'airbnb' ? '/ night' : (item.priceLabel || '');
+
+                    return `
+                        <div class="s-card" onclick="window.location.href='listing-details.html?id=${item.id}&type=${type}'">
+                            ${imgHtml}
+                            <div class="s-card-content">
+                                <div class="s-card-title">${item.title}</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div class="s-card-price">KES ${item.price.toLocaleString()} <span style="font-weight:400; color:#666; font-size:0.9rem;">${priceLabel}</span></div>
+                                    <div style="font-size:0.9rem; color:#666;">${item.location}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (e) {
+                console.error("Error loading suggestions:", e);
+                document.querySelector('.suggested-section').style.display = 'none';
+            }
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'block';
+        }
+
+        // Lightbox Functions
+        let currentSlideIndex = 0;
+
+        function openLightbox(index) {
+            if (!window.currentListingImages || window.currentListingImages.length === 0) return;
+            currentSlideIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeLightbox(e) {
+            if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function changeSlide(n) {
+            currentSlideIndex += n;
+            if (currentSlideIndex >= window.currentListingImages.length) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex < 0) {
+                currentSlideIndex = window.currentListingImages.length - 1;
+            }
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const imgUrl = optimizeCloudinaryUrl(window.currentListingImages[currentSlideIndex], 1200);
+            document.getElementById('lightbox-img').src = imgUrl;
+            document.getElementById('lightbox-caption').innerText = `${currentSlideIndex + 1} / ${window.currentListingImages.length}`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox({ target: document.getElementById('lightbox') });
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        function shareCurrentPage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
