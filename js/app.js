@@ -1,7 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', async () => {
     console.log('Jirani Airbnb loaded');
-    await JiraniData.init();
-
     // Sticky header shadow
     const header = document.querySelector('.header');
     if (header) {
@@ -13,6 +11,32 @@
             }
         });
     }
+
+    // Determine current page type
+    const isAirbnbPage = document.getElementById('airbnb-grid') !== null;
+    const isPropertyPage = document.getElementById('property-grid') !== null;
+
+    // Show Loading State Immediately (Pre-Init)
+    if (isAirbnbPage) {
+        const cachedAirbnbs = JiraniData.getAirbnbsCached();
+        if (cachedAirbnbs.length > 0) {
+            console.log("Rendering Airbnbs from cache (Pre-Init)");
+            renderAirbnbs(cachedAirbnbs);
+        } else {
+            renderLoadingState('airbnb-grid');
+        }
+    } else if (isPropertyPage) {
+        const cachedProperties = JiraniData.getPropertiesCached();
+        if (cachedProperties.length > 0) {
+            console.log("Rendering Properties from cache (Pre-Init)");
+            renderProperties(cachedProperties);
+        } else {
+            renderLoadingState('property-grid');
+        }
+    }
+
+    // Initialize Data (Firebase/Sync)
+    await JiraniData.init();
 
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -31,26 +55,13 @@
         });
     }
 
-    // Determine current page type
-    const isAirbnbPage = document.getElementById('airbnb-grid') !== null;
-    const isPropertyPage = document.getElementById('property-grid') !== null;
 
-    // Initial Render
+    // Render Fresh Data
     if (isAirbnbPage) {
-        const cachedAirbnbs = JiraniData.getAirbnbsCached();
-        if (cachedAirbnbs.length > 0) {
-            console.log("Rendering Airbnbs from cache");
-            renderAirbnbs(cachedAirbnbs);
-        }
         const freshAirbnbs = await JiraniData.getAirbnbs();
         console.log("Rendering fresh Airbnbs");
         renderAirbnbs(freshAirbnbs);
     } else if (isPropertyPage) {
-        const cachedProperties = JiraniData.getPropertiesCached();
-        if (cachedProperties.length > 0) {
-            console.log("Rendering Properties from cache");
-            renderProperties(cachedProperties);
-        }
         const freshProperties = await JiraniData.getProperties();
         console.log("Rendering fresh Properties");
         renderProperties(freshProperties);
@@ -58,6 +69,7 @@
 
     // Search Handler
     const searchForm = document.querySelector('.search-form');
+
     if (searchForm) {
         searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -226,6 +238,62 @@ function optimizeCloudinaryUrl(url, width) {
     }
     return url;
 }
+
+// Render Loading State (Skeleton)
+function renderLoadingState(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '';
+    container.style.display = 'block';
+
+    // Create a dummy section
+    const section = document.createElement('section');
+    section.className = 'location-section';
+    section.style.marginBottom = '50px';
+
+    // Dummy Header
+    const header = document.createElement('div');
+    header.style.display = 'flex';
+    header.style.justifyContent = 'space-between';
+    header.style.alignItems = 'center';
+    header.style.marginBottom = '20px';
+    header.style.padding = '0 10px';
+
+    const title = document.createElement('div');
+    title.className = 'skeleton-box skeleton-text';
+    title.style.width = '200px';
+    title.style.height = '1.5rem';
+
+    header.appendChild(title);
+    section.appendChild(header);
+
+    // Dummy Scroll Container
+    const scrollContainer = document.createElement('div');
+    scrollContainer.className = 'horizontal-scroll';
+    scrollContainer.style.display = 'flex';
+    scrollContainer.style.gap = '12px';
+    scrollContainer.style.overflowX = 'hidden'; // Hide scrollbar for skeleton
+    scrollContainer.style.padding = '10px';
+
+    // Create 4 dummy cards
+    for (let i = 0; i < 4; i++) {
+        const card = document.createElement('div');
+        card.className = 'skeleton-card';
+        card.innerHTML = `
+            <div class="skeleton-box skeleton-image"></div>
+            <div class="skeleton-box skeleton-title"></div>
+            <div class="skeleton-box skeleton-desc"></div>
+            <div class="skeleton-box skeleton-text skeleton-meta"></div>
+            <div class="skeleton-box skeleton-text" style="width: 40%"></div>
+        `;
+        scrollContainer.appendChild(card);
+    }
+
+    section.appendChild(scrollContainer);
+    container.appendChild(section);
+}
+
 
 // Shared Grouped Renderer
 function renderGroupedListings(containerId, items, pageType) {
