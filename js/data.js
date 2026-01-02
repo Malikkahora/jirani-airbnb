@@ -222,27 +222,39 @@ const JiraniData = {
         // If it's already a URL, return it
         if (!base64Data.startsWith('data:')) return base64Data;
 
+        console.log("Starting Cloudinary upload...");
         const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
         const formData = new FormData();
         formData.append('file', base64Data);
         formData.append('upload_preset', UPLOAD_PRESET);
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`Cloudinary upload failed: ${errorData.error.message}`);
+                console.error("Cloudinary Error:", errorData);
+                throw new Error(`Cloudinary upload failed: ${errorData.error.message || response.statusText}`);
             }
 
             const data = await response.json();
+            console.log("Upload successful:", data.secure_url);
             return data.secure_url;
         } catch (e) {
-            console.error('Upload failed:', e);
+            clearTimeout(timeoutId);
+            if (e.name === 'AbortError') {
+                throw new Error("Upload timed out after 60 seconds. Check your internet connection.");
+            }
+            console.error('Upload failed details:', e);
             throw e;
         }
     }

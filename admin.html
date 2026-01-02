@@ -606,7 +606,7 @@
             e.preventDefault();
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "Uploading Images..."; // Updated status
+            submitBtn.innerText = "Processing..."; // Updated status
             submitBtn.disabled = true;
 
             // Small timeout to allow UI to update
@@ -618,6 +618,7 @@
                         if (img.startsWith('data:')) {
                             // It's a new Base64 image, upload it
                             try {
+                                submitBtn.innerText = `Uploading Image ${uploadedImages.length + 1}/${currentEditingImages.length}...`;
                                 const url = await JiraniData.uploadImage(img);
                                 uploadedImages.push(url);
                             } catch (err) {
