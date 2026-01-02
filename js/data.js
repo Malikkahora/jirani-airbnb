@@ -15,16 +15,16 @@ const JiraniData = {
         // Auto-seed if empty and we have defaults
         try {
             const airbnbs = await this.getAirbnbs();
-            if (airbnbs.length === 0 && typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
-                console.log("Seeding Firebase Airbnbs...");
+            if (airbnbs.length === 0 && typeof savedExportData !== 'undefined' && savedExportData.airbnbs && savedExportData.airbnbs.length > 0) {
+                console.log(`Seeding Firebase Airbnbs (Count: ${savedExportData.airbnbs.length})...`);
                 for (const item of savedExportData.airbnbs) {
                     await this.addAirbnb(item);
                 }
             }
 
             const properties = await this.getProperties();
-            if (properties.length === 0 && typeof savedExportData !== 'undefined' && savedExportData.properties) {
-                console.log("Seeding Firebase Properties...");
+            if (properties.length === 0 && typeof savedExportData !== 'undefined' && savedExportData.properties && savedExportData.properties.length > 0) {
+                console.log(`Seeding Firebase Properties (Count: ${savedExportData.properties.length})...`);
                 for (const item of savedExportData.properties) {
                     await this.addProperty(item);
                 }
@@ -181,6 +181,27 @@ const JiraniData = {
         }
 
         await this.init();
+        return true;
+    },
+
+    deleteAllData: async function () {
+        if (!db) return;
+        console.log("Deleting all data...");
+        // Clear LocalStorage
+        localStorage.removeItem(STORE_AIRBNBS);
+        localStorage.removeItem(STORE_PROPERTIES);
+
+        // Clear Firestore
+        const airbnbs = await this.getAirbnbs();
+        for (const item of airbnbs) {
+            await this.deleteAirbnb(item.id);
+        }
+
+        const properties = await this.getProperties();
+        for (const item of properties) {
+            await this.deleteProperty(item.id);
+        }
+        console.log("All data deleted.");
         return true;
     },
 
