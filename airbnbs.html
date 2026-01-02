@@ -303,6 +303,13 @@
                 </a>
             </div>
             <div class="header__actions">
+                <button class="header__favorites-btn" id="theme-toggle-btn" onclick="toggleTheme()"
+                    aria-label="Toggle Dark Mode" style="margin-right: 10px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
                 <button class="header__favorites-btn" onclick="toggleFavoritesFilter()" aria-label="Favorites">
                     <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
                         focusable="false"
@@ -358,17 +365,22 @@
                     <form class="search-form">
                         <div class="search-form__field"><label for="location">Location</label><input type="text"
                                 id="location" placeholder="Where are you going?"></div>
-                        <div class="search-form__field"><label for="rooms">No of rooms</label><select id="rooms"
+                        <div class="search-form__field"><label for="rooms">Beds</label><select id="rooms"
                                 style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
                                 <option value="">Any</option>
                                 <option value="studio">Studio</option>
-                                <option value="1">1 Bedroom</option>
-                                <option value="2">2 Bedrooms</option>
-                                <option value="3">3 Bedrooms</option>
-                                <option value="4">4 Bedrooms</option>
-                                <option value="5">5 Bedrooms</option>
-                                <option value="6">6 Bedrooms</option>
+                                <option value="1">1 Bed</option>
+                                <option value="2">2 Beds</option>
+                                <option value="3">3 Beds</option>
+                                <option value="4">4 Beds</option>
+                                <option value="5">5+ Beds</option>
                             </select></div>
+                        <div class="search-form__field" style="border-left: 1px solid #ddd; padding-left: 10px;">
+                            <label for="baths">Baths</label>
+                            <input type="number" id="baths" placeholder="Any" min="1" max="10"
+                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
+                        </div>
+
                         <div class="search-form__field">
                             <label for="amenities">Amenities</label>
                             <div class="multi-select" id="amenities-select-airbnb">

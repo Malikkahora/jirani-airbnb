@@ -31,6 +31,9 @@
     --radius-circle: 50%;
 }
 
+/* Dark mode overrides moved to bottom for cascade */
+
+
 /* Reset & Base */
 *,
 *::before,
@@ -641,12 +644,23 @@ ul {
     flex-shrink: 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: var(--radius-md);
-    /* Ensure radius on card */
+    /* Defined border and shadow */
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Soft base shadow */
+    overflow: hidden;
+    /* rounded corners for image */
 }
 
 .property-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+
+.property-card__content {
+    padding: 12px;
 }
 
 /* Share Modal Styles */
@@ -951,6 +965,7 @@ ul {
     0% {
         background-position: -468px 0;
     }
+
     100% {
         background-position: 468px 0;
     }
@@ -1001,6 +1016,244 @@ ul {
     margin-bottom: 12px;
 }
 
+
 .skeleton-meta {
     width: 60%;
+}
+
+/* Stats Styles */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stats-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stats-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-text-secondary);
+}
+
+.stats-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+/* Listing Card Stats */
+.property-card__stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.card-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* Horizontal Scroll Navigation */
+.scroll-wrapper {
+    position: relative;
+    /* Ensure arrows can overhang if needed, or stick to edges */
+}
+
+.scroll-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+}
+
+.scroll-nav-btn:hover {
+    opacity: 1;
+    background: #f8f8f8;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-nav-btn.prev {
+    left: -20px;
+}
+
+.scroll-nav-btn.next {
+    right: -20px;
+}
+
+/* Hide on mobile where touch scroll is better */
+@media (max-width: 768px) {
+    .scroll-nav-btn {
+        display: none;
+    }
+
+    .scroll-nav-btn.prev {
+        left: 0;
+    }
+
+    .scroll-nav-btn.next {
+        right: 0;
+    }
+}
+
+/* Floating Booking Card Style */
+.booking-card {
+    position: sticky;
+    top: 120px;
+    background-color: var(--color-bg-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+}
+
+/* =========================================
+   DARK MODE OVERRIDES (APPENDED FOR CASCADE)
+   ========================================= */
+
+body.dark-mode {
+    --color-text-main: #f0f0f0;
+    --color-text-secondary: #a0a0a0;
+    --color-bg-white: #1a1a1a;
+    --color-bg-light: #2d2d2d;
+    --color-border: #404040;
+}
+
+body.dark-mode .header,
+body.dark-mode .footer {
+    background-color: var(--color-bg-light);
+    border-bottom-color: var(--color-border);
+}
+
+body.dark-mode .property-card,
+body.dark-mode .contact-container,
+body.dark-mode .modal-content,
+body.dark-mode .search-bar,
+body.dark-mode .detail-content,
+body.dark-mode .booking-card {
+    background-color: #242424;
+    border-color: var(--color-border);
+    color: var(--color-text-main);
+}
+
+/* Fix Inputs in Search Bar (High Specificity) */
+body.dark-mode .search-form__field input,
+body.dark-mode .search-form__field select,
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode select {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+/* Fix Autocomplete Yellow Background */
+body.dark-mode input:-webkit-autofill,
+body.dark-mode input:-webkit-autofill:hover,
+body.dark-mode input:-webkit-autofill:focus,
+body.dark-mode input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #242424 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Specific Location Color */
+body.dark-mode #location {
+    color: #FFB300 !important;
+    /* Yellow Orange */
+    font-weight: 500;
+}
+
+body.dark-mode #location:-webkit-autofill {
+    -webkit-text-fill-color: #FFB300 !important;
+}
+
+/* Location Header (Category Title) */
+body.dark-mode .location-header {
+    color: #FFB300 !important;
+    border-left: 4px solid #FFB300;
+    padding-left: 10px;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #aaa;
+}
+
+body.dark-mode .btn--secondary {
+    background-color: transparent;
+    color: white;
+    border-color: white;
+}
+
+body.dark-mode .btn--secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .stats-card {
+    background-color: #333;
+    border-color: #444;
+}
+
+body.dark-mode .amenities-list li,
+body.dark-mode .details-container {
+    border-color: var(--color-border);
+}
+
+body.dark-mode svg {
+    fill: currentColor;
+}
+
+/* Revert specific icons */
+body.dark-mode .header__social-link svg,
+body.dark-mode .header__favorites-btn svg {
+    fill: initial;
+    /* or standard logic */
+}
+
+/* Specific fix for toggle button icon which needs stroke */
+body.dark-mode #theme-toggle-btn svg {
+    stroke: white;
+    fill: none;
 }

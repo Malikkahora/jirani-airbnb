@@ -1,5 +1,35 @@
-﻿document.addEventListener('DOMContentLoaded', async () => {
+﻿// Theme Logic
+function initTheme() {
+    const savedTheme = localStorage.getItem('jirani_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+}
+initTheme(); // Run immediately
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('jirani_theme', isDark ? 'dark' : 'light');
+    updateThemeIcon(isDark);
+}
+
+function updateThemeIcon(isDark) {
+    const btn = document.getElementById('theme-toggle-btn');
+    if (btn) {
+        btn.innerHTML = isDark
+            ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('Jirani Airbnb loaded');
+
+    // Ensure icon is correct on load
+    const isDark = document.body.classList.contains('dark-mode');
+    updateThemeIcon(isDark);
+
     // Sticky header shadow
     const header = document.querySelector('.header');
     if (header) {
@@ -12,7 +42,6 @@
         });
     }
 
-    // Determine current page type
     const isAirbnbPage = document.getElementById('airbnb-grid') !== null;
     const isPropertyPage = document.getElementById('property-grid') !== null;
 
@@ -110,21 +139,41 @@
                 typeMatch = item.type === typeQuery;
             }
 
-            // Room Match
+            // Room Match (Beds)
             let roomMatch = true;
             if (roomsQuery) {
-                if (item.rooms) {
-                    roomMatch = item.rooms === roomsQuery;
+                // If item has explicit rooms/beds data
+                if (item.rooms || item.beds) {
+                    // Fuzzy match or extract number
+                    const beds = String(item.rooms || item.beds).toLowerCase();
+                    roomMatch = beds.includes(roomsQuery);
                 } else {
+                    // Fallback to text matching
                     if (roomsQuery === 'studio') {
                         roomMatch = item.title.toLowerCase().includes('studio') || item.desc.toLowerCase().includes('studio');
                     } else {
-                        const r = roomsQuery;
+                        const r = roomsQuery; // e.g. "1", "2"
                         const content = (item.title + ' ' + item.desc).toLowerCase();
                         roomMatch = content.includes(`${r} bedroom`) || content.includes(`${r}-bedroom`) || content.includes(`${r} bd`) || content.includes(`${r} br`) || content.includes(`${r} room`);
                     }
                 }
             }
+
+            // Baths Match
+            let bathsMatch = true;
+            const bathsInput = document.getElementById('baths');
+            const bathsQuery = bathsInput ? bathsInput.value.toLowerCase() : '';
+            if (bathsQuery) {
+                if (item.baths) {
+                    bathsMatch = String(item.baths).includes(bathsQuery);
+                } else {
+                    // Fallback
+                    const b = bathsQuery;
+                    const content = (item.title + ' ' + item.desc).toLowerCase();
+                    bathsMatch = content.includes(`${b} bath`) || content.includes(`${b}-bath`) || content.includes(`${b} bathroom`);
+                }
+            }
+
 
             // Amenities Match
             let amenitiesMatch = true;
@@ -135,7 +184,7 @@
                 amenitiesMatch = searchTerms.every(term => itemAmenities.includes(term));
             }
 
-            return textMatch && priceMatch && typeMatch && roomMatch && amenitiesMatch;
+            return textMatch && priceMatch && typeMatch && roomMatch && bathsMatch && amenitiesMatch;
         });
 
         if (type === 'airbnb') {
@@ -393,6 +442,28 @@ function renderGroupedListings(containerId, items, pageType) {
                         <h3 class="property-card__title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</h3>
                     </div>
                     <p class="property-card__desc" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3em;">${item.desc}</p>
+                    
+                    <div class="property-card__stats">
+                        <div class="card-stat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                                <path d="M2 4v16"></path><path d="M2 8h18a2 2 0 0 1 2 2v10"></path><path d="M2 17h20"></path><path d="M6 8v9"></path>
+                            </svg>
+                            <span>${item.rooms || item.beds || 0}</span>
+                        </div>
+                        <div class="card-stat">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                                <path d="M7 19v2"></path><path d="M17 19v2"></path><path d="M2 12h20"></path><path d="M2 12v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5"></path><path d="M4 12V9a2 2 0 0 1 2-2h2"></path>
+                            </svg>
+                            <span>${item.baths || 1}</span>
+                        </div>
+                        ${pageType === 'property' ? `
+                        <div class="card-stat">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                            <span>${item.sqft || 0}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
                     <p class="property-card__price">
                         <strong style="color: ${pageType === 'property' ? '#2d60ff' : '#FFB300'};">KES ${item.price.toLocaleString()}</strong> 
                         ${pageType === 'airbnb' ? 'night' : (item.priceLabel || '')}
@@ -403,8 +474,32 @@ function renderGroupedListings(containerId, items, pageType) {
             scrollContainer.appendChild(article);
         });
 
-        section.appendChild(scrollContainer);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'scroll-wrapper';
+
+        // Prev Button
+        const btnPrev = document.createElement('div');
+        btnPrev.className = 'scroll-nav-btn prev';
+        btnPrev.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+        btnPrev.onclick = () => {
+            scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        };
+        wrapper.appendChild(btnPrev);
+
+        wrapper.appendChild(scrollContainer);
+
+        // Next Button
+        const btnNext = document.createElement('div');
+        btnNext.className = 'scroll-nav-btn next';
+        btnNext.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+        btnNext.onclick = () => {
+            scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        };
+        wrapper.appendChild(btnNext);
+
+        section.appendChild(wrapper);
         container.appendChild(section);
+
     });
 }
 

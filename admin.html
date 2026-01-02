@@ -309,19 +309,22 @@
                         style="width:100%; border:1px solid #ddd; padding:8px;">
                 </div>
                 <br>
-                <div class="form-group">
-                    <label for="edit-rooms">No of rooms</label>
-                    <select id="edit-rooms" class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px;">
-                        <option value="">Select...</option>
-                        <option value="studio">Studio</option>
-                        <option value="1">1 Bedroom</option>
-                        <option value="2">2 Bedrooms</option>
-                        <option value="3">3 Bedrooms</option>
-                        <option value="4">4 Bedrooms</option>
-                        <option value="5">5 Bedrooms</option>
-                        <option value="6">6 Bedrooms</option>
-                    </select>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="edit-rooms">Beds</label>
+                        <input type="text" id="edit-rooms" class="form-control" placeholder="e.g. 3"
+                            style="width:100%; border:1px solid #ddd; padding:8px;">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="edit-baths">Baths</label>
+                        <input type="number" id="edit-baths" class="form-control" placeholder="e.g. 2"
+                            style="width:100%; border:1px solid #ddd; padding:8px;">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="edit-sqft">Sqft</label>
+                        <input type="number" id="edit-sqft" class="form-control" placeholder="e.g. 1500"
+                            style="width:100%; border:1px solid #ddd; padding:8px;">
+                    </div>
                 </div>
                 <!-- Property Type (Only for Properties) -->
                 <br>
@@ -510,7 +513,9 @@
             document.getElementById('edit-desc').value = item.desc || '';
             document.getElementById('edit-location').value = item.location;
             document.getElementById('edit-price').value = item.price;
-            document.getElementById('edit-rooms').value = item.rooms || '';
+            document.getElementById('edit-rooms').value = item.rooms || item.beds || '';
+            document.getElementById('edit-baths').value = item.baths || '';
+            document.getElementById('edit-sqft').value = item.sqft || '';
             document.getElementById('edit-amenities').value = item.amenities || '';
 
             // Handle Type Field
@@ -614,23 +619,32 @@
                 try {
                     // Upload Images Loop
                     const uploadedImages = [];
-                    for (let img of currentEditingImages) {
-                        if (img.startsWith('data:')) {
-                            // It's a new Base64 image, upload it
-                            try {
-                                submitBtn.innerText = `Uploading Image ${uploadedImages.length + 1}/${currentEditingImages.length}...`;
-                                const url = await JiraniData.uploadImage(img);
-                                uploadedImages.push(url);
-                            } catch (err) {
-                                console.error("Upload failed for one image", err);
-                                alert("Failed to upload an image: " + err.message);
-                                throw err;
+                    const hasNewImages = currentEditingImages.some(img => img.startsWith('data:'));
+
+                    if (!hasNewImages) {
+                        // Quick path: No new images to upload
+                        uploadedImages.push(...currentEditingImages);
+                    } else {
+                        // Upload path
+                        for (let img of currentEditingImages) {
+                            if (img.startsWith('data:')) {
+                                // It's a new Base64 image, upload it
+                                try {
+                                    submitBtn.innerText = `Uploading Image ${uploadedImages.length + 1}/${currentEditingImages.length}...`;
+                                    const url = await JiraniData.uploadImage(img);
+                                    uploadedImages.push(url);
+                                } catch (err) {
+                                    console.error("Upload failed for one image", err);
+                                    alert("Failed to upload an image: " + err.message);
+                                    throw err;
+                                }
+                            } else {
+                                // Existing URL
+                                uploadedImages.push(img);
                             }
-                        } else {
-                            // Existing URL
-                            uploadedImages.push(img);
                         }
                     }
+
 
                     const idVal = document.getElementById('edit-id').value;
                     const type = document.getElementById('edit-type').value;
@@ -641,6 +655,8 @@
                         location: document.getElementById('edit-location').value,
                         price: parseInt(document.getElementById('edit-price').value),
                         rooms: document.getElementById('edit-rooms').value,
+                        baths: document.getElementById('edit-baths').value,
+                        sqft: document.getElementById('edit-sqft').value,
                         amenities: document.getElementById('edit-amenities').value,
                         images: uploadedImages,
                         image: uploadedImages.length > 0 ? uploadedImages[0] : ''
