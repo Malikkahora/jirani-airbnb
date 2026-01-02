@@ -216,6 +216,17 @@ window.toggleFavoritesFilter = async function () {
     }
 };
 
+// Helper to optimize Cloudinary URLs
+function optimizeCloudinaryUrl(url, width) {
+    if (!url || typeof url !== 'string') return url;
+    // Check if it's a Cloudinary URL and has /upload/
+    if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
+        // Insert transformations: resize, auto format, auto quality
+        return url.replace('/upload/', `/upload/w_${width},f_auto,q_auto/`);
+    }
+    return url;
+}
+
 // Shared Grouped Renderer
 function renderGroupedListings(containerId, items, pageType) {
     const container = document.getElementById(containerId);
@@ -289,7 +300,9 @@ function renderGroupedListings(containerId, items, pageType) {
             let imageHtml = '';
 
             if (images.length > 0) {
-                imageHtml = `<img src="${images[0]}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+                // optimizeCloudinaryUrl with width 400 for cards
+                const optimizedUrl = optimizeCloudinaryUrl(images[0], 400);
+                imageHtml = `<img src="${optimizedUrl}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
             } else {
                 imageHtml = `<div class="property-card__image-placeholder" style="background-color: ${item.imageColor || '#ddd'}; height: 100%; width: 100%; border-radius: 12px;"></div>`;
             }

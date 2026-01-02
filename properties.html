@@ -7,11 +7,27 @@
     <title>Jirani Properties</title>
     <link rel="icon" href="images/home-bg.jpg">
     <meta name="description"
-        content="Find your dream home with Jirani Properties. Houses and apartments for sale and rent.">
+        content="Find your dream home with Jirani Properties. Houses, apartments, and land for sale and rent in Nairobi and across Kenya. Verified listings.">
+    <meta name="keywords"
+        content="Houses for sale Nairobi, Apartments for rent Kenya, Real estate listings Kenya, Buy property Kenya, Land for sale Nairobi, Jirani Properties">
+    <link rel="canonical" href="https://jiraniproperties.co.ke/properties.html">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Jirani Properties - Real Estate for Sale and Rent",
+      "description": "Browse our extensive list of properties for sale and rent in Kenya.",
+      "url": "https://jiraniproperties.co.ke/properties.html",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [] 
+      }
+    }
+    </script>
     <style>
         .carousel-btn {
             position: absolute;
@@ -403,7 +419,11 @@
             document.getElementById('modal-title').innerText = item.title;
             document.getElementById('modal-location').innerText = item.location.charAt(0).toUpperCase() + item.location.slice(1);
             document.getElementById('modal-label').innerText = item.type === 'rent' ? "For Rent" : "For Sale";
-            document.getElementById('modal-desc').innerText = `${item.desc}. This premium property in ${item.location} matches your needs. Contact our agents for a viewing today.`;
+
+            // Fix description
+            const baseDesc = item.desc || "A beautiful property";
+            document.getElementById('modal-desc').innerText = `${baseDesc}. This premium property in ${item.location} matches your needs. Contact our agents for a viewing today.`;
+
             document.getElementById('modal-price').innerText = item.price.toLocaleString();
             document.getElementById('modal-price-label').innerText = item.priceLabel || '';
 
@@ -425,9 +445,13 @@
             let imageHtml = '';
             const carouselId = `modal-carousel`;
             if (images.length > 0) {
+                // Use optimizeCloudinaryUrl helper if available, otherwise just use URL
+                // Note: optimizeCloudinaryUrl is in app.js, ensuring it's loaded
                 imageHtml = `<div id="${carouselId}" class="image-carousel" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; scrollbar-width: none; align-items: center;">`;
                 images.forEach(img => {
-                    imageHtml += `<img src="${img}" style="min-width: 100%; height: auto; max-height: 80vh; object-fit: contain; scroll-snap-align: start;">`;
+                    // Check if optimizeCloudinaryUrl exists (it's in app.js)
+                    const src = typeof optimizeCloudinaryUrl === 'function' ? optimizeCloudinaryUrl(img, 800) : img;
+                    imageHtml += `<img src="${src}" style="min-width: 100%; height: auto; max-height: 80vh; object-fit: contain; scroll-snap-align: start;">`;
                 });
                 imageHtml += `</div>`;
 
@@ -442,6 +466,30 @@
             }
             document.getElementById('modal-gallery').innerHTML = imageHtml;
 
+            // Updated Actions
+            const actionsContainer = document.querySelector('.detail-price-box div[style="display:flex; gap:10px;"]');
+            if (actionsContainer) {
+                actionsContainer.innerHTML = `
+                    <button class="btn btn--secondary" onclick="shareListing('${item.id}')" style="display:flex; align-items:center; gap:5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        Share
+                    </button>
+                    <a href="#" id="modal-contact-btn" class="btn btn--primary" style="background-color: #2d60ff;">Contact Agent</a>
+                 `;
+
+                const contactBtn = actionsContainer.querySelector('#modal-contact-btn');
+                if (contactBtn) {
+                    contactBtn.onclick = (e) => {
+                        e.preventDefault();
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('listing_id', item.id);
+                        const link = url.toString();
+                        const text = `Beep! Hello Jirani, I am interested in this Property: ${item.title} located in ${item.location}. Link: ${link}`;
+                        window.open(`https://wa.me/254725833232?text=${encodeURIComponent(text)}`, '_blank');
+                    }
+                }
+            }
+
             document.getElementById('detail-modal').classList.add('open');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
         }
@@ -453,7 +501,15 @@
             if (typeof closeShareModal === 'function') closeShareModal();
         }
 
-        function shareListing() {
+        let currentShareUrl = '';
+
+        function shareListing(id) {
+            const url = new URL(window.location.href);
+            if (id) {
+                url.searchParams.set('listing_id', id);
+            }
+            currentShareUrl = url.toString();
+
             document.getElementById('share-modal').classList.add('active');
             document.getElementById('share-overlay').classList.add('active');
         }
@@ -465,7 +521,7 @@
 
         function executeShare(platform) {
             const title = document.getElementById('modal-title').innerText;
-            const url = window.location.href; // In real app, this might be item specific URL
+            const url = currentShareUrl || window.location.href;
             const text = `Check out this property: ${title}`;
 
             if (platform === 'whatsapp') {
@@ -485,9 +541,19 @@
                     setTimeout(() => btn.innerText = original, 2000);
                 });
             }
-            // Optional: close modal after action
-            // closeShareModal();
         }
+
+        // Deep Link Check
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const listingId = urlParams.get('listing_id');
+            if (listingId) {
+                // Wait for data?
+                setTimeout(() => {
+                    openDetailModal(listingId);
+                }, 500);
+            }
+        });
     </script>
 
     <!-- Share Modal Elements -->
