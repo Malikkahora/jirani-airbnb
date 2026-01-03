@@ -1,55 +1,198 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jirani - Airbnbs & Properties</title>
+    <title>About Us - Jirani Group</title>
     <link rel="icon" href="images/home-bg.jpg">
     <meta name="description"
-        content="Jirani Group connects you with the best Airbnb stays in Nairobi and premiere properties for sale or rent across Kenya. Your trusted real estate partner.">
-    <meta name="keywords"
-        content="Jirani Group, Airbnb Nairobi, Property for sale Kenya, Rental apartments Nairobi, Real estate Kenya, Vacation homes, Short term rentals Nairobi">
-    <link rel="canonical" href="https://jiraniproperties.co.ke/index.html">
+        content="Learn more about Jirani Group, your trusted partner for Airbnb stays and property sales in Kenya.">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Jirani Group",
-      "url": "https://jiraniproperties.co.ke",
-      "logo": "https://jiraniproperties.co.ke/images/logo.png",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+254725833232",
-        "contactType": "customer service",
-        "areaServed": "KE",
-        "availableLanguage": ["en", "sw"]
-      },
-      "sameAs": [
-        "https://www.facebook.com/",
-        "https://www.instagram.com/jirani.bnb",
-        "https://www.tiktok.com/@jirani.properties"
-      ]
-    }
-    </script>
+    <style>
+        /* Reusing and adapting hero styles */
+        .page-hero {
+            position: relative;
+            background-color: #f0f4ff;
+            /* Fallback */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/home-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 350px;
+            /* Consistent height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+            /* Header offset */
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .content-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .content-text h2 {
+            font-size: 2.2rem;
+            color: var(--color-text-main);
+            margin-bottom: 20px;
+        }
+
+        .content-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--color-text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: #2d60ff;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mission-section {
+            background-color: #f8f9fa;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .mission-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mission-icon {
+            width: 60px;
+            height: 60px;
+            background: #e6eeff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #2d60ff;
+        }
+
+        .mission-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: var(--color-text-main);
+        }
+
+        .mission-card p {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .page-hero {
+                height: 300px;
+            }
+
+            .page-hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <header class="header">
         <div class="container header__container">
             <a href="index.html" class="logo">Jirani<span class="logo__accent">Group</span></a>
-            <!-- Simplified Nav for Landing -->
             <nav class="nav">
                 <ul class="nav__list">
-                    <li class="nav__item"><a href="index.html" class="nav__link active">Home</a></li>
+                    <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
                     <li class="nav__item"><a href="airbnbs.html" class="nav__link">Airbnbs</a></li>
                     <li class="nav__item"><a href="properties.html" class="nav__link">Properties</a></li>
                     <li class="nav__item"><a href="contact.html" class="nav__link">Contacts</a></li>
-                    <li class="nav__item"><a href="about.html" class="nav__link">About Us</a></li>
+                    <li class="nav__item"><a href="about.html" class="nav__link active">About Us</a></li>
                 </ul>
                 <div class="mobile-nav-socials mobile-only">
                     <a href="https://www.facebook.com/" aria-label="Facebook" style="color:#1877F2;"><svg
@@ -70,20 +213,9 @@
                             fill="currentColor">
                             <path
                                 d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.892 11.893-11.892 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.514-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.015-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                            </path>
-                        </svg></a>
-                    <a href="https://www.tiktok.com/@jirani.properties" aria-label="TikTok" style="color:#000000;"><svg
-                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path
-                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
                         </svg></a>
                 </div>
-
-
-
             </nav>
-
             <div class="header__actions">
                 <button class="header__favorites-btn" onclick="toggleFavoritesFilter()" aria-label="Favorites">
                     <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
@@ -123,8 +255,6 @@
                     </button>
                     <div class="header__profile-dropdown" id="profileDropdown">
                         <a href="login.html" class="header__profile-link">Log in</a>
-
-
                     </div>
                 </div>
             </div>
@@ -144,49 +274,94 @@
             </div>
         </div>
     </header>
+
     <main>
-        <section class="portal-main">
+        <section class="page-hero">
             <div class="container">
-                <h1 class="portal-title">Welcome to Jirani Group</h1>
-                <p class="portal-subtitle">What are you looking for today?</p>
-                <div class="portal-options">
-                    <a href="airbnbs.html" class="portal-card">
-                        <div class="portal-card__image" style="background-color: #FFF8E1;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"
-                                fill="none" stroke="#FFB300" stroke-width="2" stroke-linecap="round"
+                <h1>We Connect You to Home</h1>
+                <p>Jirani Group is Kenya's premier partner for unique Airbnb experiences and trusted property sales.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="content-grid">
+                    <div class="content-text">
+                        <h2>Who We Are</h2>
+                        <p>Founded on the principles of trust and community ("Jirani" means Neighbor in Swahili), we
+                            bridge the gap between property seekers and their dream spaces.</p>
+                        <p>Whether you are looking for a short-term vacation rental in Nairobi's best neighborhoods or
+                            seeking to buy land and build your legacy, Jirani Group offers a curated portfolio of
+                            premium listings.</p>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <h3>500+</h3>
+                                <p>Properties</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>1k+</h3>
+                                <p>Happy Clients</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>5+</h3>
+                                <p>Years Exp.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-image">
+                        <img src="images/home-bg.jpg" alt="Modern Home"
+                            style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mission-section">
+            <div class="container">
+                <h2 class="section-title">Why Choose Us</h2>
+                <div class="mission-grid">
+                    <div class="mission-card">
+                        <div class="mission-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                             </svg>
                         </div>
-                        <div class="portal-card__content">
-                            <h2 class="portal-card__title">Airbnb Stays</h2>
-                            <p class="portal-card__desc">Find unique homes and experiences for your vacation.</p>
-                            <span class="btn btn--primary" style="background-color: #FFB300;">Browse Airbnbs</span>
-                        </div>
-                    </a>
-                    <a href="properties.html" class="portal-card">
-                        <div class="portal-card__image" style="background-color: #e6eeff;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"
-                                fill="none" stroke="#2d60ff" stroke-width="2" stroke-linecap="round"
+                        <h3>Verified Listings</h3>
+                        <p>Every property on our platform is vetted for quality, safety, and authenticity.</p>
+                    </div>
+                    <div class="mission-card">
+                        <div class="mission-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="3" y1="9" x2="21" y2="9"></line>
-                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                             </svg>
                         </div>
-                        <div class="portal-card__content">
-                            <h2 class="portal-card__title">Properties</h2>
-                            <p class="portal-card__desc">Discover houses and apartments for sale or rent.</p>
-                            <span class="btn btn--primary" style="background-color: #2d60ff;">View Properties</span>
+                        <h3>Personalized Service</h3>
+                        <p>Our agents work with you one-on-one to find exactly what fits your needs.</p>
+                    </div>
+                    <div class="mission-card">
+                        <div class="mission-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
                         </div>
-                    </a>
+                        <h3>Secure Transactions</h3>
+                        <p>We ensure transparent and secure payment processes for peace of mind.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container footer__container">
             <!-- Brand Column -->
@@ -295,6 +470,7 @@
             </div>
         </div>
     </footer>
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -302,7 +478,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <!-- Firebase Config -->
     <script src="js/firebase-config.js"></script>
-    <script src="js/seed-data.js"></script>
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>
 </body>
