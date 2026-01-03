@@ -155,6 +155,12 @@ ul {
     display: none !important;
 }
 
+/* Explicitly hide transparency layers and mobile interactives on desktop */
+.mobile-nav-socials,
+.header__mobile-controls {
+    display: none !important;
+}
+
 .nav {
     position: absolute;
     left: 50%;
