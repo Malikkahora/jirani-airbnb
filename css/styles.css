@@ -134,6 +134,8 @@ ul {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    position: relative;
+    height: 100%;
 }
 
 .logo {
@@ -142,7 +144,7 @@ ul {
     color: var(--color-primary);
     display: flex;
     align-items: center;
-    flex: 1;
+    z-index: 20;
 }
 
 .logo__accent {
@@ -150,12 +152,23 @@ ul {
 }
 
 .mobile-only {
-    display: none;
+    display: none !important;
+}
+
+.nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .nav__list {
     display: flex;
     gap: var(--spacing-lg);
+    margin: 0;
+    padding: 0;
 }
 
 .nav__link {
@@ -203,7 +216,8 @@ ul {
     display: flex;
     gap: var(--spacing-xs);
     align-items: center;
-    flex: 1;
+    margin-left: auto;
+    z-index: 20;
     justify-content: flex-end;
 }
 
