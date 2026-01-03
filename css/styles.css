@@ -196,6 +196,84 @@ ul {
 .header__actions {
     display: flex;
     gap: var(--spacing-xs);
+    align-items: center;
+}
+
+.header__theme-btn,
+.header__favorites-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    color: var(--color-text-primary);
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header__theme-btn:hover,
+.header__favorites-btn:hover {
+    background-color: var(--color-bg-light);
+    /* Using existing variable */
+}
+
+/* Profile Dropdown */
+.header__profile-menu {
+    position: relative;
+    margin-left: 0.5rem;
+}
+
+.header__profile-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    padding: 5px 5px 5px 12px;
+    border-radius: 21px;
+    color: var(--color-text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: box-shadow 0.2s;
+}
+
+.header__profile-btn:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header__profile-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 240px;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+.header__profile-dropdown.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.header__profile-link {
+    display: block;
+    padding: 10px 16px;
+    color: var(--color-text-main);
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.header__profile-link:hover {
+    background-color: var(--color-bg-light);
 }
 
 .menu-toggle {
@@ -450,6 +528,16 @@ ul {
 /* Mobile Responsive */
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    :root {
+        --font-size-base: 0.85rem;
+        --font-size-lg: 1rem;
+        --font-size-xl: 1.25rem;
+        --font-size-2xl: 1.5rem;
+        --spacing-md: 0.75rem;
+        --spacing-lg: 1rem;
+        --spacing-xl: 1.5rem;
+    }
+
     .menu-toggle {
         display: flex;
         z-index: 1002;
@@ -480,6 +568,13 @@ ul {
         transform: translateX(0);
     }
 
+    /* Compact Header on Mobile */
+    .header {
+        height: 60px;
+        top: 10px;
+        width: 95%;
+    }
+
     .nav__list {
         flex-direction: column;
         align-items: center;
@@ -487,8 +582,8 @@ ul {
     }
 
     .nav__link {
-        font-size: 1.5rem;
-        /* Larger text for mobile */
+        font-size: 1rem;
+        /* Standard size for mobile */
         font-weight: 600;
     }
 
@@ -500,7 +595,8 @@ ul {
         align-items: center;
         justify-content: center;
         position: fixed;
-        bottom: 50px;
+        bottom: 20px;
+        /* Lower bottom position */
         left: 0;
         width: 100%;
         gap: var(--spacing-md);
@@ -533,7 +629,7 @@ ul {
     }
 
     .hero__title {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .property-grid {
@@ -543,11 +639,11 @@ ul {
 
     /* Mobile Card Sizing for Carousel */
     .location-section .property-card {
-        min-width: 260px !important;
-        /* Shrink from 300px */
-        width: 75vw !important;
+        min-width: 160px !important;
+        /* Shrink from 260px */
+        width: 45vw !important;
         /* Responsive width */
-        max-width: 280px !important;
+        max-width: 180px !important;
     }
 
     /* Reduce padding for header overlap */
@@ -557,13 +653,60 @@ ul {
     }
 
     .portal-title {
-        font-size: 2rem !important;
+        font-size: 1.5rem !important;
     }
 
     .hero {
-        padding: 100px 0 40px 0 !important;
+        padding: 80px 0 20px 0 !important;
         /* Reduce top padding */
     }
+
+    /* Compact Portal Cards */
+    .portal-card {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .portal-card__image {
+        height: 140px;
+    }
+
+    .portal-card__title {
+        font-size: 1.25rem;
+    }
+}
+
+/* Profile Dropdown Items */
+.header__profile-dropdown .header__profile-link.theme-toggle-row {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.dropdown-socials {
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.dropdown-socials a {
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-socials a:hover {
+    transform: scale(1.1);
 }
 
 /* Portal Page Styles */
@@ -729,27 +872,6 @@ ul {
     color: var(--color-text-main);
     transition: background 0.2s;
     margin-right: 8px;
-}
-
-.header__favorites-btn:hover {
-    background: #f7f7f7;
-}
-
-.header__profile-btn {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: white;
-    border: 1px solid #DDDDDD;
-    border-radius: 21px;
-    padding: 5px 5px 5px 12px;
-    cursor: pointer;
-    transition: box-shadow 0.2s;
-    color: var(--color-text-main);
-}
-
-.header__profile-btn:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
 }
 
 .header__profile-dropdown {
@@ -1256,4 +1378,10 @@ body.dark-mode .header__favorites-btn svg {
 body.dark-mode #theme-toggle-btn svg {
     stroke: white;
     fill: none;
+}
+
+/* Ensure Dropdown Options are Dark in Dark Mode */
+body.dark-mode .search-form select option {
+    background-color: #2d2d2d;
+    color: #ffffff;
 }

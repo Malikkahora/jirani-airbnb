@@ -15,6 +15,15 @@ function toggleTheme() {
 }
 
 function updateThemeIcon(isDark) {
+    const container = document.getElementById('theme-icon-container');
+    if (container) {
+        // Dropdown version (Icon only, 16x16)
+        container.innerHTML = isDark
+            ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+        return;
+    }
+
     const btn = document.getElementById('theme-toggle-btn');
     if (btn) {
         btn.innerHTML = isDark
@@ -108,9 +117,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function handleSearch(type) {
         const locationInput = document.getElementById('location');
+        const budgetInput = document.getElementById('budget'); // New budget dropdown
+        const budgetQuery = budgetInput ? budgetInput.value : '';
+
         const priceInput = document.getElementById('price');
-        const typeInput = document.getElementById('type'); // Property page only
-        const roomsInput = document.getElementById('rooms'); // Airbnb page only (new)
+        const typeInput = document.getElementById('type');
+        const roomsInput = document.getElementById('rooms');
 
         const query = locationInput ? locationInput.value.toLowerCase().trim() : '';
         const priceQuery = priceInput ? parseInt(priceInput.value.replace(/[^0-9]/g, '')) : NaN;
@@ -129,8 +141,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Price Match
             let priceMatch = true;
+
+            // 1. Check direct Price Input (Properties page usually)
             if (!isNaN(priceQuery) && priceQuery > 0) {
                 priceMatch = item.price <= priceQuery;
+            }
+            // 2. Check Budget Dropdown (Airbnb page)
+            else if (budgetQuery) {
+                const [min, max] = budgetQuery.split('-').map(Number);
+                if (max) {
+                    // Range: min - max
+                    priceMatch = item.price >= min && item.price <= max;
+                } else {
+                    // Range: min+ (if logic changes, but here we cover large number in max)
+                    // Our values are "0-3000", "10000-1000000" etc so split works
+                    priceMatch = item.price >= min && item.price <= max;
+                }
             }
 
             // Type Match
