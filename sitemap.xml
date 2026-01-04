@@ -26,8 +26,32 @@
   </url>
   <url>
     <loc>https://jiraniproperties.co.ke/contact.html</loc>
-    <lastmod>2026-01-02</lastmod>
+    <lastmod>2026-01-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://jiraniproperties.co.ke/blog.html</loc>
+    <lastmod>2026-01-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jiraniproperties.co.ke/about.html</loc>
+    <lastmod>2026-01-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jiraniproperties.co.ke/blog-nairobi-guide.html</loc>
+    <lastmod>2026-01-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jiraniproperties.co.ke/blog-revenue-guide.html</loc>
+    <lastmod>2026-01-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

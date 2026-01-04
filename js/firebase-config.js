@@ -13,9 +13,11 @@ const firebaseConfig = {
 
 // Initialize specific Firebase products we need
 // These variables will be available globally since we are loading this script in HTML
-let db;
-let auth;
-let storage;
+// Initialize specific Firebase products we need
+// These variables will be available globally since we are loading this script in HTML
+window.db = null;
+window.auth = null;
+window.storage = null;
 
 function initFirebase() {
     if (typeof firebase === 'undefined') {
@@ -31,9 +33,9 @@ function initFirebase() {
     }
 
     // Get instances
-    db = firebase.firestore();
-    auth = firebase.auth();
-    storage = firebase.storage();
+    window.db = firebase.firestore();
+    window.auth = firebase.auth();
+    window.storage = firebase.storage();
 
     console.log("Firebase Initialized");
 }

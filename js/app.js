@@ -81,7 +81,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialize Data (Firebase/Sync)
-    await JiraniData.init();
+    try {
+        await JiraniData.init();
+    } catch (e) {
+        console.error("Failed to initialize JiraniData:", e);
+    }
 
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');

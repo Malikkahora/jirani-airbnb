@@ -7,7 +7,7 @@
             initFirebase();
         }
 
-        if (!db) {
+        if (!window.db) {
             console.warn("Firebase DB not initialized. Check js/firebase-config.js");
             return;
         }
@@ -48,9 +48,9 @@
     },
 
     getAirbnbs: async function () {
-        if (!db) return [];
+        if (!window.db) return [];
         try {
-            const snapshot = await db.collection(STORE_AIRBNBS).get();
+            const snapshot = await window.db.collection(STORE_AIRBNBS).get();
             const items = snapshot.docs.map(doc => {
                 let data = doc.data();
                 data.id = doc.id; // Ensure ID is part of object
@@ -83,9 +83,9 @@
     },
 
     getProperties: async function () {
-        if (!db) return [];
+        if (!window.db) return [];
         try {
-            const snapshot = await db.collection(STORE_PROPERTIES).get();
+            const snapshot = await window.db.collection(STORE_PROPERTIES).get();
             const items = snapshot.docs.map(doc => {
                 let data = doc.data();
                 data.id = doc.id;
@@ -110,13 +110,13 @@
     },
 
     addAirbnb: async function (item) {
-        if (!db) return;
+        if (!window.db) return;
         try {
             // Using ID from item if available to keep consistency
             if (item.id) {
-                await db.collection(STORE_AIRBNBS).doc(item.id.toString()).set(item);
+                await window.db.collection(STORE_AIRBNBS).doc(item.id.toString()).set(item);
             } else {
-                await db.collection(STORE_AIRBNBS).add(item);
+                await window.db.collection(STORE_AIRBNBS).add(item);
             }
         } catch (e) {
             console.error("Error adding airbnb:", e);
@@ -125,12 +125,12 @@
     },
 
     addProperty: async function (item) {
-        if (!db) return;
+        if (!window.db) return;
         try {
             if (item.id) {
-                await db.collection(STORE_PROPERTIES).doc(item.id.toString()).set(item);
+                await window.db.collection(STORE_PROPERTIES).doc(item.id.toString()).set(item);
             } else {
-                await db.collection(STORE_PROPERTIES).add(item);
+                await window.db.collection(STORE_PROPERTIES).add(item);
             }
         } catch (e) {
             console.error("Error adding property:", e);
@@ -139,9 +139,9 @@
     },
 
     updateAirbnb: async function (item) {
-        if (!db) return;
+        if (!window.db) return;
         try {
-            await db.collection(STORE_AIRBNBS).doc(item.id.toString()).update(item);
+            await window.db.collection(STORE_AIRBNBS).doc(item.id.toString()).update(item);
         } catch (e) {
             console.error("Error updating airbnb:", e);
             throw e;
@@ -149,9 +149,9 @@
     },
 
     updateProperty: async function (item) {
-        if (!db) return;
+        if (!window.db) return;
         try {
-            await db.collection(STORE_PROPERTIES).doc(item.id.toString()).update(item);
+            await window.db.collection(STORE_PROPERTIES).doc(item.id.toString()).update(item);
         } catch (e) {
             console.error("Error updating property:", e);
             throw e;
@@ -159,17 +159,17 @@
     },
 
     deleteAirbnb: async function (id) {
-        if (!db) return;
-        await db.collection(STORE_AIRBNBS).doc(id.toString()).delete();
+        if (!window.db) return;
+        await window.db.collection(STORE_AIRBNBS).doc(id.toString()).delete();
     },
 
     deleteProperty: async function (id) {
-        if (!db) return;
-        await db.collection(STORE_PROPERTIES).doc(id.toString()).delete();
+        if (!window.db) return;
+        await window.db.collection(STORE_PROPERTIES).doc(id.toString()).delete();
     },
 
     resetData: async function () {
-        if (!db) return;
+        if (!window.db) return;
         const airbnbs = await this.getAirbnbs();
         for (const item of airbnbs) {
             await this.deleteAirbnb(item.id);
@@ -185,7 +185,7 @@
     },
 
     deleteAllData: async function () {
-        if (!db) return;
+        if (!window.db) return;
         console.log("Deleting all data...");
         // Clear LocalStorage
         localStorage.removeItem(STORE_AIRBNBS);
