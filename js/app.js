@@ -487,7 +487,7 @@ function renderGroupedListings(containerId, items, pageType) {
                     ${imageHtml}
                     ${pageType === 'property' ?
                     `<div style="position: absolute; top: 10px; left: 10px; background: ${item.type === 'sale' ? '#2d60ff' : '#00C853'}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">${item.type === 'sale' ? 'For Sale' : 'For Rent'}</div>`
-                    : ''}
+                    : `<div style="position: absolute; top: 10px; left: 10px; background: #FF5A5F; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">Airbnb</div>`}
                     <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${item.id})">
                         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false"><path d="M16 28c-7-4.73-14-10-14-17a6.98 6.98 0 0 1 7-7c1.8 0 3.58.68 4.95 2.05L16 8.1l2.05-2.05a6.98 6.98 0 0 1 9.9 0 6.98 6.98 0 0 1 0 9.9L16 28z"></path></svg>
                     </button>
