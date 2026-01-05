@@ -116,14 +116,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderProperties(freshProperties);
     }
 
+
     // Search Handler
     const searchForm = document.querySelector('.search-form');
+
+    // Make handleSearch globally available for URL param logic
+    window.handleSearch = handleSearch;
 
     if (searchForm) {
         searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             await handleSearch(isAirbnbPage ? 'airbnb' : 'property');
         });
+
+        // Check for URL parameters on load to trigger auto-search
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationParam = urlParams.get('location');
+        if (locationParam) {
+            const locationInput = document.getElementById('location');
+            if (locationInput) {
+                locationInput.value = locationParam;
+                // Small delay to ensure data is loaded before filtering
+                setTimeout(() => {
+                    handleSearch(isAirbnbPage ? 'airbnb' : 'property');
+                }, 500);
+            }
+        }
     }
 
     async function handleSearch(type) {
