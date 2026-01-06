@@ -371,6 +371,14 @@
                     </p>
                 </div>
                 <div class="search-bar">
+                    <div class="search-mobile-toggle mobile-only" onclick="toggleMobileSearch(true)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Where to?</span>
+                    </div>
                     <form class="search-form">
                         <div class="search-form__field"><label for="location">Location</label><input type="text"
                                 id="location" placeholder="Where are you going?"></div>
@@ -431,10 +439,27 @@
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg></button>
+                        <button type="button" class="btn btn--secondary search-btn mobile-only"
+                            style="margin-top:10px; border:1px solid #ddd; background:#f9f9f9; width:100%; border-radius:30px;"
+                            onclick="toggleMobileSearch(false)">Cancel</button>
                     </form>
                 </div>
             </div>
         </section>
+
+        <!-- New Random Featured Slider -->
+        <section class="featured-random">
+            <div class="slider-container">
+                <div class="slider-header">
+                    <h2 class="slider-title">Explore Top Stays</h2>
+                    <p class="section-subtitle-text">Handpicked selections just for you</p>
+                </div>
+                <div class="slider-track" id="slider-track">
+                    <!-- Loaded via JS -->
+                </div>
+            </div>
+        </section>
+
         <section class="featured" id="airbnbs">
             <div class="container">
                 <div class="section-header">
@@ -614,6 +639,7 @@
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // Start script
         async function openDetailModal(id) {
             const items = await JiraniData.getAirbnbs();
             const item = items.find(i => i.id === id);
@@ -712,6 +738,33 @@
             const grid = document.getElementById('airbnb-grid');
             const items = await JiraniData.getAirbnbs();
 
+            // 1. Setup Random Slider
+            const sliderTrack = document.getElementById('slider-track');
+            if (sliderTrack && items.length > 0) {
+                // Shuffle copy of items
+                const shuffled = [...items].sort(() => 0.5 - Math.random()).slice(0, 6); // Take 6 random
+
+                shuffled.forEach(item => {
+                    const images = item.images || (item.image ? [item.image] : []);
+                    const coverImage = images.length > 0 ? images[0] : null;
+                    const coverStyle = coverImage ? `background-image: url('${coverImage}');` : `background-color: ${item.imageColor || '#eee'};`;
+
+                    const card = document.createElement('div');
+                    card.className = 'slider-card';
+                    card.onclick = () => openDetailModal(item.id);
+                    card.innerHTML = `
+                        <div class="slider-card-img" style="${coverStyle} background-size: cover; background-position: center;"></div>
+                        <div class="slider-card-info">
+                            <h4 class="slider-card-title">${item.title}</h4>
+                            <div class="slider-card-loc"><i class="fas fa-map-marker-alt" style="font-size:0.8rem; margin-right:4px;"></i>${item.location}</div>
+                            <div class="slider-card-price">KES ${item.price} <small style="font-weight:400; color:#666;">/night</small></div>
+                        </div>
+                    `;
+                    sliderTrack.appendChild(card);
+                });
+            }
+
+            // 2. Setup Main Grid
             // Only show first 6 or so if needed, but here we show all
             items.forEach(item => {
                 const images = item.images || (item.image ? [item.image] : []);

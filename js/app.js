@@ -620,3 +620,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMultiSelect('amenities-select', 'amenities-text', 'amenities');
     setupMultiSelect('amenities-select-airbnb', 'amenities-text-airbnb', 'amenities');
 });
+
+// Mobile Search Toggle
+window.toggleMobileSearch = function (show = true) {
+    const form = document.querySelector('.search-form');
+    const toggle = document.querySelector('.search-mobile-toggle');
+
+    if (show) {
+        if (form) form.classList.add('active');
+        if (toggle) toggle.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+    } else {
+        if (form) form.classList.remove('active');
+        if (toggle) toggle.style.display = 'flex';
+        document.body.style.overflow = '';
+    }
+};

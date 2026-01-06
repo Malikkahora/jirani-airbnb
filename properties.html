@@ -295,6 +295,14 @@
                 </div>
 
                 <div class="search-bar">
+                    <div class="search-mobile-toggle mobile-only" onclick="toggleMobileSearch(true)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>Where to?</span>
+                    </div>
                     <form class="search-form">
                         <div class="search-form__field">
                             <label for="location">Location</label>
@@ -357,6 +365,9 @@
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                         </button>
+                        <button type="button" class="btn btn--secondary search-btn mobile-only"
+                            style="margin-top:10px; border:1px solid #ddd; background:#f9f9f9; width:100%; border-radius:30px;"
+                            onclick="toggleMobileSearch(false)">Cancel</button>
                     </form>
                 </div>
             </div>
