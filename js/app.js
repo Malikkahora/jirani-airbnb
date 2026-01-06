@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const freshAirbnbs = await JiraniData.getAirbnbs();
         console.log("Rendering fresh Airbnbs");
         renderAirbnbs(freshAirbnbs);
+        renderFeaturedSlider(freshAirbnbs);
     } else if (isPropertyPage) {
         const freshProperties = await JiraniData.getProperties();
         console.log("Rendering fresh Properties");
@@ -640,3 +641,38 @@ window.toggleMobileSearch = function (show = true) {
         document.body.style.overflow = '';
     }
 };
+
+// Render Featured Random Slider
+function renderFeaturedSlider(items) {
+    const track = document.getElementById('slider-track');
+    if (!track) return;
+
+    // Shuffle and pick 8 random items
+    const shuffled = [...items].sort(() => 0.5 - Math.random());
+    const featured = shuffled.slice(0, 8);
+
+    track.innerHTML = '';
+
+    featured.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'slider-card';
+        card.onclick = () => {
+            window.location.href = `listing-details.html?id=${item.id}&type=airbnb`;
+        };
+
+        const image = item.images && item.images.length > 0 ? item.images[0] : (item.image || '');
+        const optimizedImage = optimizeCloudinaryUrl(image, 300);
+
+        card.innerHTML = `
+            <div class="slider-card-img-wrapper">
+                <img src="${optimizedImage}" alt="${item.title}" class="slider-card-img">
+            </div>
+            <div class="slider-card-info">
+                <div class="slider-card-loc">${item.location}</div>
+                <h3 class="slider-card-title">${item.title}</h3>
+                <div class="slider-card-price">KES ${item.price.toLocaleString()} <span class="price-suffix">/ night</span></div>
+            </div>
+        `;
+        track.appendChild(card);
+    });
+}
