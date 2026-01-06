@@ -127,6 +127,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             await handleSearch(isAirbnbPage ? 'airbnb' : 'property');
+            // Minify search on mobile after submitting
+            if (window.innerWidth <= 768 && typeof toggleMobileSearch === 'function') {
+                toggleMobileSearch(false);
+            }
         });
 
         // Check for URL parameters on load to trigger auto-search
