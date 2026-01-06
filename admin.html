@@ -4,913 +4,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jirani Admin Dashboard</title>
+    <title>Admin Dashboard - Jirani Properties</title>
     <link rel="icon" href="images/favicon.png">
-    <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .admin-header {
-            background-color: #333;
-            color: white;
-            padding: var(--spacing-md) 0;
-        }
+    <!-- Admin Styles -->
+    <link rel="stylesheet" href="css/admin.css">
 
-        .admin-nav {
-            display: flex;
-            gap: var(--spacing-lg);
-            margin-top: var(--spacing-md);
-        }
-
-        .admin-nav button {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 1rem;
-            cursor: pointer;
-            padding-bottom: 4px;
-        }
-
-        .admin-nav button.active {
-            color: white;
-            border-bottom: 2px solid var(--color-primary);
-        }
-
-        .admin-main {
-            padding: var(--spacing-xl) 0;
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            background: white;
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-        }
-
-        .admin-table th,
-        .admin-table td {
-            padding: var(--spacing-sm);
-            text-align: left;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .admin-table th {
-            background-color: var(--color-bg-light);
-            font-weight: 600;
-        }
-
-        .action-btn {
-            background-color: var(--color-bg-light);
-            border: 1px solid var(--color-border);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .action-btn:hover {
-            background-color: #ddd;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal.open {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: var(--spacing-lg);
-            border-radius: var(--radius-md);
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .close-modal {
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
-
-        /* Photo Preview Styles */
-        .preview-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid #ddd;
-            padding: 5px;
-            border-radius: 4px;
-        }
-
-        .preview-controls {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .preview-btn {
-            padding: 2px 6px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 2px;
-        }
-
-        .preview-btn:hover {
-            background: #e0e0e0;
-        }
-
-        .preview-btn.delete {
-            color: white;
-            background: #ff4d4d;
-            border-color: #ff3333;
-        }
-
-        .preview-btn.delete:hover {
-            background: #e60000;
-        }
-    </style>
-</head>
-
-<body>
-    <script>
-        // Auth Check
-        if (!sessionStorage.getItem('jirani_admin_logged_in')) {
-            window.location.href = 'login.html';
-        }
-    </script>
-    <!-- Firebase SDKs -->
+    <!-- Dependencies (Icons + Firebase) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <!-- Firebase Config -->
-    <script src="js/firebase-config.js"></script>
-    <script src="js/data.js"></script>
+</head>
 
-    <header class="admin-header">
-        <div class="container">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div class="logo" style="color:white;">Jirani<span class="logo__accent" style="color:#ddd;">Admin</span>
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <button onclick="openExportModal()" class="btn btn--primary"
-                        style="background-color: #28a745; border-color: #28a745;">Export Data</button>
-                    <button onclick="restoreDefaults()" class="btn btn--secondary"
-                        style="background-color: #dc3545; border-color: #dc3545; color: white;">Restore
-                        Defaults</button>
-                    <button onclick="deleteAllData()" class="btn btn--secondary"
-                        style="background-color: #000; border-color: #000; color: white;">Delete All Data</button>
-                    <button
-                        onclick="if(typeof auth !== 'undefined') auth.signOut().then(() => { sessionStorage.clear(); window.location.href='index.html'; }); else { sessionStorage.clear(); window.location.href='index.html'; }"
-                        class="btn btn--secondary" style="color:white; border-color:white;">Logout</button>
-                </div>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                Jirani<span style="color:#2d60ff">Admin</span>
             </div>
-            <nav class="admin-nav">
-                <button id="tab-airbnbs" class="active" onclick="switchTab('airbnbs')">Airbnbs</button>
-                <button id="tab-properties" onclick="switchTab('properties')">Properties</button>
-            </nav>
         </div>
-    </header>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" id="nav-airbnbs" onclick="switchTab('airbnbs')">
+                <i class="fas fa-home"></i>
+                <span>Airbnbs</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-properties" onclick="switchTab('properties')">
+                <i class="fas fa-building"></i>
+                <span>Properties</span>
+            </a>
+            <a href="index.html" class="nav-item" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                <span>View Site</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item" id="logout-btn" style="color:#ef4444;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
 
-    <main class="admin-main container">
-        <section id="view-airbnbs">
-            <div
-                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--spacing-md);">
-                <h2 class="section-title" style="margin-bottom:0;">Manage Airbnbs</h2>
-                <button class="btn btn--primary" onclick="openCreateModal('airbnb')">Add New Airbnb</button>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title" id="page-title">Manage Airbnbs</h1>
             </div>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Photo</th>
-                        <th>Title</th>
-                        <th>Location</th>
-                        <th>Price</th>
-                        <th>Arrangement</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="airbnb-list"></tbody>
-            </table>
-        </section>
 
-        <section id="view-properties" style="display: none;">
-            <div
-                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--spacing-md);">
-                <h2 class="section-title" style="margin-bottom:0;">Manage Properties</h2>
-                <button class="btn btn--primary" onclick="openCreateModal('property')">Add New Property</button>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="search-input" placeholder="Search listings...">
             </div>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Photo</th>
-                        <th>Title</th>
-                        <th>Location</th>
-                        <th>Price</th>
-                        <th>Type</th>
-                        <th>Arrangement</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="property-list"></tbody>
-            </table>
-        </section>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-bar">
+            <div>
+                <!-- Could add filters here later -->
+            </div>
+            <button class="btn btn-primary" onclick="openEditModal()">
+                <i class="fas fa-plus"></i> Add New
+            </button>
+        </div>
+
+        <!-- Listings Table -->
+        <div class="table-card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="80">Image</th>
+                            <th>Title/ID</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                            <th id="th-type" style="display:none;">Type</th>
+                            <th width="150">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Data inserted by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </main>
 
-    <!-- Export Modal -->
-    <div id="export-modal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
+    <!-- Edit Modal -->
+    <div class="modal-overlay">
+        <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Export Data</h3>
-                <span class="close-modal" onclick="closeExportModal()">&times;</span>
+                <h3 id="modal-title">Edit Listing</h3>
+                <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;"
+                    onclick="closeModal()">&times;</button>
             </div>
-            <div
-                style="margin-bottom: 15px; background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; font-size: 0.9rem;">
-                <strong>IMPORTANT:</strong> Changes you make here are saved in <em>your browser only</em>.
-                To update the live website, you must:
-                <ol style="margin-left: 20px; margin-top: 5px;">
-                    <li>Click "Copy Code" below.</li>
-                    <li>Open <code>js/data.js</code> in your project folder.</li>
-                    <li>Replace the <strong>entire file content</strong> with this code.</li>
-                    <li>Deploy/Upload your website files again.</li>
-                </ol>
-            </div>
-            <textarea id="export-code"
-                style="width: 100%; height: 300px; font-family: monospace; padding: 10px; border: 1px solid #ccc; border-radius: 4px;"
-                readonly></textarea>
-            <div style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
-                <button class="btn btn--secondary" onclick="closeExportModal()">Close</button>
-                <button class="btn btn--primary" onclick="copyExportCode()">Copy Code</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Global Edit Modal -->
-    <div id="edit-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Item</h3>
-                <span class="close-modal" onclick="closeModal()">&times;</span>
-            </div>
-            <form id="edit-form">
-                <input type="hidden" id="edit-id">
-                <input type="hidden" id="edit-type"> <!-- 'airbnb' or 'property' -->
-
-                <div class="form-group">
-                    <label for="edit-title">Title</label>
-                    <input type="text" id="edit-title" required class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px;">
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="edit-desc">Description</label>
-                    <textarea id="edit-desc" rows="4" class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px; resize: vertical;"></textarea>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="edit-location">Location</label>
-                    <input type="text" id="edit-location" required class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px;">
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="edit-price">Price</label>
-                    <input type="number" id="edit-price" required class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px;">
-                </div>
-                <br>
-                <div style="display: flex; gap: 10px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label for="edit-rooms">Beds</label>
-                        <input type="text" id="edit-rooms" class="form-control" placeholder="e.g. 3"
-                            style="width:100%; border:1px solid #ddd; padding:8px;">
+            <div class="modal-body">
+                <form id="edit-form">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" id="edit-title" class="form-control" required>
                     </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="edit-baths">Baths</label>
-                        <input type="number" id="edit-baths" class="form-control" placeholder="e.g. 2"
-                            style="width:100%; border:1px solid #ddd; padding:8px;">
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="edit-desc" class="form-control" rows="3"></textarea>
                     </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="edit-sqft">Sqft</label>
-                        <input type="number" id="edit-sqft" class="form-control" placeholder="e.g. 1500"
-                            style="width:100%; border:1px solid #ddd; padding:8px;">
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" id="edit-location" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price (KES)</label>
+                            <input type="number" id="edit-price" class="form-control" required>
+                        </div>
                     </div>
-                </div>
-                <!-- Property Type (Only for Properties) -->
-                <br>
-                <div class="form-group" id="edit-type-container" style="display:none;">
-                    <label for="edit-property-type">Type</label>
-                    <select id="edit-property-type" class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px;">
-                        <option value="rent">For Rent</option>
-                        <option value="buy">For Sale</option>
-                    </select>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="edit-amenities">Amenities</label>
-                    <input type="text" id="edit-amenities" required class="form-control"
-                        style="width:100%; border:1px solid #ddd; padding:8px;">
-                </div>
-                <br>
-                <div class="form-group">
-                    <label>Photos (Drag/Reorder)</label>
-                    <p style="font-size:0.8rem; color:#666; margin-bottom:5px;">Upload new photos to add them to the
-                        list. Use buttons to reorder.</p>
-                    <div id="photo-preview-container"
-                        style="margin-bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
-                        <!-- Previews will go here -->
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label class="form-label">Beds/Rooms</label>
+                            <input type="text" id="edit-rooms" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Baths</label>
+                            <input type="number" id="edit-baths" class="form-control">
+                        </div>
+                        <div class="form-group" id="type-group" style="display:none;">
+                            <label class="form-label">Type</label>
+                            <select id="edit-type" class="form-control">
+                                <option value="rent">Rent</option>
+                                <option value="sale">Sale</option>
+                            </select>
+                        </div>
                     </div>
-                    <input type="file" id="edit-image" accept="image/*" multiple>
-                </div>
-                <br>
-                <button type="submit" class="btn btn--primary" style="width:100%;">Save Changes</button>
-            </form>
-        </div>
-    </div>
 
-    <script>
-        // State for the modal
-        let currentEditingImages = [];
-
-        // Init
-        (async () => {
-            await JiraniData.init();
-            await renderAirbnbs();
-            await renderProperties();
-        })();
-
-        function switchTab(tab) {
-            document.querySelectorAll('.admin-nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
-
-            document.getElementById('view-airbnbs').style.display = tab === 'airbnbs' ? 'block' : 'none';
-            document.getElementById('view-properties').style.display = tab === 'properties' ? 'block' : 'none';
-        }
-
-        async function renderAirbnbs() {
-            const list = document.getElementById('airbnb-list');
-            list.innerHTML = '';
-            const items = await JiraniData.getAirbnbs();
-            items.forEach(item => {
-                const tr = document.createElement('tr');
-                let displayImg = '';
-                let images = item.images || (item.image ? [item.image] : []);
-
-                if (images.length > 0) {
-                    let src = images[0];
-                    if (src.includes('res.cloudinary.com') && src.includes('/upload/')) {
-                        src = src.replace('/upload/', '/upload/w_100,f_auto,q_auto/');
-                    }
-                    displayImg = `<img src="${src}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">`;
-                    if (images.length > 1) {
-                        displayImg += `<span style="font-size:0.7rem; color:#666; margin-left:4px;">+${images.length - 1}</span>`;
-                    }
-                } else {
-                    displayImg = '<div style="width:50px; height:50px; background:#eee; border-radius:4px;"></div>';
-                }
-
-                tr.innerHTML = `
-                    <td>${displayImg}</td>
-                    <td>${item.title}</td>
-                    <td>${item.location}</td>
-                    <td>KES ${item.price.toLocaleString()}</td>
-                    <td>
-                        <button class="action-btn" onclick="moveItem('airbnb', '${item.id}', -1)">↑</button>
-                        <button class="action-btn" onclick="moveItem('airbnb', '${item.id}', 1)">↓</button>
-                    </td>
-                    <td>
-                        <button class="action-btn" onclick="openEditModal('airbnb', '${item.id}')">Edit</button>
-                        <button class="action-btn" style="color:red; border-color:red;" onclick="deleteItem('airbnb', '${item.id}')">Delete</button>
-                    </td>
-                `;
-                list.appendChild(tr);
-            });
-        }
-
-        async function renderProperties() {
-            const list = document.getElementById('property-list');
-            list.innerHTML = '';
-            const items = await JiraniData.getProperties();
-            items.forEach(item => {
-                const tr = document.createElement('tr');
-                let displayImg = '';
-                let images = item.images || (item.image ? [item.image] : []);
-
-                if (images.length > 0) {
-                    let src = images[0];
-                    if (src.includes('res.cloudinary.com') && src.includes('/upload/')) {
-                        src = src.replace('/upload/', '/upload/w_100,f_auto,q_auto/');
-                    }
-                    displayImg = `<img src="${src}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">`;
-                    if (images.length > 1) {
-                        displayImg += `<span style="font-size:0.7rem; color:#666; margin-left:4px;">+${images.length - 1}</span>`;
-                    }
-                } else {
-                    displayImg = '<div style="width:50px; height:50px; background:#eee; border-radius:4px;"></div>';
-                }
-
-                tr.innerHTML = `
-                    <td>${displayImg}</td>
-                    <td>${item.title}</td>
-                    <td>${item.location}</td>
-                    <td>KES ${item.price.toLocaleString()}</td>
-                    <td>${item.type}</td>
-                    <td>
-                        <button class="action-btn" onclick="moveItem('property', '${item.id}', -1)">↑</button>
-                        <button class="action-btn" onclick="moveItem('property', '${item.id}', 1)">↓</button>
-                    </td>
-                    <td>
-                        <button class="action-btn" onclick="openEditModal('property', '${item.id}')">Edit</button>
-                        <button class="action-btn" style="color:red; border-color:red;" onclick="deleteItem('property', '${item.id}')">Delete</button>
-                    </td>
-                `;
-                list.appendChild(tr);
-            });
-        }
-
-        async function moveItem(type, id, direction) {
-            await JiraniData.moveItem(type, id, direction);
-            if (type === 'airbnb') await renderAirbnbs();
-            else await renderProperties();
-        }
-
-        async function deleteItem(type, id) {
-            if (confirm('Are you sure you want to delete this listing?')) {
-                if (type === 'airbnb') {
-                    await JiraniData.deleteAirbnb(id);
-                    await renderAirbnbs();
-                } else {
-                    await JiraniData.deleteProperty(id);
-                    await renderProperties();
-                }
-            }
-        }
-
-        function openCreateModal(type) {
-            document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = '';
-            document.getElementById('edit-type').value = type;
-
-            // Clear current images for new item
-            currentEditingImages = [];
-            renderPreviewImages();
-
-            // Toggle Type Field
-            const typeContainer = document.getElementById('edit-type-container');
-            if (type === 'property') {
-                typeContainer.style.display = 'block';
-                document.getElementById('edit-property-type').value = 'rent'; // Default
-            } else {
-                typeContainer.style.display = 'none';
-            }
-
-            document.querySelector('.modal-title').innerText = type === 'airbnb' ? 'Add Airbnb' : 'Add Property';
-            document.getElementById('edit-modal').classList.add('open');
-        }
-
-        async function openEditModal(type, id) {
-            document.querySelector('.modal-title').innerText = 'Edit Item';
-            const modal = document.getElementById('edit-modal');
-            const items = type === 'airbnb' ? await JiraniData.getAirbnbs() : await JiraniData.getProperties();
-            const item = items.find(i => i.id == id); // Loose equality match
-
-            if (!item) return;
-
-            document.getElementById('edit-id').value = item.id;
-            document.getElementById('edit-type').value = type;
-            document.getElementById('edit-title').value = item.title;
-            document.getElementById('edit-desc').value = item.desc || '';
-            document.getElementById('edit-location').value = item.location;
-            document.getElementById('edit-price').value = item.price;
-            document.getElementById('edit-rooms').value = item.rooms || item.beds || '';
-            document.getElementById('edit-baths').value = item.baths || '';
-            document.getElementById('edit-sqft').value = item.sqft || '';
-            document.getElementById('edit-amenities').value = item.amenities || '';
-
-            // Handle Type Field
-            const typeContainer = document.getElementById('edit-type-container');
-            if (type === 'property') {
-                typeContainer.style.display = 'block';
-                document.getElementById('edit-property-type').value = item.type || 'rent';
-            } else {
-                typeContainer.style.display = 'none';
-            }
-
-            // Load existing images into state
-            currentEditingImages = item.images || (item.image ? [item.image] : []);
-            renderPreviewImages();
-
-            modal.classList.add('open');
-        }
-
-        function renderPreviewImages() {
-            const container = document.getElementById('photo-preview-container');
-            container.innerHTML = '';
-
-            currentEditingImages.forEach((src, index) => {
-                const div = document.createElement('div');
-                div.className = 'preview-item';
-                div.innerHTML = `
-                    <div style="position:relative;">
-                        <img src="${src}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
-                        <span style="position:absolute; top:2px; left:2px; background:rgba(0,0,0,0.6); color:white; font-size:0.6rem; padding:1px 4px; border-radius:2px;">${index + 1}</span>
+                    <div class="form-group">
+                        <label class="form-label">Amenities (Comma separated)</label>
+                        <input type="text" id="edit-amenities" class="form-control">
                     </div>
-                    <div class="preview-controls">
-                        <button type="button" class="preview-btn" onclick="movePhoto(${index}, -1)" ${index === 0 ? 'disabled' : ''}>&lt;</button>
-                        <button type="button" class="preview-btn delete" onclick="deletePhoto(${index})">x</button>
-                        <button type="button" class="preview-btn" onclick="movePhoto(${index}, 1)" ${index === currentEditingImages.length - 1 ? 'disabled' : ''}>&gt;</button>
+
+                    <div class="form-group">
+                        <label class="form-label">Images</label>
+                        <input type="file" id="image-input" multiple accept="image/*" class="form-control">
+                        <div class="upload-grid" id="upload-preview"></div>
                     </div>
-                `;
-                container.appendChild(div);
-            });
-        }
 
-        function movePhoto(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex >= 0 && newIndex < currentEditingImages.length) {
-                // Swap
-                const temp = currentEditingImages[index];
-                currentEditingImages[index] = currentEditingImages[newIndex];
-                currentEditingImages[newIndex] = temp;
-                renderPreviewImages();
-            }
-        }
-
-        function deletePhoto(index) {
-            if (confirm("Remove this photo?")) {
-                currentEditingImages.splice(index, 1);
-                renderPreviewImages();
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('edit-modal').classList.remove('open');
-        }
-
-        // Handle file selection (Append to existing) with Compression
-        document.getElementById('edit-image').addEventListener('change', function (e) {
-            const files = Array.from(e.target.files);
-            if (files.length === 0) return;
-
-            // Show loading state if desired, or just process
-            let processedCount = 0;
-
-            files.forEach(file => {
-                // Increased quality and resolution for 5MB+ support (via Storage)
-                compressImage(file, 2048, 2048, 0.90).then(base64 => {
-                    currentEditingImages.push(base64);
-                    processedCount++;
-                    if (processedCount === files.length) {
-                        renderPreviewImages();
-                        document.getElementById('edit-image').value = '';
-                    }
-                }).catch(err => {
-                    console.error("Compression error", err);
-                    processedCount++; // Still count to avoid hanging
-                    if (processedCount === files.length) {
-                        renderPreviewImages();
-                        document.getElementById('edit-image').value = '';
-                    }
-                });
-            });
-
-        });
-
-        document.getElementById('edit-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "Processing..."; // Updated status
-            submitBtn.disabled = true;
-
-            // Small timeout to allow UI to update
-            setTimeout(async () => {
-                try {
-                    // Upload Images Loop
-                    const uploadedImages = [];
-                    const hasNewImages = currentEditingImages.some(img => img.startsWith('data:'));
-
-                    if (!hasNewImages) {
-                        // Quick path: No new images to upload
-                        uploadedImages.push(...currentEditingImages);
-                    } else {
-                        // Upload path
-                        for (let img of currentEditingImages) {
-                            if (img.startsWith('data:')) {
-                                // It's a new Base64 image, upload it
-                                try {
-                                    submitBtn.innerText = `Uploading Image ${uploadedImages.length + 1}/${currentEditingImages.length}...`;
-                                    const url = await JiraniData.uploadImage(img);
-                                    uploadedImages.push(url);
-                                } catch (err) {
-                                    console.error("Upload failed for one image", err);
-                                    alert("Failed to upload an image: " + err.message);
-                                    throw err;
-                                }
-                            } else {
-                                // Existing URL
-                                uploadedImages.push(img);
-                            }
-                        }
-                    }
-
-
-                    const idVal = document.getElementById('edit-id').value;
-                    const type = document.getElementById('edit-type').value;
-
-                    const formData = {
-                        title: document.getElementById('edit-title').value,
-                        desc: document.getElementById('edit-desc').value,
-                        location: document.getElementById('edit-location').value,
-                        price: parseInt(document.getElementById('edit-price').value),
-                        rooms: document.getElementById('edit-rooms').value,
-                        baths: document.getElementById('edit-baths').value,
-                        sqft: document.getElementById('edit-sqft').value,
-                        amenities: document.getElementById('edit-amenities').value,
-                        images: uploadedImages,
-                        image: uploadedImages.length > 0 ? uploadedImages[0] : ''
-                    };
-
-                    // Capture Type for properties
-                    if (type === 'property') {
-                        formData.type = document.getElementById('edit-property-type').value;
-                    }
-
-                    let success = false;
-
-                    if (idVal) {
-                        // Update
-                        const id = idVal;
-                        const items = type === 'airbnb' ? await JiraniData.getAirbnbs() : await JiraniData.getProperties();
-                        const originalItem = items.find(i => i.id == id);
-                        const newItem = { ...originalItem, ...formData };
-
-                        if (type === 'airbnb') await JiraniData.updateAirbnb(newItem);
-                        else await JiraniData.updateProperty(newItem);
-                    } else {
-                        // Create
-                        const newItem = {
-                            id: `${type}_${Date.now()}`,
-                            ...formData,
-                            // desc is now in formData
-                            rating: "New",
-                            imageColor: "#ddd",
-                        };
-
-                        if (type === 'airbnb') await JiraniData.addAirbnb(newItem);
-                        else await JiraniData.addProperty(newItem);
-                    }
-
-                    // Assume success if no error thrown
-                    success = true;
-
-                    if (type === 'airbnb') await renderAirbnbs();
-                    else await renderProperties();
-
-                    closeModal();
-                    alert("Listing saved successfully!");
-                } catch (error) {
-                    alert(error.message);
-                } finally {
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
-                }
-            }, 50);
-        });
-
-        // Export Modal Functions
-        async function openExportModal() {
-            const code = await JiraniData.getExportData();
-            document.getElementById('export-code').value = code;
-            document.getElementById('export-modal').classList.add('open');
-        }
-
-
-        async function restoreDefaults() {
-            if (confirm('Are you sure you want to restore default data? This will DELETE all existing listings and revert to the original set.')) {
-                try {
-                    await JiraniData.resetData();
-                    alert('Data restored to defaults! Page will reload.');
-                    window.location.reload();
-                } catch (e) {
-                    console.error("Restore failed", e);
-                    alert('Restore failed: ' + e.message);
-                }
-            }
-        }
-
-        async function deleteAllData() {
-            if (confirm('WARNING: Are you sure you want to DELETE ALL LISTINGS? The database will be completely empty.')) {
-                if (confirm('Double check: This action cannot be undone. Proceed?')) {
-                    try {
-                        const btn = document.querySelector('button[onclick="deleteAllData()"]');
-                        const originalText = btn.innerText;
-                        btn.innerText = "Deleting...";
-                        btn.disabled = true;
-
-                        await JiraniData.deleteAllData();
-
-                        alert('All data deleted successfully!');
-                        window.location.reload();
-                    } catch (e) {
-                        console.error("Delete All failed", e);
-                        alert('Delete All failed: ' + e.message);
-                    }
-                }
-            }
-        }
-
-        function closeExportModal() {
-            document.getElementById('export-modal').classList.remove('open');
-        }
-
-        function copyExportCode() {
-            const textarea = document.getElementById('export-code');
-            textarea.select();
-            document.execCommand('copy');
-            alert('Code copied to clipboard! Now paste it into js/data.js');
-        }
-
-        // Image Compression Helper
-        function compressImage(file, maxWidth, maxHeight, quality) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const img = new Image();
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > maxWidth) {
-                                height *= maxWidth / width;
-                                width = maxWidth;
-                            }
-                        } else {
-                            if (height > maxHeight) {
-                                width *= maxHeight / height;
-                                height = maxHeight;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Force JPEG for better compression
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.src = event.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-
-        }
-    </script>
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container footer__container">
-            <!-- Brand Column -->
-            <div class="footer__col footer__brand">
-                <h3>Jirani Group</h3>
-                <p>Your trusted partner in finding home. We connect you with premium Airbnb stays and verified
-                    properties across Kenya, including Syokimau, Utawala, Roysambu, Mirema, Kileleshwa, Westlands,
-                    Lavington, Ruaka, and Ngong Rd.</p>
-                <div class="footer__socials">
-                    <a href="https://www.facebook.com/" class="footer__social-link" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path
-                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                    </a>
-                    <a href="https://www.instagram.com/jirani.bnb" class="footer__social-link" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="https://www.tiktok.com/@jirani.properties" class="footer__social-link" aria-label="TikTok">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path
-                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
-                        </svg>
-                    </a>
-                    <a href="https://wa.me/254725833232" class="footer__social-link" aria-label="WhatsApp">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path
-                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="footer__col">
-                <h3>Quick Links</h3>
-                <ul class="footer__links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="airbnbs.html">Airbnbs</a></li>
-                    <li><a href="properties.html">Properties</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Info -->
-            <div class="footer__col">
-                <h3>Contact Info</h3>
-                <ul class="footer__contact-info">
-                    <li>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.12 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                            </path>
-                        </svg>
-                        <span>+254 725 833 232</span>
-                    </li>
-                    <li>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                            </path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                        <span>info@jiraniproperties.co.ke</span>
-                    </li>
-                    <li>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        <span>Nairobi, Kenya</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Newsletter -->
-            <div class="footer__col">
-                <h3>Stay Updated</h3>
-                <p style="margin-bottom: 15px; color: #aaa; font-size: 0.9rem;">Subscribe to get the latest property
-                    listings and news.</p>
-                <form class="footer__newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
-                    <input type="email" placeholder="Your email" class="footer__newsletter-input" required>
-                    <button type="submit" class="footer__newsletter-btn">Go</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" style="background:transparent; color:#666;"
+                            onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
                 </form>
             </div>
         </div>
+    </div>
 
-        <div class="footer__bottom">
-            <div class="container"
-                style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <p>&copy; 2024 Jirani Group. All rights reserved.</p>
-                <div class="footer__bottom-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 
 </html>
