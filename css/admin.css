@@ -391,14 +391,68 @@ tr:last-child td {
 
     .main-content {
         margin-left: 0;
+        padding: 10px;
+        /* Reduced padding */
     }
 
     .menu-toggle {
         display: block;
     }
 
+    .topbar {
+        padding: 0 10px;
+        /* Compact topbar */
+        height: auto;
+        min-height: var(--header-height);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+
     .search-box {
-        display: none;
-        /* Hide for simplicity on mobile */
+        display: block;
+        /* Show search on mobile */
+        width: 100%;
+        /* Full width */
+    }
+
+    /* "Zoomed out" feel: Compact Table */
+    th,
+    td {
+        padding: 8px 10px;
+        /* Reduced cell padding */
+        font-size: 0.85rem;
+        /* Smaller font */
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .page-title {
+        font-size: 1rem;
+    }
+
+    /* Sidebar Overlay */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        /* Below sidebar (100) */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
     }
 }
