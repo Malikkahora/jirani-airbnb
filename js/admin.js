@@ -13,7 +13,7 @@ let editingImages = [];
 document.addEventListener('DOMContentLoaded', async () => {
     // Auth Check
     if (!sessionStorage.getItem('jirani_admin_logged_in')) {
-        window.location.href = 'login.html';
+        window.location.href = '../login/';
         return;
     }
 
@@ -322,6 +322,6 @@ function setupEventListeners() {
         e.preventDefault();
         sessionStorage.clear();
         if (window.auth) window.auth.signOut();
-        window.location.href = 'index.html';
+        window.location.href = '../index.html';
     });
 }

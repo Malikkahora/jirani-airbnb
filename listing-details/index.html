@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listing Details - Jirani</title>
-    <link rel="icon" href="images/favicon.png">
-    <link rel="stylesheet" href="css/styles.css?v=1.1">
-    <link rel="stylesheet" href="css/footer-styles.css">
+    <link rel="icon" href="../images/favicon.png">
+    <link rel="stylesheet" href="../css/styles.css?v=1.1">
+    <link rel="stylesheet" href="../css/footer-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta property="og:title" content="Listing Details - Jirani">
     <meta property="og:description" content="Check out this property on Jirani Properties">
     <meta property="og:image" content="https://jiraniproperties.co.ke/images/home-bg.jpg">
-    <meta property="og:url" content="https://jiraniproperties.co.ke/listing-details.html">
+    <meta property="og:url" content="https://jiraniproperties.co.ke/listing-details/">
     <style>
         .details-container {
             max-width: 1100px;
@@ -519,15 +519,15 @@
 <body>
     <header class="header">
         <div class="container header__container">
-            <a href="index.html" class="logo">Jirani<span class="logo__accent">Group</span></a>
+            <a href="../index.html" class="logo">Jirani<span class="logo__accent">Group</span></a>
             <nav class="nav">
                 <ul class="nav__list">
-                    <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
-                    <li class="nav__item"><a href="airbnbs.html" class="nav__link">Airbnbs</a></li>
-                    <li class="nav__item"><a href="properties.html" class="nav__link">Properties</a></li>
-                    <li class="nav__item"><a href="blog.html" class="nav__link">Blog</a></li>
-                    <li class="nav__item"><a href="contact.html" class="nav__link">Contacts</a></li>
-                    <li class="nav__item"><a href="about.html" class="nav__link">About Us</a></li>
+                    <li class="nav__item"><a href="../index.html" class="nav__link">Home</a></li>
+                    <li class="nav__item"><a href="../airbnbs/" class="nav__link">Airbnbs</a></li>
+                    <li class="nav__item"><a href="../properties/" class="nav__link">Properties</a></li>
+                    <li class="nav__item"><a href="../blog/" class="nav__link">Blog</a></li>
+                    <li class="nav__item"><a href="../contact/" class="nav__link">Contacts</a></li>
+                    <li class="nav__item"><a href="../about/" class="nav__link">About Us</a></li>
                 </ul>
                 <div class="mobile-nav-socials mobile-only">
                     <a href="https://www.facebook.com/" aria-label="Facebook" style="color:#1877F2;"><svg
@@ -597,7 +597,7 @@
                         </svg>
                     </button>
                     <div class="header__profile-dropdown" id="profileDropdown">
-                        <a href="login.html" class="header__profile-link">Log in</a>
+                        <a href="../login/" class="header__profile-link">Log in</a>
                     </div>
                 </div>
             </div> <!-- Close header__actions -->
@@ -764,7 +764,7 @@
             <div id="error-msg" style="display: none; text-align: center; padding: 50px; color: red;">
                 <h2>Listing not found</h2>
                 <p>The listing you are looking for does not exist or has been removed.</p>
-                <a href="index.html" class="btn btn--primary" style="margin-top: 20px; display: inline-block;">Go
+                <a href="../index.html" class="btn btn--primary" style="margin-top: 20px; display: inline-block;">Go
                     Home</a>
             </div>
         </div>
@@ -815,12 +815,12 @@
             <div class="footer__col">
                 <h3>Quick Links</h3>
                 <ul class="footer__links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="airbnbs.html">Airbnbs</a></li>
-                    <li><a href="properties.html">Properties</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../airbnbs/">Airbnbs</a></li>
+                    <li><a href="../properties/">Properties</a></li>
+                    <li><a href="../blog/">Blog</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="../about/">About Us</a></li>
                 </ul>
             </div>
 
@@ -898,9 +898,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-    <script src="js/firebase-config.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/app.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
@@ -946,11 +946,22 @@
             document.getElementById('d-price').innerText = Number(item.price).toLocaleString();
 
             // Type & Period
+            const typeBadge = document.getElementById('d-type');
             if (type === 'airbnb') {
-                document.getElementById('d-type').innerText = 'Airbnb / Short Stay';
+                typeBadge.innerText = 'Airbnb / Short Stay';
+                typeBadge.style.background = '#FF5A5F';
+                typeBadge.style.color = '#ffffff';
                 document.getElementById('d-period').innerText = '/ night';
             } else {
-                document.getElementById('d-type').innerText = item.type === 'rent' ? 'For Rent' : 'For Sale';
+                if (item.type === 'sale') {
+                    typeBadge.innerText = 'For Sale';
+                    typeBadge.style.background = '#2d60ff';
+                    typeBadge.style.color = '#ffffff';
+                } else {
+                    typeBadge.innerText = 'For Rent';
+                    typeBadge.style.background = '#00C853';
+                    typeBadge.style.color = '#ffffff';
+                }
                 document.getElementById('d-period').innerText = item.priceLabel || '';
             }
 
@@ -1113,7 +1124,7 @@
                     const priceLabel = type === 'airbnb' ? '/ night' : (item.priceLabel || '');
 
                     return `
-                        <div class="s-card" onclick="window.location.href='listing-details.html?id=${item.id}&type=${type}'">
+                        <div class="s-card" onclick="window.location.href='../listing-details/?id=${item.id}&type=${type}'">
                             ${imgHtml}
                             <div class="s-card-content">
                                 <div class="s-card-title">${item.title}</div>
@@ -1256,12 +1267,12 @@
             <div class="footer__col">
                 <h3>Quick Links</h3>
                 <ul class="footer__links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="airbnbs.html">Airbnbs</a></li>
-                    <li><a href="properties.html">Properties</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../airbnbs/">Airbnbs</a></li>
+                    <li><a href="../properties/">Properties</a></li>
+                    <li><a href="../blog/">Blog</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="../about/">About Us</a></li>
                 </ul>
             </div>
 

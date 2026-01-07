@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jirani Admin Access</title>
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" href="images/home-bg.jpg">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="../images/home-bg.jpg">
+    <link rel="stylesheet" href="../css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .login-container {
@@ -97,7 +97,8 @@
                 <button type="submit" class="btn btn--primary" style="width: 100%;">Log In</button>
             </form>
             <div style="text-align: center; margin-top: var(--spacing-md);">
-                <a href="index.html" style="font-size: 0.875rem; color: var(--color-text-secondary);">Back to Home</a>
+                <a href="../index.html" style="font-size: 0.875rem; color: var(--color-text-secondary);">Back to
+                    Home</a>
             </div>
             <div class="social-links" style="margin-top: var(--spacing-md);">
                 <a href="https://www.facebook.com/" class="social-link" aria-label="Facebook">
@@ -165,7 +166,7 @@
                 .then((userCredential) => {
                     // Signed in 
                     sessionStorage.setItem('jirani_admin_logged_in', 'true');
-                    window.location.href = 'admin.html';
+                    window.location.href = '../admin/';
                 })
                 .catch((error) => {
                     console.error("Login Error:", error);
@@ -180,7 +181,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <!-- Firebase Config -->
-    <script src="js/firebase-config.js"></script>
+    <script src="../js/firebase-config.js"></script>
 </body>
 
 </html>

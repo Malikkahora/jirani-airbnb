@@ -472,7 +472,7 @@ function renderGroupedListings(containerId, items, pageType) {
             article.style.flexShrink = '0';
             article.style.scrollSnapAlign = 'start';
             article.onclick = () => {
-                const url = `listing-details.html?id=${item.id}&type=${pageType}`;
+                const url = `/listing-details/?id=${item.id}&type=${pageType}`;
                 window.location.href = url;
             };
 
@@ -657,7 +657,7 @@ function renderFeaturedSlider(items) {
         const card = document.createElement('div');
         card.className = 'slider-card';
         card.onclick = () => {
-            window.location.href = `listing-details.html?id=${item.id}&type=airbnb`;
+            window.location.href = `/listing-details/?id=${item.id}&type=airbnb`;
         };
 
         const image = item.images && item.images.length > 0 ? item.images[0] : (item.image || '');
