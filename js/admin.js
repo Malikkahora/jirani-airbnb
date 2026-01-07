@@ -322,6 +322,6 @@ function setupEventListeners() {
         e.preventDefault();
         sessionStorage.clear();
         if (window.auth) window.auth.signOut();
-        window.location.href = '../index.html';
+        window.location.href = '../';
     });
 }
