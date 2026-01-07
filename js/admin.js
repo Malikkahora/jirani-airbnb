@@ -83,7 +83,7 @@ function renderTable(items) {
             if (src.includes('res.cloudinary.com')) {
                 src = src.replace('/upload/', '/upload/w_100,f_auto,q_auto/');
             }
-            displayImg = `<img src="${src}" class="listing-img" alt="${item.title}">`;
+            displayImg = `<img src="${src}" class="listing-img" alt="${item.title}" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';">`;
         } else {
             displayImg = `<div class="listing-img" style="background:#ddd"></div>`;
         }

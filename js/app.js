@@ -482,7 +482,7 @@ function renderGroupedListings(containerId, items, pageType) {
             if (images.length > 0) {
                 // optimizeCloudinaryUrl with width 400 for cards
                 const optimizedUrl = optimizeCloudinaryUrl(images[0], 400);
-                imageHtml = `<img src="${optimizedUrl}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
+                imageHtml = `<img src="${optimizedUrl}" loading="lazy" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.padding='20px';this.style.backgroundColor='#f8f9fa';" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">`;
             } else {
                 imageHtml = `<div class="property-card__image-placeholder" style="background-color: ${item.imageColor || '#ddd'}; height: 100%; width: 100%; border-radius: 12px;"></div>`;
             }
@@ -665,7 +665,7 @@ function renderFeaturedSlider(items) {
 
         card.innerHTML = `
             <div class="slider-card-img-wrapper">
-                <img src="${optimizedImage}" alt="${item.title}" class="slider-card-img">
+                <img src="${optimizedImage}" alt="${item.title}" class="slider-card-img" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.padding='20px';this.style.backgroundColor='#f8f9fa';">
             </div>
             <div class="slider-card-info">
                 <div class="slider-card-loc">${item.location}</div>
