@@ -748,8 +748,8 @@ ul {
 
 /* Property Card Default (Desktop/Laptop) */
 .property-card {
-    min-width: 260px;
-    width: 260px;
+    min-width: 215px;
+    width: 215px;
     scroll-snap-align: start;
     flex-shrink: 0;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -759,6 +759,7 @@ ul {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     position: relative;
+    margin-right: 12px;
 }
 
 .property-card:hover {
@@ -779,14 +780,14 @@ ul {
 }
 
 .property-card__image-wrapper {
-    height: 220px;
+    height: 160px;
     width: 100%;
     position: relative;
     overflow: hidden;
 }
 
 .property-card__content {
-    padding: 20px;
+    padding: 12px;
 }
 
 /* Share Modal Styles */
@@ -2023,8 +2024,8 @@ body.dark-mode .featured-random {
 }
 
 .slider-card {
-    min-width: 260px;
-    max-width: 260px;
+    min-width: 215px;
+    max-width: 215px;
     background: white;
     border-radius: 24px;
     overflow: hidden;
