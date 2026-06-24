@@ -966,9 +966,12 @@
             `;
                 grid.appendChild(card);
             });
-            // 3. Sticky Search Bar Logic
+            // 3. Sticky & Auto-Scroll Search Logic
             const searchBar = document.querySelector('.search-bar');
+            const searchForm = document.querySelector('.search-form');
             const hero = document.querySelector('.hero');
+            const resultsSection = document.getElementById('airbnbs');
+
             if (searchBar && hero) {
                 window.addEventListener('scroll', () => {
                     const heroBottom = hero.offsetTop + hero.offsetHeight;
@@ -977,6 +980,15 @@
                     } else {
                         searchBar.classList.remove('sticky');
                     }
+                });
+            }
+
+            if (searchForm && resultsSection) {
+                searchForm.addEventListener('submit', (e) => {
+                    // Smooth scroll to results on search trigger
+                    setTimeout(() => {
+                        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
                 });
             }
         })();
