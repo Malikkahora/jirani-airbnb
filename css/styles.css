@@ -2001,8 +2001,8 @@ body.dark-mode .featured-random {
 }
 
 .slider-card {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 260px;
+    max-width: 260px;
     background: white;
     border-radius: 24px;
     overflow: hidden;
@@ -2075,8 +2075,8 @@ body.dark-mode .featured-random {
 
 @media (max-width: 768px) {
     .slider-card {
-        min-width: 220px;
-        max-width: 220px;
+        min-width: 150px;
+        max-width: 170px;
     }
 
     .slider-card-img-wrapper {
