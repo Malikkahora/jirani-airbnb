@@ -405,53 +405,53 @@
             .detail-info {
                 padding: 25px;
             }
+        }
 
-            /* WhatsApp FAB Styling */
+        /* WhatsApp FAB Styling */
+        .whatsapp-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999;
+            text-decoration: none;
+        }
+
+        .whatsapp-fab:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-fab:active {
+            transform: scale(0.95);
+        }
+
+        .whatsapp-fab svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        @media (max-width: 768px) {
             .whatsapp-fab {
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                width: 60px;
-                height: 60px;
-                background: linear-gradient(135deg, #25D366, #128C7E);
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-                cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                z-index: 9999;
-                text-decoration: none;
-            }
-
-            .whatsapp-fab:hover {
-                transform: scale(1.1) translateY(-5px);
-                box-shadow: 0 15px 35px rgba(37, 211, 102, 0.5);
-            }
-
-            .whatsapp-fab:active {
-                transform: scale(0.95);
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
             }
 
             .whatsapp-fab svg {
-                width: 32px;
-                height: 32px;
-            }
-
-            @media (max-width: 768px) {
-                .whatsapp-fab {
-                    bottom: 20px;
-                    right: 20px;
-                    width: 50px;
-                    height: 50px;
-                }
-
-                .whatsapp-fab svg {
-                    width: 26px;
-                    height: 26px;
-                }
+                width: 26px;
+                height: 26px;
             }
         }
     </style>
