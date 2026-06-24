@@ -594,11 +594,9 @@ ul {
 
     /* Mobile Card Sizing for Carousel */
     .location-section .property-card {
-        min-width: 150px !important;
-        /* Shrink from 160px */
-        width: 46vw !important;
-        /* Slightly wider responsive width */
-        max-width: 170px !important;
+        min-width: 140px !important;
+        width: 42vw !important;
+        max-width: 180px !important;
     }
 
     /* Reduce padding for header overlap */
