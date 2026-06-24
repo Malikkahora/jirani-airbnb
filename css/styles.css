@@ -3,11 +3,18 @@
     --color-primary: #FFB300;
     /* Neon Amber */
     --color-primary-hover: #FF8F00;
+    --color-accent: #FF5A5F;
+    /* Airbnb Red */
     --color-text-main: #222222;
     --color-text-secondary: #717171;
     --color-bg-white: #ffffff;
     --color-bg-light: #f7f7f7;
     --color-border: #dddddd;
+
+    /* Modern Gradients */
+    --gradient-primary: linear-gradient(135deg, #FFB300 0%, #FF8F00 100%);
+    --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
 
     /* Typography */
     --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -29,6 +36,12 @@
     --radius-lg: 32px;
     /* Pill shape */
     --radius-circle: 50%;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
 /* Dark mode overrides moved to bottom for cascade */
@@ -576,16 +589,16 @@ ul {
 
     .property-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: var(--spacing-sm);
+        gap: 12px;
     }
 
     /* Mobile Card Sizing for Carousel */
     .location-section .property-card {
-        min-width: 160px !important;
-        /* Shrink from 260px */
-        width: 45vw !important;
-        /* Responsive width */
-        max-width: 180px !important;
+        min-width: 150px !important;
+        /* Shrink from 160px */
+        width: 46vw !important;
+        /* Slightly wider responsive width */
+        max-width: 170px !important;
     }
 
     /* Reduce padding for header overlap */
@@ -731,24 +744,22 @@ ul {
 
 /* Property Card Default (Desktop/Laptop) */
 .property-card {
-    min-width: 280px;
-    width: 280px;
+    min-width: 260px;
+    width: 260px;
     scroll-snap-align: start;
     flex-shrink: 0;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: var(--radius-md);
-    /* Defined border and shadow */
-    border: 1px solid #e0e0e0;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    /* Soft base shadow */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    /* rounded corners for image */
+    position: relative;
 }
 
 .property-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 .property-card img {
@@ -756,6 +767,11 @@ ul {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.6s ease;
+}
+
+.property-card:hover img {
+    transform: scale(1.1);
 }
 
 .property-card__image-wrapper {
@@ -766,7 +782,7 @@ ul {
 }
 
 .property-card__content {
-    padding: 12px;
+    padding: 20px;
 }
 
 /* Share Modal Styles */
@@ -1985,77 +2001,76 @@ body.dark-mode .featured-random {
 }
 
 .slider-card {
-    min-width: 250px;
-    max-width: 250px;
-    background: var(--color-bg-card);
-    border-radius: 12px;
+    min-width: 300px;
+    max-width: 300px;
+    background: white;
+    border-radius: 24px;
     overflow: hidden;
     scroll-snap-align: start;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    /* Softer shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    /* Very subtle border */
 }
 
 .slider-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
 }
 
 .slider-card-img-wrapper {
     width: 100%;
-    height: 160px;
-    /* Slightly shorter */
+    height: 200px;
     overflow: hidden;
+    position: relative;
 }
 
 .slider-card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .slider-card:hover .slider-card-img {
-    transform: scale(1.05);
+    transform: scale(1.15);
 }
 
 .slider-card-info {
-    padding: 12px;
-    /* Tighter padding */
+    padding: 24px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
 .slider-card-title {
-    font-size: 1rem;
-    /* Smaller title */
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--color-text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
 }
 
 .slider-card-loc {
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: 6px;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .slider-card-price {
-    font-weight: 700;
-    color: var(--color-text-main);
-    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    font-size: 1.2rem;
 }
 
-.slider-card-price .price-suffix {
-    font-weight: 400;
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
+.slider-card-price small {
+    font-weight: 500;
+    color: #666;
+    font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
