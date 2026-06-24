@@ -589,7 +589,7 @@ ul {
 
     .property-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 10px;
     }
 
     #airbnbs {
@@ -604,9 +604,9 @@ ul {
 
     /* Mobile Card Sizing for Carousel */
     .location-section .property-card {
-        min-width: 140px !important;
-        width: 42vw !important;
-        max-width: 180px !important;
+        min-width: 130px !important;
+        width: 40vw !important;
+        max-width: 170px !important;
     }
 
     /* Reduce padding for header overlap */
