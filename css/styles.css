@@ -631,33 +631,60 @@ ul {
 
     /* Mobile Search Dropdown Refinement */
     .search-mobile-overlay {
-        max-height: 85vh !important;
+        max-height: 80vh !important;
         overflow-y: auto !important;
-        padding-bottom: 20px !important;
+        padding: 10px !important;
+    }
+
+    .search-mobile-overlay .search-form {
+        padding: 5px !important;
     }
 
     .search-mobile-overlay .search-form__field {
-        padding: 4px 15px !important;
+        padding: 2px 12px !important;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .search-mobile-overlay .search-form__field label {
-        font-size: 0.65rem !important;
+        font-size: 0.6rem !important;
         margin-bottom: 0 !important;
         display: block !important;
+        opacity: 0.8;
     }
 
     .search-mobile-overlay .search-form__field input,
     .search-mobile-overlay .search-form__field select {
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
         padding: 0 !important;
-        height: 24px !important;
+        height: 20px !important;
+        background: transparent !important;
     }
 
     .search-mobile-overlay .search-btn {
-        margin-top: 10px !important;
-        padding: 8px !important;
-        font-size: 0.85rem !important;
+        margin-top: 5px !important;
+        padding: 6px !important;
+        font-size: 0.8rem !important;
+        height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .search-mobile-overlay .search-btn svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .search-btn-cancel {
+        margin-top: 5px !important;
+        padding: 6px !important;
+        font-size: 0.8rem !important;
+        height: 36px !important;
+        border: 1px solid #ddd !important;
+        background: #f9f9f9 !important;
+        width: 100% !important;
+        border-radius: 20px !important;
+        color: #666 !important;
     }
 
     /* Compact Portal Cards */
