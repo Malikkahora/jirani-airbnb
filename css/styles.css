@@ -630,6 +630,12 @@ ul {
     }
 
     /* Mobile Search Dropdown Refinement */
+    .search-mobile-overlay {
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        padding-bottom: 20px !important;
+    }
+
     .search-mobile-overlay .search-form__field {
         padding: 4px 15px !important;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
