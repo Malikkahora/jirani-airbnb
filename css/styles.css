@@ -629,6 +629,29 @@ ul {
         /* Reduce top and bottom padding */
     }
 
+    /* Mobile Search Dropdown Refinement */
+    .search-mobile-overlay .search-form__field {
+        padding: 8px 15px !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .search-mobile-overlay .search-form__field label {
+        font-size: 0.7rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .search-mobile-overlay .search-form__field input,
+    .search-mobile-overlay .search-form__field select {
+        font-size: 0.85rem !important;
+        padding: 2px 0 !important;
+    }
+
+    .search-mobile-overlay .search-btn {
+        margin-top: 15px !important;
+        padding: 12px !important;
+        font-size: 0.9rem !important;
+    }
+
     /* Compact Portal Cards */
     .portal-card {
         width: 100%;
