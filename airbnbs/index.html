@@ -328,12 +328,35 @@
             border-radius: 40px;
             padding: 10px;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .search-bar.sticky {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            width: 90%;
+            max-width: 1100px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 50px;
+        }
+
+        .search-bar.sticky .search-btn {
+            transform: scale(0.9);
         }
 
         .search-bar:hover {
             transform: translateY(-5px);
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .search-bar.sticky:hover {
+            transform: translateX(-50%) translateY(-2px) scale(0.96);
         }
 
         /* Animations */
@@ -943,6 +966,19 @@
             `;
                 grid.appendChild(card);
             });
+            // 3. Sticky Search Bar Logic
+            const searchBar = document.querySelector('.search-bar');
+            const hero = document.querySelector('.hero');
+            if (searchBar && hero) {
+                window.addEventListener('scroll', () => {
+                    const heroBottom = hero.offsetTop + hero.offsetHeight;
+                    if (window.scrollY > heroBottom - 100) {
+                        searchBar.classList.add('sticky');
+                    } else {
+                        searchBar.classList.remove('sticky');
+                    }
+                });
+            }
         })();
     </script>
 </body>
