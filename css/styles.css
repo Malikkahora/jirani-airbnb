@@ -598,8 +598,13 @@ ul {
     }
 
     .section-header {
-        margin-top: 20px;
-        margin-bottom: 20px !important;
+        margin-top: 10px;
+        margin-bottom: 10px !important;
+    }
+
+    .location-section {
+        margin-bottom: 10px !important;
+        padding-bottom: 0 !important;
     }
 
     /* Mobile Card Sizing for Carousel */
