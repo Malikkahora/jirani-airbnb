@@ -629,35 +629,75 @@ ul {
         /* Reduce top and bottom padding */
     }
 
-    /* Mobile Search Dropdown Refinement */
+    /* Mobile Search Dropdown Refinement - Floating Style */
     .search-mobile-overlay {
-        max-height: 85vh !important;
+        position: fixed !important;
+        top: 100px !important;
+        left: 20px !important;
+        right: 20px !important;
+        bottom: auto !important;
+        width: calc(100% - 40px) !important;
+        max-height: 75vh !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+        padding: 5px !important;
+        z-index: 10001 !important;
         overflow-y: auto !important;
-        padding: 8px !important;
+        animation: searchModalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        margin: 0 auto !important;
+    }
+
+    @keyframes searchModalSlideUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .search-mobile-overlay h3 {
+        text-align: center !important;
+        font-size: 1rem !important;
+        margin: 15px 0 10px !important;
+        font-weight: 700 !important;
+        color: #1a1a1a !important;
     }
 
     .search-mobile-overlay .search-form {
-        padding: 2px !important;
+        padding: 0 5px 10px !important;
     }
 
     .search-mobile-overlay .search-form__field {
-        padding: 1px 12px !important;
+        padding: 6px 15px !important;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
+    .search-mobile-overlay .search-form__field:last-of-type {
+        border-bottom: none !important;
+    }
+
     .search-mobile-overlay .search-form__field label {
-        font-size: 0.55rem !important;
-        margin-bottom: 0 !important;
+        font-size: 0.7rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 2px !important;
         display: block !important;
-        opacity: 0.8;
+        color: #1a1a1a !important;
     }
 
     .search-mobile-overlay .search-form__field input,
     .search-mobile-overlay .search-form__field select {
-        font-size: 0.7rem !important;
+        font-size: 0.85rem !important;
         padding: 0 !important;
-        height: 18px !important;
+        height: 24px !important;
         background: transparent !important;
+        color: #484848 !important;
     }
 
     .search-mobile-overlay .search-btn {
