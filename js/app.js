@@ -501,7 +501,6 @@ function renderGroupedListings(containerId, items, pageType) {
                     <div class="property-card__header">
                         <h3 class="property-card__title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</h3>
                     </div>
-                    <p class="property-card__desc" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3em;">${item.desc}</p>
                     
                     <div class="property-card__stats">
                         <div class="card-stat">
