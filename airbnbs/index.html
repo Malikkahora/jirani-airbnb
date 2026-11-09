@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -645,6 +645,32 @@
             </div>
         </section>
 
+        <!-- Category Filter Bar -->
+        <section class="category-filter-bar">
+            <div class="container">
+                <div class="category-chips" id="category-chips">
+                    <button class="category-chip active" data-category="all" onclick="filterByCategory('all', this)">
+                        <span class="chip-icon">🏠</span> All Stays
+                    </button>
+                    <button class="category-chip" data-category="romantic" onclick="filterByCategory('romantic', this)">
+                        <span class="chip-icon">💑</span> Romantic
+                    </button>
+                    <button class="category-chip" data-category="family" onclick="filterByCategory('family', this)">
+                        <span class="chip-icon">👨‍👩‍👧</span> Family
+                    </button>
+                    <button class="category-chip" data-category="business" onclick="filterByCategory('business', this)">
+                        <span class="chip-icon">💼</span> Business
+                    </button>
+                    <button class="category-chip" data-category="budget" onclick="filterByCategory('budget', this)">
+                        <span class="chip-icon">💰</span> Budget
+                    </button>
+                    <button class="category-chip" data-category="luxury" onclick="filterByCategory('luxury', this)">
+                        <span class="chip-icon">✨</span> Luxury
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- New Random Featured Slider -->
         <section class="featured-random">
             <div class="slider-container">
@@ -1044,6 +1070,72 @@
             }
         })();
     </script>
+    <script>
+// Category filter logic
+const CATEGORY_KEYWORDS = {
+    romantic: ['romantic', 'couple', 'honeymoon', 'cozy', 'intimate', 'getaway', 'retreat', 'private'],
+    family: ['family', 'kids', 'children', 'spacious', 'large', 'group', '3 bed', '4 bed', '5 bed', '3-bed', '4-bed'],
+    business: ['business', 'work', 'wifi', 'office', 'corporate', 'fast internet', 'workstation', 'professional'],
+    budget: [],  // handled by price
+    luxury: ['luxury', 'premium', 'penthouse', 'rooftop', 'executive', 'suite', 'villa', 'pool']
+};
+
+function getListingCategory(item) {
+    const text = `${item.title} ${item.desc} ${item.amenities || ''}`.toLowerCase();
+    for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+        if (cat === 'budget') {
+            if (item.price <= 4000) return 'budget';
+        } else if (keywords.some(k => text.includes(k))) {
+            return cat;
+        }
+    }
+    return 'all';
+}
+
+window.filterByCategory = async function(category, btn) {
+    // Update active chip
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const items = await JiraniData.getAirbnbs();
+    if (category === 'all') {
+        renderAirbnbs(items);
+    } else {
+        const filtered = items.filter(item => {
+            const text = `${item.title} ${item.desc} ${item.amenities || ''}`.toLowerCase();
+            if (category === 'budget') return item.price <= 4000;
+            const keywords = CATEGORY_KEYWORDS[category] || [];
+            return keywords.some(k => text.includes(k));
+        });
+        renderAirbnbs(filtered.length > 0 ? filtered : items);
+        if (filtered.length === 0) {
+            const grid = document.getElementById('airbnb-grid');
+            if (grid) grid.innerHTML = '<div style="text-align:center;padding:60px 20px;"><h3>No ' + category + ' stays found yet</h3><p style="color:#666;margin-top:10px;">Check back soon or browse all stays</p><button class="btn btn--primary" onclick="filterByCategory(\'all\', null)" style="margin-top:20px;">Browse All Stays</button></div>';
+        }
+    }
+    // Check URL param
+    const url = new URL(window.location);
+    if (category !== 'all') url.searchParams.set('category', category);
+    else url.searchParams.delete('category');
+    window.history.replaceState({}, '', url);
+    
+    // Scroll to listings
+    setTimeout(() => {
+        const section = document.getElementById('airbnbs');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+};
+
+// Auto-trigger from URL param on load
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cat = urlParams.get('category');
+    if (cat) {
+        const chip = document.querySelector(`[data-category="${cat}"]`);
+        setTimeout(() => filterByCategory(cat, chip), 800);
+    }
+});
+</script>
 </body>
 
 </html>
