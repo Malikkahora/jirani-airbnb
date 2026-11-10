@@ -1164,53 +1164,85 @@ function getListingCategory(item) {
     return 'all';
 }
 
-window.filterByCategory = async function(category, btn) {
-    // Update active chip
+window.filterByCategory = async function(category, btn, shouldScroll = true) {
+    // 1. Update active chip
     document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-    if (btn) btn.classList.add('active');
+    if (!btn && category) {
+        btn = document.querySelector(`.category-chip[data-category="${category}"]`);
+    }
+    if (btn) {
+        btn.classList.add('active');
+        try {
+            btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } catch (e) {}
+    }
 
     const items = await JiraniData.getAirbnbs();
+    const categoryObj = (typeof CATEGORY_CONFIG !== 'undefined') ? CATEGORY_CONFIG.find(c => c.id === category) : null;
     
-    // Update Category Sliders
+    // 2. Filter listings
+    let filtered = items;
+    if (category !== 'all') {
+        if (categoryObj && categoryObj.filter) {
+            filtered = items.filter(categoryObj.filter);
+        } else if (category === 'budget') {
+            filtered = items.filter(item => item.price && item.price <= 4500);
+        } else {
+            const keywords = (typeof CATEGORY_KEYWORDS !== 'undefined' && CATEGORY_KEYWORDS[category]) || [];
+            filtered = items.filter(item => {
+                const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+                return keywords.some(k => text.includes(k));
+            });
+        }
+        if (filtered.length === 0) {
+            filtered = items.slice(0, 8);
+        }
+    }
+
+    // 3. Update Category Sliders
     if (typeof window.renderCategorySliders === 'function') {
         window.renderCategorySliders(items, category);
     }
 
-    if (category === 'all') {
-        renderAirbnbs(items);
+    // 4. Update the section header in main listings
+    const sectionTitle = document.querySelector('#airbnbs .section-title');
+    const sectionSubtitle = document.querySelector('#airbnbs .section-subtitle-text');
+    if (category !== 'all' && categoryObj) {
+        if (sectionTitle) sectionTitle.innerHTML = `<span style="margin-right:8px;">${categoryObj.icon}</span>${categoryObj.title} in Nairobi`;
+        if (sectionSubtitle) sectionSubtitle.innerHTML = `${categoryObj.subtitle} &bull; <strong>${filtered.length} stays available</strong>`;
     } else {
-        const filtered = items.filter(item => {
-            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
-            if (category === 'budget') return item.price && item.price <= 4500;
-            if (typeof CATEGORY_CONFIG !== 'undefined') {
-                const cfg = CATEGORY_CONFIG.find(c => c.id === category);
-                if (cfg && cfg.filter) return cfg.filter(item);
-            }
-            const keywords = (typeof CATEGORY_KEYWORDS !== 'undefined' && CATEGORY_KEYWORDS[category]) || [];
-            return keywords.some(k => text.includes(k));
-        });
-        renderAirbnbs(filtered.length > 0 ? filtered : items);
-        if (filtered.length === 0) {
-            const grid = document.getElementById('airbnb-grid');
-            if (grid) grid.innerHTML = '<div style="text-align:center;padding:60px 20px;"><h3>No ' + category + ' stays found yet</h3><p style="color:#666;margin-top:10px;">Check back soon or browse all stays</p><button class="btn btn--primary" onclick="filterByCategory(\'all\', null)" style="margin-top:20px;">Browse All Stays</button></div>';
-        }
+        if (sectionTitle) sectionTitle.innerHTML = `Latest Airbnb Listings`;
+        if (sectionSubtitle) sectionSubtitle.innerHTML = `Curated stays in top locations`;
     }
-    // Check URL param
+
+    // 5. Render Main Grid
+    if (typeof renderAirbnbs === 'function') {
+        renderAirbnbs(filtered);
+    }
+
+    // 6. Update URL param without page reload
     const url = new URL(window.location);
     if (category !== 'all') url.searchParams.set('category', category);
     else url.searchParams.delete('category');
     window.history.replaceState({}, '', url);
     
-    // Smooth scroll to relevant category slider or listings
-    setTimeout(() => {
-        const targetBlock = category !== 'all' ? document.getElementById(`cat-block-${category}`) : document.getElementById('category-sliders-container');
-        if (targetBlock) {
-            targetBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            const section = document.getElementById('airbnbs');
-            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }, 120);
+    // 7. Direct user smoothly to the category options with fixed-header offset
+    if (shouldScroll) {
+        setTimeout(() => {
+            const target = category !== 'all' 
+                ? (document.getElementById(`cat-block-${category}`) || document.getElementById('airbnbs')) 
+                : document.getElementById('category-sliders-container');
+            if (target) {
+                const headerOffset = 110;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({
+                    top: Math.max(0, offsetPosition),
+                    behavior: 'smooth'
+                });
+            }
+        }, 80);
+    }
 };
 
 // Auto-trigger from URL param on load
@@ -1219,7 +1251,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const cat = urlParams.get('category');
     if (cat) {
         const chip = document.querySelector(`[data-category="${cat}"]`);
-        setTimeout(() => filterByCategory(cat, chip), 800);
+        if (chip) {
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+        }
+        setTimeout(() => filterByCategory(cat, chip, true), 300);
     }
 });
 </script>

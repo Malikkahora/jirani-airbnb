@@ -66,9 +66,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cachedAirbnbs = JiraniData.getAirbnbsCached();
         if (cachedAirbnbs.length > 0) {
             console.log("Rendering Airbnbs from cache (Pre-Init)");
-            renderAirbnbs(cachedAirbnbs);
-            if (typeof renderCategorySliders === 'function') {
-                renderCategorySliders(cachedAirbnbs);
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeCat = urlParams.get('category') || 'all';
+            if (activeCat && activeCat !== 'all' && typeof window.filterByCategory === 'function') {
+                const chip = document.querySelector(`[data-category="${activeCat}"]`);
+                window.filterByCategory(activeCat, chip, false);
+            } else {
+                renderAirbnbs(cachedAirbnbs);
+                if (typeof renderCategorySliders === 'function') {
+                    renderCategorySliders(cachedAirbnbs, 'all');
+                }
             }
         } else {
             renderLoadingState('airbnb-grid');
@@ -112,8 +119,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (isAirbnbPage) {
         const freshAirbnbs = await JiraniData.getAirbnbs();
         console.log("Rendering fresh Airbnbs");
-        renderAirbnbs(freshAirbnbs);
-        renderCategorySliders(freshAirbnbs);
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeCat = urlParams.get('category') || (document.querySelector('.category-chip.active') ? document.querySelector('.category-chip.active').getAttribute('data-category') : 'all');
+        if (activeCat && activeCat !== 'all' && typeof window.filterByCategory === 'function') {
+            const chip = document.querySelector(`[data-category="${activeCat}"]`);
+            window.filterByCategory(activeCat, chip, false);
+        } else {
+            renderAirbnbs(freshAirbnbs);
+            renderCategorySliders(freshAirbnbs, 'all');
+        }
     } else if (isPropertyPage) {
         const freshProperties = await JiraniData.getProperties();
         console.log("Rendering fresh Properties");
@@ -740,7 +754,8 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
     const favorites = getFavorites().map(String);
 
     let catsToShow = CATEGORY_CONFIG;
-    if (activeCategory && activeCategory !== 'all') {
+    const isSingleCategory = activeCategory && activeCategory !== 'all';
+    if (isSingleCategory) {
         const matched = CATEGORY_CONFIG.find(c => c.id === activeCategory);
         if (matched) {
             catsToShow = [matched];
@@ -748,6 +763,32 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
     }
 
     let html = '';
+
+    // Active Category Filter Bar
+    if (isSingleCategory && catsToShow.length > 0) {
+        const currentCat = catsToShow[0];
+        let currentItems = items.filter(currentCat.filter);
+        if (currentItems.length === 0) currentItems = items.slice(0, 8);
+        html += `
+        <div class="category-active-bar-wrapper">
+            <div class="slider-container">
+                <div class="category-active-bar">
+                    <div class="active-bar-content">
+                        <span class="active-bar-icon">${currentCat.icon}</span>
+                        <div class="active-bar-text">
+                            <strong>${currentCat.title}</strong>
+                            <span>&bull; ${currentItems.length} curated options in Nairobi</span>
+                        </div>
+                    </div>
+                    <button type="button" class="active-bar-reset-btn" onclick="filterByCategory('all', document.querySelector('[data-category=all]'))">
+                        &times; Browse All Categories
+                    </button>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
     catsToShow.forEach(cat => {
         let catItems = items.filter(cat.filter);
         if (catItems.length === 0) {
@@ -760,20 +801,27 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
                 <div class="slider-header-flex">
                     <div class="slider-title-group">
                         <div class="slider-tagline">${cat.tagline}</div>
-                        <div class="slider-title-row">
+                        <div class="slider-title-row clickable" onclick="filterByCategory('${cat.id}', document.querySelector('[data-category=\\'${cat.id}\\']'))" title="Click to view all ${cat.title}">
                             <span class="slider-icon">${cat.icon}</span>
                             <h2 class="slider-title">${cat.title}</h2>
                             <span class="category-count-badge">${catItems.length} stays</span>
                         </div>
                         <p class="slider-subtitle-text">${cat.subtitle}</p>
                     </div>
-                    <div class="slider-nav-arrows">
-                        <button type="button" class="slider-arrow-btn prev" onclick="scrollCategorySlider('${cat.id}', -1)" aria-label="Previous ${cat.title}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                    <div class="slider-header-actions">
+                        ${!isSingleCategory ? `
+                        <button type="button" class="slider-view-all-btn" onclick="filterByCategory('${cat.id}', document.querySelector('[data-category=\\'${cat.id}\\']'))" title="Direct to ${cat.title}">
+                            View all ${cat.title} (${catItems.length}) &rarr;
                         </button>
-                        <button type="button" class="slider-arrow-btn next" onclick="scrollCategorySlider('${cat.id}', 1)" aria-label="Next ${cat.title}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                        </button>
+                        ` : ''}
+                        <div class="slider-nav-arrows">
+                            <button type="button" class="slider-arrow-btn prev" onclick="scrollCategorySlider('${cat.id}', -1)" aria-label="Previous ${cat.title}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                            </button>
+                            <button type="button" class="slider-arrow-btn next" onclick="scrollCategorySlider('${cat.id}', 1)" aria-label="Next ${cat.title}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="slider-track" id="cat-track-${cat.id}">
