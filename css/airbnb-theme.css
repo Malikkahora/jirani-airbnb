@@ -1842,10 +1842,11 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
 }
 
 /* --------------------------------------------------------------------------
-   SEARCH CARD SCROLL-HIDE BEHAVIOR
+   SEARCH CARD & RATINGS SCROLL-HIDE BEHAVIOR
    -------------------------------------------------------------------------- */
 .search-bar,
-.luxury-search-bar {
+.luxury-search-bar,
+.hero-trust-ribbon {
     transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 visibility 0.35s;
@@ -1853,7 +1854,8 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
 }
 
 .search-bar.search-card--hidden,
-.luxury-search-bar.search-card--hidden {
+.luxury-search-bar.search-card--hidden,
+.hero-trust-ribbon.search-card--hidden {
     opacity: 0 !important;
     transform: translateY(-20px) scale(0.97) !important;
     pointer-events: none !important;

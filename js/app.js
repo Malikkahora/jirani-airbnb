@@ -847,10 +847,10 @@ window.toggleMobileSearch = function (show = true) {
     }
 };
 
-// Search Card Disappears on Scroll Down
+// Search Card & Ratings Ribbon Disappear on Scroll Down
 window.addEventListener('scroll', () => {
     const scrollPos = window.scrollY || window.pageYOffset || 0;
-    const searchBars = document.querySelectorAll('.search-bar, .luxury-search-bar');
+    const scrollElements = document.querySelectorAll('.search-bar, .luxury-search-bar, .hero-trust-ribbon');
 
     // 1. Auto-dismiss mobile search card if open when user scrolls
     const activeForm = document.querySelector('.search-form.active');
@@ -860,12 +860,12 @@ window.addEventListener('scroll', () => {
         }
     }
 
-    // 2. Hide search card when scrolling down past 60px; reappear when near top
-    searchBars.forEach(bar => {
+    // 2. Hide search card and ratings ribbon when scrolling down past 60px; reappear when near top
+    scrollElements.forEach(el => {
         if (scrollPos > 60) {
-            bar.classList.add('search-card--hidden');
+            el.classList.add('search-card--hidden');
         } else {
-            bar.classList.remove('search-card--hidden');
+            el.classList.remove('search-card--hidden');
         }
     });
 }, { passive: true });
