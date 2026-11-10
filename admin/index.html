@@ -8,7 +8,41 @@
     <link rel="icon" href="../images/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Admin Styles -->
-    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin.css?v=3.0">
+    <style>
+        .btn-cat-tag, .btn-amenity-tag {
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f1f5f9;
+            border: 1.5px solid #cbd5e1;
+            color: #475569;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            user-select: none;
+        }
+        .btn-cat-tag:hover, .btn-amenity-tag:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+            color: #1e293b;
+        }
+        .btn-cat-tag.active {
+            background: #2d60ff !important;
+            border-color: #2d60ff !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(45, 96, 255, 0.35) !important;
+        }
+        .btn-amenity-tag.active {
+            background: #10b981 !important;
+            border-color: #10b981 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+        }
+    </style>
 
     <!-- Dependencies (Icons + Firebase) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -153,12 +187,12 @@
                     <div class="form-group" id="amenities-group">
                         <label class="form-label">Amenities Tags</label>
                         <div class="amenity-tags-container" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                            <button type="button" class="btn-amenity-tag" data-val="swimming pool" onclick="toggleAmenityTag('swimming pool')">🏊 Swimming Pool</button>
-                            <button type="button" class="btn-amenity-tag" data-val="gym" onclick="toggleAmenityTag('gym')">🏋️ Gym</button>
-                            <button type="button" class="btn-amenity-tag" data-val="sauna" onclick="toggleAmenityTag('sauna')">🧖 Sauna</button>
-                            <button type="button" class="btn-amenity-tag" data-val="ample parking" onclick="toggleAmenityTag('ample parking')">🅿️ Ample Parking</button>
-                            <button type="button" class="btn-amenity-tag" data-val="rooftop bar" onclick="toggleAmenityTag('rooftop bar')">🍸 Rooftop Bar</button>
-                            <button type="button" class="btn-amenity-tag" data-val="balcony" onclick="toggleAmenityTag('balcony')">🌅 Balcony</button>
+                            <button type="button" class="btn-amenity-tag" data-val="swimming pool" onclick="toggleAmenityTag('swimming pool', this)">🏊 Swimming Pool</button>
+                            <button type="button" class="btn-amenity-tag" data-val="gym" onclick="toggleAmenityTag('gym', this)">🏋️ Gym</button>
+                            <button type="button" class="btn-amenity-tag" data-val="sauna" onclick="toggleAmenityTag('sauna', this)">🧖 Sauna</button>
+                            <button type="button" class="btn-amenity-tag" data-val="ample parking" onclick="toggleAmenityTag('ample parking', this)">🅿️ Ample Parking</button>
+                            <button type="button" class="btn-amenity-tag" data-val="rooftop bar" onclick="toggleAmenityTag('rooftop bar', this)">🍸 Rooftop Bar</button>
+                            <button type="button" class="btn-amenity-tag" data-val="balcony" onclick="toggleAmenityTag('balcony', this)">🌅 Balcony</button>
                         </div>
                         <input type="text" id="edit-amenities" class="form-control" placeholder="Select tags above or enter custom amenities (comma-separated)">
                         <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Click tags to quickly assign features (Swimming Pool, Gym, Sauna, etc.) or add custom ones.</small>
@@ -167,11 +201,11 @@
                     <div class="form-group" id="categories-group">
                         <label class="form-label">Category Tags</label>
                         <div class="cat-tags-container" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                            <button type="button" class="btn-cat-tag" data-val="romantic" onclick="toggleCategoryTag('romantic')">💖 Romantic</button>
-                            <button type="button" class="btn-cat-tag" data-val="family" onclick="toggleCategoryTag('family')">👨‍👩‍👧 Family</button>
-                            <button type="button" class="btn-cat-tag" data-val="business" onclick="toggleCategoryTag('business')">💼 Business</button>
-                            <button type="button" class="btn-cat-tag" data-val="luxury" onclick="toggleCategoryTag('luxury')">✨ Luxury</button>
-                            <button type="button" class="btn-cat-tag" data-val="budget" onclick="toggleCategoryTag('budget')">💰 Budget</button>
+                            <button type="button" class="btn-cat-tag" data-val="romantic" onclick="toggleCategoryTag('romantic', this)">💖 Romantic</button>
+                            <button type="button" class="btn-cat-tag" data-val="family" onclick="toggleCategoryTag('family', this)">👨‍👩‍👧 Family</button>
+                            <button type="button" class="btn-cat-tag" data-val="business" onclick="toggleCategoryTag('business', this)">💼 Business</button>
+                            <button type="button" class="btn-cat-tag" data-val="luxury" onclick="toggleCategoryTag('luxury', this)">✨ Luxury</button>
+                            <button type="button" class="btn-cat-tag" data-val="budget" onclick="toggleCategoryTag('budget', this)">💰 Budget</button>
                         </div>
                         <input type="text" id="edit-categories" class="form-control" placeholder="Select tags above or enter categories (comma-separated)">
                         <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Assigns which category sliders and dedicated gallery pages this listing appears in.</small>
@@ -194,9 +228,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/data.js"></script>
-    <script src="../js/admin.js"></script>
+    <script src="../js/firebase-config.js?v=3.0"></script>
+    <script src="../js/data.js?v=3.0"></script>
+    <script src="../js/admin.js?v=3.0"></script>
 </body>
 
 </html>

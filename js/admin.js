@@ -127,10 +127,9 @@ function handleSearch(query) {
 }
 
 // Category Tag Toggle Logic
-function toggleCategoryTag(cat) {
-    const btn = document.querySelector(`.btn-cat-tag[data-val="${cat}"]`);
-    if (!btn) return;
-    btn.classList.toggle('active');
+window.toggleCategoryTag = function (cat, btnEl = null) {
+    const btn = btnEl || document.querySelector(`.btn-cat-tag[data-val="${cat}"]`);
+    if (btn) btn.classList.toggle('active');
 
     // Collect all active tags
     const activeTags = [];
@@ -140,19 +139,20 @@ function toggleCategoryTag(cat) {
 
     // Preserve any custom category tags typed by the admin
     const input = document.getElementById('edit-categories');
+    if (!input) return;
     const existing = (input.value || '').split(',').map(s => s.trim()).filter(Boolean);
     const standard = ['romantic', 'family', 'business', 'luxury', 'budget'];
     const customs = existing.filter(t => !standard.includes(t.toLowerCase()));
 
     const combined = [...new Set([...activeTags, ...customs])];
     input.value = combined.join(', ');
-}
+};
+function toggleCategoryTag(cat, btnEl) { return window.toggleCategoryTag(cat, btnEl); }
 
 // Amenity Tag Toggle Logic
-function toggleAmenityTag(amenity) {
-    const btn = document.querySelector(`.btn-amenity-tag[data-val="${amenity}"]`);
-    if (!btn) return;
-    btn.classList.toggle('active');
+window.toggleAmenityTag = function (amenity, btnEl = null) {
+    const btn = btnEl || document.querySelector(`.btn-amenity-tag[data-val="${amenity}"]`);
+    if (btn) btn.classList.toggle('active');
 
     // Collect all active tags
     const activeAmenityTags = [];
@@ -170,6 +170,7 @@ function toggleAmenityTag(amenity) {
     };
 
     const input = document.getElementById('edit-amenities');
+    if (!input) return;
     const existing = (input.value || '').split(',').map(s => s.trim()).filter(Boolean);
     const standardKeys = Object.keys(standardMap);
     const customs = existing.filter(t => !standardKeys.some(k => t.toLowerCase() === k));
@@ -177,7 +178,8 @@ function toggleAmenityTag(amenity) {
     const formattedActive = activeAmenityTags.map(k => standardMap[k] || k);
     const combined = [...new Set([...formattedActive, ...customs])];
     input.value = combined.join(', ');
-}
+};
+function toggleAmenityTag(amenity, btnEl) { return window.toggleAmenityTag(amenity, btnEl); }
 
 // Modal Logic
 async function openEditModal(id = null) {
@@ -435,6 +437,23 @@ function setupEventListeners() {
             });
         });
     }
+
+    // Tag Buttons Click Listeners (Double layer of safety with inline onclick)
+    document.querySelectorAll('.btn-cat-tag').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const val = this.getAttribute('data-val');
+            window.toggleCategoryTag(val, this);
+        });
+    });
+
+    document.querySelectorAll('.btn-amenity-tag').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const val = this.getAttribute('data-val');
+            window.toggleAmenityTag(val, this);
+        });
+    });
 
     // Form Submit
     document.getElementById('edit-form').addEventListener('submit', handleFormSubmit);

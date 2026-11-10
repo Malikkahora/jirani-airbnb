@@ -8,9 +8,59 @@
     <link rel="icon" href="../images/favicon.png">
     <meta name="description" content="Explore luxury amenities at Jirani Stays Nairobi: Heated swimming pools, keyless self check-in, 50+ Mbps fiber Wi-Fi, gourmet kitchens, and dedicated concierge.">
     <link rel="canonical" href="https://jiraniproperties.co.ke/airbnbs/amenities.html">
-    <link rel="stylesheet" href="../css/styles.css?v=2.1">
+    <link rel="stylesheet" href="../css/styles.css?v=2.2">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.2">
+    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.5">
+    <style>
+        .amenity-chip {
+            padding: 10px 22px;
+            background: #FFFFFF;
+            border: 1.5px solid #E2DBD0;
+            border-radius: 9999px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1F2421;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+        .amenity-chip:hover {
+            border-color: #557A68;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(85, 122, 104, 0.15);
+        }
+        .amenity-chip.active {
+            background: #557A68 !important;
+            border-color: #557A68 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 6px 18px rgba(85, 122, 104, 0.35) !important;
+        }
+        body.dark-mode .amenity-chip {
+            background: #232A26;
+            border-color: rgba(123, 178, 152, 0.2);
+            color: #FFFFFF;
+        }
+        body.dark-mode .amenity-chip.active {
+            background: #557A68 !important;
+            border-color: #557A68 !important;
+            color: #FFFFFF !important;
+        }
+        .amenity-badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(85, 122, 104, 0.1);
+            color: #557A68;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+    </style>
 </head>
 
 <body class="airbnb-page">
@@ -31,6 +81,13 @@
             </nav>
             <div class="header__actions">
                 <a href="gallery.html?category=all" class="btn btn-canva-pill" style="padding: 9px 22px !important; font-size: 0.78rem !important;">BOOK A STAY</a>
+            </div>
+            <div class="header__mobile-controls mobile-only" style="align-items: center; gap: 10px;">
+                <button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.header').classList.toggle('nav-open')">
+                    <span class="menu-toggle__bar"></span>
+                    <span class="menu-toggle__bar"></span>
+                    <span class="menu-toggle__bar"></span>
+                </button>
             </div>
         </div>
     </header>
@@ -282,15 +339,25 @@
         function checkItemMatchesAmenity(item, amenity) {
             if (!item) return false;
             if (amenity === 'all') return true;
-            const text = `${item.amenities || ''} ${item.desc || ''} ${item.title || ''}`.toLowerCase();
+            const amText = Array.isArray(item.amenities) ? item.amenities.join(' ') : (item.amenities || '');
+            const text = `${amText} ${item.desc || ''} ${item.title || ''}`.toLowerCase();
             if (amenity === 'swimming pool') {
                 return text.includes('pool') || text.includes('swimming');
             }
+            if (amenity === 'gym') {
+                return text.includes('gym') || text.includes('fitness') || text.includes('workout');
+            }
+            if (amenity === 'sauna') {
+                return text.includes('saun') || text.includes('steam') || text.includes('spa');
+            }
             if (amenity === 'ample parking') {
-                return text.includes('parking') || text.includes('garage');
+                return text.includes('parking') || text.includes('garage') || text.includes('car');
             }
             if (amenity === 'rooftop bar') {
                 return text.includes('rooftop bar') || (text.includes('rooftop') && text.includes('bar')) || text.includes('lounge');
+            }
+            if (amenity === 'balcony') {
+                return text.includes('balcon') || text.includes('terrace') || text.includes('patio');
             }
             return text.includes(amenity.toLowerCase());
         }
@@ -384,6 +451,10 @@
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 if (typeof JiraniData !== 'undefined') {
+                    // 1. Initialize Firebase DB
+                    await JiraniData.init();
+
+                    // 2. Load cached or fallback data
                     const cached = JiraniData.getAirbnbsCached();
                     if (cached && cached.length > 0) {
                         allAmenityStays = cached;
@@ -395,7 +466,7 @@
                     const initialAmenity = urlParams.get('amenity') || 'all';
                     filterByAmenity(initialAmenity);
 
-                    // Fetch fresh data in background
+                    // 3. Fetch fresh data from Firestore
                     const fresh = await JiraniData.getAirbnbs();
                     if (fresh && fresh.length > 0) {
                         allAmenityStays = fresh;
