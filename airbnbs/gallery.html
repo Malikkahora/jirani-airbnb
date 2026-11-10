@@ -286,7 +286,6 @@
                 if (descEl) descEl.innerText = 'Explore our complete portfolio of serviced apartments, boutique suites & executive penthouses across Nairobi.';
             } else if (categoryObj) {
                 allCategoryItems = items.filter(categoryObj.filter);
-                if (allCategoryItems.length === 0) allCategoryItems = items.slice(0, 8);
                 const bcEl = document.getElementById('breadcrumb-category');
                 if (bcEl) bcEl.innerText = `${categoryObj.title} Gallery`;
                 const tagEl = document.getElementById('gallery-tagline-badge');

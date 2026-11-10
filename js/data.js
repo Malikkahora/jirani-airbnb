@@ -1,4 +1,4 @@
-﻿const JiraniData = {
+const JiraniData = {
     // Flag to check if we are using Firebase
     isFirebase: true,
 
@@ -116,8 +116,10 @@
             if (item.id) {
                 await window.db.collection(STORE_AIRBNBS).doc(item.id.toString()).set(item);
             } else {
-                await window.db.collection(STORE_AIRBNBS).add(item);
+                const docRef = await window.db.collection(STORE_AIRBNBS).add(item);
+                item.id = docRef.id;
             }
+            try { localStorage.removeItem(STORE_AIRBNBS); } catch (e) {}
         } catch (e) {
             console.error("Error adding airbnb:", e);
             throw e;
@@ -130,8 +132,10 @@
             if (item.id) {
                 await window.db.collection(STORE_PROPERTIES).doc(item.id.toString()).set(item);
             } else {
-                await window.db.collection(STORE_PROPERTIES).add(item);
+                const docRef = await window.db.collection(STORE_PROPERTIES).add(item);
+                item.id = docRef.id;
             }
+            try { localStorage.removeItem(STORE_PROPERTIES); } catch (e) {}
         } catch (e) {
             console.error("Error adding property:", e);
             throw e;
@@ -141,7 +145,8 @@
     updateAirbnb: async function (item) {
         if (!window.db) return;
         try {
-            await window.db.collection(STORE_AIRBNBS).doc(item.id.toString()).update(item);
+            await window.db.collection(STORE_AIRBNBS).doc(item.id.toString()).set(item, { merge: true });
+            try { localStorage.removeItem(STORE_AIRBNBS); } catch (e) {}
         } catch (e) {
             console.error("Error updating airbnb:", e);
             throw e;
@@ -151,7 +156,8 @@
     updateProperty: async function (item) {
         if (!window.db) return;
         try {
-            await window.db.collection(STORE_PROPERTIES).doc(item.id.toString()).update(item);
+            await window.db.collection(STORE_PROPERTIES).doc(item.id.toString()).set(item, { merge: true });
+            try { localStorage.removeItem(STORE_PROPERTIES); } catch (e) {}
         } catch (e) {
             console.error("Error updating property:", e);
             throw e;
@@ -160,12 +166,24 @@
 
     deleteAirbnb: async function (id) {
         if (!window.db) return;
-        await window.db.collection(STORE_AIRBNBS).doc(id.toString()).delete();
+        try {
+            await window.db.collection(STORE_AIRBNBS).doc(id.toString()).delete();
+            try { localStorage.removeItem(STORE_AIRBNBS); } catch (e) {}
+        } catch (e) {
+            console.error("Error deleting airbnb:", e);
+            throw e;
+        }
     },
 
     deleteProperty: async function (id) {
         if (!window.db) return;
-        await window.db.collection(STORE_PROPERTIES).doc(id.toString()).delete();
+        try {
+            await window.db.collection(STORE_PROPERTIES).doc(id.toString()).delete();
+            try { localStorage.removeItem(STORE_PROPERTIES); } catch (e) {}
+        } catch (e) {
+            console.error("Error deleting property:", e);
+            throw e;
+        }
     },
 
     resetData: async function () {

@@ -1526,9 +1526,6 @@ window.filterByCategory = async function(category, btn, shouldScroll = true) {
                 return keywords.some(k => text.includes(k));
             });
         }
-        if (filtered.length === 0) {
-            filtered = items.slice(0, 8);
-        }
     }
 
     // 3. Dynamic Category Gallery Banner

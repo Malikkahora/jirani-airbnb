@@ -168,7 +168,7 @@ async function openEditModal(id = null) {
         editingId = id;
         document.getElementById('modal-title').textContent = 'Edit Listing';
 
-        const item = allItems.find(i => i.id === id);
+        const item = allItems.find(i => String(i.id) === String(id));
         if (item) {
             document.getElementById('edit-title').value = item.title;
             document.getElementById('edit-desc').value = item.desc || '';
@@ -283,7 +283,8 @@ async function handleFormSubmit(e) {
 
         if (editingId) {
             // Update
-            const item = { ...allItems.find(i => i.id === editingId), ...formData };
+            const existing = allItems.find(i => String(i.id) === String(editingId)) || {};
+            const item = { ...existing, ...formData, id: editingId };
             if (currentTab === 'airbnbs') await JiraniData.updateAirbnb(item);
             else await JiraniData.updateProperty(item);
         } else {
@@ -296,6 +297,11 @@ async function handleFormSubmit(e) {
             if (currentTab === 'airbnbs') await JiraniData.addAirbnb(newItem);
             else await JiraniData.addProperty(newItem);
         }
+
+        try {
+            localStorage.removeItem('jirani_airbnbs');
+            localStorage.removeItem('jirani_properties');
+        } catch (e) {}
 
         await loadData(currentTab);
         closeModal();
