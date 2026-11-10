@@ -68,14 +68,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("Rendering Airbnbs from cache (Pre-Init)");
             const urlParams = new URLSearchParams(window.location.search);
             const activeCat = urlParams.get('category') || 'all';
+            if (typeof renderCategorySliders === 'function') {
+                renderCategorySliders(cachedAirbnbs, 'all');
+            }
             if (activeCat && activeCat !== 'all' && typeof window.filterByCategory === 'function') {
                 const chip = document.querySelector(`[data-category="${activeCat}"]`);
                 window.filterByCategory(activeCat, chip, false);
             } else {
                 renderAirbnbs(cachedAirbnbs);
-                if (typeof renderCategorySliders === 'function') {
-                    renderCategorySliders(cachedAirbnbs, 'all');
-                }
             }
         } else {
             renderLoadingState('airbnb-grid');
@@ -121,12 +121,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("Rendering fresh Airbnbs");
         const urlParams = new URLSearchParams(window.location.search);
         const activeCat = urlParams.get('category') || (document.querySelector('.category-chip.active') ? document.querySelector('.category-chip.active').getAttribute('data-category') : 'all');
+        if (typeof renderCategorySliders === 'function') {
+            renderCategorySliders(freshAirbnbs, 'all');
+        }
         if (activeCat && activeCat !== 'all' && typeof window.filterByCategory === 'function') {
             const chip = document.querySelector(`[data-category="${activeCat}"]`);
             window.filterByCategory(activeCat, chip, false);
         } else {
             renderAirbnbs(freshAirbnbs);
-            renderCategorySliders(freshAirbnbs, 'all');
         }
     } else if (isPropertyPage) {
         const freshProperties = await JiraniData.getProperties();
@@ -862,7 +864,7 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
                 <div class="slider-header-flex">
                     <div class="slider-title-group">
                         <div class="slider-tagline">${cat.tagline}</div>
-                        <div class="slider-title-row clickable" onclick="window.location.href='/airbnbs/gallery.html?category=${cat.id}'" title="Open ${cat.title} Gallery">
+                        <div class="slider-title-row clickable" onclick="window.location.href='gallery.html?category=${cat.id}'" title="Open ${cat.title} Gallery">
                             <span class="slider-icon">${cat.icon}</span>
                             <h2 class="slider-title">${cat.title}</h2>
                             <span class="category-count-badge">${catItems.length} stays</span>
@@ -870,7 +872,7 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
                         <p class="slider-subtitle-text">${cat.subtitle}</p>
                     </div>
                     <div class="slider-header-actions">
-                        <button type="button" class="slider-view-all-btn" onclick="window.location.href='/airbnbs/gallery.html?category=${cat.id}'" title="Open ${cat.title} Gallery">
+                        <button type="button" class="slider-view-all-btn" onclick="window.location.href='gallery.html?category=${cat.id}'" title="Open ${cat.title} Gallery">
                             Open ${cat.title} Gallery (${catItems.length}) &rarr;
                         </button>
                         <div class="slider-nav-arrows">
@@ -915,7 +917,7 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
 
         // Dedicated "Open Full Gallery" card at the end of every category slider track
         html += `
-            <div class="slider-card slider-card--gallery-cta" onclick="window.location.href='/airbnbs/gallery.html?category=${cat.id}'" title="Open full ${cat.title} Gallery">
+            <div class="slider-card slider-card--gallery-cta" onclick="window.location.href='gallery.html?category=${cat.id}'" title="Open full ${cat.title} Gallery">
                 <div class="gallery-cta-inner">
                     <span class="gallery-cta-icon">${cat.icon}</span>
                     <div class="gallery-cta-badge">${catItems.length}+ STAYS</div>
