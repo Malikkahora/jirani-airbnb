@@ -10,7 +10,7 @@
     <link rel="canonical" href="https://jiraniproperties.co.ke/airbnbs/gallery.html">
     <link rel="stylesheet" href="../css/styles.css?v=2.0">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.0">
+    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.1">
 </head>
 
 <body class="airbnb-page">
@@ -223,13 +223,38 @@
             const urlParams = new URLSearchParams(window.location.search);
             currentCategory = urlParams.get('category') || 'romantic';
 
-            await JiraniData.init();
-            const allItems = await JiraniData.getAirbnbs();
-            
-            updateCategoryView(currentCategory, allItems);
+            // 1. Immediately render from local cache for instant load (0ms delay)
+            let allItems = (typeof JiraniData !== 'undefined' && typeof JiraniData.getAirbnbsCached === 'function')
+                ? JiraniData.getAirbnbsCached()
+                : [];
+
+            if (allItems && allItems.length > 0) {
+                console.log(`Gallery: Loaded ${allItems.length} items from cache`);
+                updateCategoryView(currentCategory, allItems);
+            }
+
+            // 2. Fetch fresh items asynchronously from Firebase
+            try {
+                if (typeof JiraniData !== 'undefined' && typeof JiraniData.getAirbnbs === 'function') {
+                    const freshItems = await JiraniData.getAirbnbs();
+                    if (freshItems && freshItems.length > 0) {
+                        allItems = freshItems;
+                        updateCategoryView(currentCategory, allItems);
+                    }
+                }
+            } catch (e) {
+                console.warn("Could not fetch live Firebase data:", e);
+            }
+
+            // 3. Fallback to sample data if cache & network were both empty
+            if ((!allItems || allItems.length === 0) && typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
+                console.log("Gallery: Falling back to savedExportData");
+                updateCategoryView(currentCategory, savedExportData.airbnbs);
+            }
         }
 
         function updateCategoryView(catId, items) {
+            if (!items || items.length === 0) return;
             currentCategory = catId;
 
             // Highlight chip
@@ -246,22 +271,31 @@
             // Filter items
             if (catId === 'all') {
                 allCategoryItems = items;
-                document.getElementById('breadcrumb-category').innerText = 'All Stays Gallery';
-                document.getElementById('gallery-tagline-badge').innerText = '✦ ALL VERIFIED STAYS';
-                document.getElementById('gallery-main-title').innerHTML = '🏠 All Airbnb Stays in Nairobi';
-                document.getElementById('gallery-main-desc').innerText = 'Explore our complete portfolio of serviced apartments, boutique suites & executive penthouses across Nairobi.';
+                const bcEl = document.getElementById('breadcrumb-category');
+                if (bcEl) bcEl.innerText = 'All Stays Gallery';
+                const tagEl = document.getElementById('gallery-tagline-badge');
+                if (tagEl) tagEl.innerText = '✦ ALL VERIFIED STAYS';
+                const titleEl = document.getElementById('gallery-main-title');
+                if (titleEl) titleEl.innerHTML = '🏠 All Airbnb Stays in Nairobi';
+                const descEl = document.getElementById('gallery-main-desc');
+                if (descEl) descEl.innerText = 'Explore our complete portfolio of serviced apartments, boutique suites & executive penthouses across Nairobi.';
             } else if (categoryObj) {
                 allCategoryItems = items.filter(categoryObj.filter);
                 if (allCategoryItems.length === 0) allCategoryItems = items.slice(0, 8);
-                document.getElementById('breadcrumb-category').innerText = `${categoryObj.title} Gallery`;
-                document.getElementById('gallery-tagline-badge').innerText = categoryObj.tagline || '✦ CURATED EXPERIENCE';
-                document.getElementById('gallery-main-title').innerHTML = `${categoryObj.icon} ${categoryObj.title} Gallery`;
-                document.getElementById('gallery-main-desc').innerText = categoryObj.subtitle || 'Handpicked premium stays.';
+                const bcEl = document.getElementById('breadcrumb-category');
+                if (bcEl) bcEl.innerText = `${categoryObj.title} Gallery`;
+                const tagEl = document.getElementById('gallery-tagline-badge');
+                if (tagEl) tagEl.innerText = categoryObj.tagline || '✦ CURATED EXPERIENCE';
+                const titleEl = document.getElementById('gallery-main-title');
+                if (titleEl) titleEl.innerHTML = `${categoryObj.icon} ${categoryObj.title} Gallery`;
+                const descEl = document.getElementById('gallery-main-desc');
+                if (descEl) descEl.innerText = categoryObj.subtitle || 'Handpicked premium stays.';
             } else {
                 allCategoryItems = items;
             }
 
-            document.getElementById('gallery-total-count').innerText = `${allCategoryItems.length} Verified Stays`;
+            const countEl = document.getElementById('gallery-total-count');
+            if (countEl) countEl.innerText = `${allCategoryItems.length} Verified Stays`;
 
             // Reset neighborhood filter
             currentNeighborhood = 'all';
@@ -273,16 +307,27 @@
             renderGalleryItems(currentDisplayedItems, catId);
 
             // Update URL without reload
-            const url = new URL(window.location);
-            url.searchParams.set('category', catId);
-            window.history.replaceState({}, '', url);
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set('category', catId);
+                window.history.replaceState({}, '', url);
+            } catch (e) {}
         }
 
         function switchCategory(catId) {
-            JiraniData.getAirbnbs().then(items => {
+            currentCategory = catId;
+            let items = (typeof JiraniData !== 'undefined' && typeof JiraniData.getAirbnbsCached === 'function')
+                ? JiraniData.getAirbnbsCached()
+                : [];
+            if (items && items.length > 0) {
                 updateCategoryView(catId, items);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            }
+            if (typeof JiraniData !== 'undefined' && typeof JiraniData.getAirbnbs === 'function') {
+                JiraniData.getAirbnbs().then(fresh => {
+                    if (fresh && fresh.length > 0) updateCategoryView(catId, fresh);
+                }).catch(e => console.warn(e));
+            }
         }
 
         function filterNeighborhood(neigh, btn) {
@@ -347,18 +392,18 @@
                             </button>
                         </div>
                         <div class="gallery-card__body">
-                            <div class="gallery-card__loc">${item.location || 'Nairobi'}</div>
-                            <h3 class="gallery-card__title" title="${item.title}">${item.title}</h3>
-                            <div class="gallery-card__stats">
+                            <div class="gallery-card__location">${item.location || 'Nairobi'}</div>
+                            <h3 class="gallery-card__name" title="${item.title}">${item.title}</h3>
+                            <div class="gallery-card__meta">
                                 <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg> ${item.rooms || item.beds || 1} Bed</span>
                                 <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 19v2"/><path d="M17 19v2"/><path d="M2 12h20"/><path d="M2 12v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5"/><path d="M4 12V9a2 2 0 0 1 2-2h2"/></svg> ${item.baths || 1} Bath</span>
                                 ${item.amenities && item.amenities.toLowerCase().includes('wifi') ? `<span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> Wifi</span>` : ''}
                             </div>
                             <div class="gallery-card__price-row">
                                 <div class="gallery-card__price">
-                                    <strong>KES ${item.price.toLocaleString()}</strong> <span class="night-label">/ night</span>
+                                    KES ${item.price ? item.price.toLocaleString() : '3,000'} <span class="gallery-card__price-night">/ night</span>
                                 </div>
-                                <span class="gallery-card__action">View Details &rarr;</span>
+                                <div class="gallery-card__rating">⭐️ 4.98</div>
                             </div>
                         </div>
                     </article>
