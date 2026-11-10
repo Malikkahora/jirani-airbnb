@@ -849,9 +849,23 @@ window.toggleMobileSearch = function (show = true) {
     }
 };
 
+// Calculate dynamic hero scroll threshold:
+// Triggers only when the hero search bar reaches near the top header,
+// rather than disappearing prematurely while the user is still reading the hero.
+function getHeroScrollThreshold() {
+    const isMobile = window.innerWidth <= 768;
+    const heroContent = document.querySelector('.luxury-hero .hero__content');
+    if (heroContent) {
+        const headerOffset = isMobile ? 65 : 100;
+        const searchTop = heroContent.offsetTop + heroContent.offsetHeight;
+        return Math.max(isMobile ? 260 : 340, Math.round(searchTop - headerOffset + 20));
+    }
+    return isMobile ? 280 : 380;
+}
+
 // Search Bar & Ratings Scroll Behavior:
-// - Desktop: Search bar & ratings ribbon disappear on scroll down (> 60px) and collapse space so below content moves up; reappear at top.
-// - Mobile: Retain search bar! Hides when scrolling down (> 70px); appears in full as a floating sticky bar when scrolling UP.
+// - Desktop: Search bar & ratings ribbon disappear only when reaching header scroll point; reappear when returning to hero.
+// - Mobile: Retains search bar in hero. Once scrolled past hero, hides on scroll-down and appears in full on scroll-up.
 let lastScrollY = window.scrollY || window.pageYOffset || 0;
 
 window.addEventListener('scroll', () => {
@@ -863,6 +877,10 @@ window.addEventListener('scroll', () => {
     const collapsibleWrap = document.getElementById('hero-search-collapsible-wrap');
     const heroSection = document.querySelector('.luxury-hero');
 
+    // Dynamic threshold: scroll point where search bar actually reaches the top header
+    const threshold = getHeroScrollThreshold();
+    const returnThreshold = threshold - (isMobile ? 60 : 80);
+
     // 1. Auto-dismiss mobile search card if open when user scrolled significantly
     const activeForm = document.querySelector('.search-form.active');
     if (activeForm && Math.abs(diff) > 35) {
@@ -873,8 +891,8 @@ window.addEventListener('scroll', () => {
 
     if (isMobile) {
         // MOBILE LOGIC:
-        if (scrollPos <= 70) {
-            // Near top hero section: search bar rests in normal inline hero position
+        if (scrollPos <= returnThreshold) {
+            // Inside the hero section: search bar rests in normal inline hero position
             searchBars.forEach(bar => {
                 bar.classList.remove('search-card--hidden');
                 bar.classList.remove('mobile-scroll-up-active');
@@ -882,8 +900,8 @@ window.addEventListener('scroll', () => {
             if (heroTrustRibbon) heroTrustRibbon.classList.remove('search-card--hidden');
             if (collapsibleWrap) collapsibleWrap.classList.remove('is-collapsed');
             if (heroSection) heroSection.classList.remove('hero-scrolled-collapsed');
-        } else {
-            // Below top scroll point on mobile:
+        } else if (scrollPos >= threshold) {
+            // Below the hero scroll point on mobile:
             // Hero space stays collapsed so listings occupy top space smoothly
             if (collapsibleWrap) collapsibleWrap.classList.add('is-collapsed');
             if (heroSection) heroSection.classList.add('hero-scrolled-collapsed');
@@ -905,7 +923,7 @@ window.addEventListener('scroll', () => {
         }
     } else {
         // DESKTOP LOGIC:
-        if (scrollPos > 60) {
+        if (scrollPos >= threshold) {
             searchBars.forEach(bar => {
                 bar.classList.add('search-card--hidden');
                 bar.classList.remove('mobile-scroll-up-active');
@@ -913,7 +931,7 @@ window.addEventListener('scroll', () => {
             if (heroTrustRibbon) heroTrustRibbon.classList.add('search-card--hidden');
             if (collapsibleWrap) collapsibleWrap.classList.add('is-collapsed');
             if (heroSection) heroSection.classList.add('hero-scrolled-collapsed');
-        } else {
+        } else if (scrollPos <= returnThreshold) {
             searchBars.forEach(bar => {
                 bar.classList.remove('search-card--hidden');
                 bar.classList.remove('mobile-scroll-up-active');
