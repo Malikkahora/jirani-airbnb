@@ -774,80 +774,159 @@
             </div>
         </section>
 
-        <!-- 2. BROWSE BY STAY EXPERIENCE (EDITORIAL BENTO SHOWCASE) -->
-        <section class="experience-bento-section">
+        <!-- 2. CATEGORY OPTIONS SLIDER (CLICK ANY TO REDIRECT TO ITS DEDICATED GALLERY PAGE) -->
+        <section class="category-options-slider-section" id="category-options">
             <div class="container">
-                <div class="section-header-centered">
-                    <div class="section-tagline">TAILORED TO YOUR TRAVEL STYLE</div>
-                    <h2 class="editorial-heading">Explore By Stay Experience</h2>
-                    <p class="editorial-subheading">From romantic couple escapes to spacious family homes and executive work suites, find your bespoke stay.</p>
+                <div class="category-slider-header-flex">
+                    <div class="category-slider-title-group">
+                        <div class="section-tagline">✦ CURATED BY TRAVEL EXPERIENCE</div>
+                        <h2 class="editorial-heading">Explore By Category</h2>
+                        <p class="editorial-subheading">Choose your stay style below. Each category opens a dedicated, organized gallery with instant booking.</p>
+                    </div>
+                    <div class="cat-slider-nav-arrows">
+                        <button type="button" class="cat-slider-arrow prev" onclick="scrollCategoryOptions(-1)" aria-label="Previous Category Options">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        <button type="button" class="cat-slider-arrow next" onclick="scrollCategoryOptions(1)" aria-label="Next Category Options">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="bento-grid">
-                    <!-- Romantic Card (Large Featured) -->
-                    <div class="bento-card bento-card--large" onclick="window.location.href='gallery.html?category=romantic'" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg');">
-                        <div class="bento-card__overlay"></div>
-                        <div class="bento-card__badge">💑 COUPLES & GETAWAYS</div>
-                        <div class="bento-card__content">
-                            <h3 class="bento-card__title">Romantic Stays</h3>
-                            <p class="bento-card__desc">Intimate studio suites, mood lighting, plush bedding & private sunset balconies.</p>
-                            <span class="bento-card__cta">Open Category Gallery &rarr;</span>
+                <!-- Slider Track of Category Cards -->
+                <div class="category-options-track-wrapper">
+                    <div class="category-options-track" id="category-options-track">
+                        <!-- 1. Romantic Stays -->
+                        <div class="category-option-card" onclick="window.location.href='gallery.html?category=romantic'" role="button" tabindex="0">
+                            <div class="cat-option-img-wrap">
+                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg" alt="Romantic Stays" class="cat-option-img" loading="lazy">
+                                <div class="cat-option-overlay"></div>
+                                <div class="cat-option-badge">💑 COUPLES & GETAWAYS</div>
+                                <div class="cat-option-count" id="count-romantic">78 Stays</div>
+                            </div>
+                            <div class="cat-option-content">
+                                <div class="cat-option-title-row">
+                                    <span class="cat-option-icon">💖</span>
+                                    <h3 class="cat-option-title">Romantic Stays</h3>
+                                </div>
+                                <p class="cat-option-desc">Intimate studio suites, mood lighting, plush bedding & private sunset balconies.</p>
+                                <div class="cat-option-footer">
+                                    <span class="cat-option-price">From KES 3,000 / nt</span>
+                                    <span class="cat-option-cta">Open Gallery &rarr;</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Family Card -->
-                    <div class="bento-card" onclick="window.location.href='gallery.html?category=family'" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316281/fef1ibgclv5yawyfhznj.jpg');">
-                        <div class="bento-card__overlay"></div>
-                        <div class="bento-card__badge">👨‍👩‍👧 ROOM TO GATHER</div>
-                        <div class="bento-card__content">
-                            <h3 class="bento-card__title">Family Stays</h3>
-                            <p class="bento-card__desc">Spacious 2-4 bedroom apartments with fully-equipped kitchens & quiet compounds.</p>
-                            <span class="bento-card__cta">Open Category Gallery &rarr;</span>
+                        <!-- 2. Family Stays -->
+                        <div class="category-option-card" onclick="window.location.href='gallery.html?category=family'" role="button" tabindex="0">
+                            <div class="cat-option-img-wrap">
+                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316281/fef1ibgclv5yawyfhznj.jpg" alt="Family Stays" class="cat-option-img" loading="lazy">
+                                <div class="cat-option-overlay"></div>
+                                <div class="cat-option-badge">👨‍👩‍👧 ROOM TO GATHER</div>
+                                <div class="cat-option-count" id="count-family">45 Stays</div>
+                            </div>
+                            <div class="cat-option-content">
+                                <div class="cat-option-title-row">
+                                    <span class="cat-option-icon">👨‍👩‍👧</span>
+                                    <h3 class="cat-option-title">Family Stays</h3>
+                                </div>
+                                <p class="cat-option-desc">Spacious 2-4 bedroom apartments with fully-equipped kitchens & quiet compounds.</p>
+                                <div class="cat-option-footer">
+                                    <span class="cat-option-price">From KES 6,000 / nt</span>
+                                    <span class="cat-option-cta">Open Gallery &rarr;</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Business Card -->
-                    <div class="bento-card" onclick="window.location.href='gallery.html?category=business'" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316280/tr3auzjcr38xyfeajbiz.jpg');">
-                        <div class="bento-card__overlay"></div>
-                        <div class="bento-card__badge">💼 WORK-READY</div>
-                        <div class="bento-card__content">
-                            <h3 class="bento-card__title">Executive & Business</h3>
-                            <p class="bento-card__desc">Dedicated desks, ultra-fast fiber Wi-Fi & central access to Westlands and CBD.</p>
-                            <span class="bento-card__cta">Open Category Gallery &rarr;</span>
+                        <!-- 3. Business Stays -->
+                        <div class="category-option-card" onclick="window.location.href='gallery.html?category=business'" role="button" tabindex="0">
+                            <div class="cat-option-img-wrap">
+                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316280/tr3auzjcr38xyfeajbiz.jpg" alt="Business Stays" class="cat-option-img" loading="lazy">
+                                <div class="cat-option-overlay"></div>
+                                <div class="cat-option-badge">💼 WORK-READY</div>
+                                <div class="cat-option-count" id="count-business">50 Stays</div>
+                            </div>
+                            <div class="cat-option-content">
+                                <div class="cat-option-title-row">
+                                    <span class="cat-option-icon">💼</span>
+                                    <h3 class="cat-option-title">Executive & Business</h3>
+                                </div>
+                                <p class="cat-option-desc">Dedicated desks, ultra-fast fiber Wi-Fi & central access to Westlands and CBD.</p>
+                                <div class="cat-option-footer">
+                                    <span class="cat-option-price">From KES 4,500 / nt</span>
+                                    <span class="cat-option-cta">Open Gallery &rarr;</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Luxury Card -->
-                    <div class="bento-card" onclick="window.location.href='gallery.html?category=luxury'" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316282/dl8tklgck0jc4npsn5kk.jpg');">
-                        <div class="bento-card__overlay"></div>
-                        <div class="bento-card__badge">✨ PREMIER LIVING</div>
-                        <div class="bento-card__content">
-                            <h3 class="bento-card__title">Luxury Penthouses</h3>
-                            <p class="bento-card__desc">Heated rooftop pools, panoramic skyline views, elevator access & designer finishes.</p>
-                            <span class="bento-card__cta">Open Category Gallery &rarr;</span>
+                        <!-- 4. Luxury Penthouses -->
+                        <div class="category-option-card" onclick="window.location.href='gallery.html?category=luxury'" role="button" tabindex="0">
+                            <div class="cat-option-img-wrap">
+                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316282/dl8tklgck0jc4npsn5kk.jpg" alt="Luxury Penthouses" class="cat-option-img" loading="lazy">
+                                <div class="cat-option-overlay"></div>
+                                <div class="cat-option-badge">✨ PREMIER LIVING</div>
+                                <div class="cat-option-count" id="count-luxury">25 Stays</div>
+                            </div>
+                            <div class="cat-option-content">
+                                <div class="cat-option-title-row">
+                                    <span class="cat-option-icon">✨</span>
+                                    <h3 class="cat-option-title">Luxury Penthouses</h3>
+                                </div>
+                                <p class="cat-option-desc">Heated rooftop pools, panoramic skyline views, elevator access & designer finishes.</p>
+                                <div class="cat-option-footer">
+                                    <span class="cat-option-price">From KES 8,000 / nt</span>
+                                    <span class="cat-option-cta">Open Gallery &rarr;</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Budget Card -->
-                    <div class="bento-card" onclick="window.location.href='gallery.html?category=budget'" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316276/sqkfnwwodlyww2665yvm.jpg');">
-                        <div class="bento-card__overlay"></div>
-                        <div class="bento-card__badge">💰 TOP VALUE</div>
-                        <div class="bento-card__content">
-                            <h3 class="bento-card__title">Smart Budget Gems</h3>
-                            <p class="bento-card__desc">Stylish, clean and exceptionally cozy apartments under KES 4,500 / night.</p>
-                            <span class="bento-card__cta">Open Category Gallery &rarr;</span>
+                        <!-- 5. Budget Friendly -->
+                        <div class="category-option-card" onclick="window.location.href='gallery.html?category=budget'" role="button" tabindex="0">
+                            <div class="cat-option-img-wrap">
+                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316276/sqkfnwwodlyww2665yvm.jpg" alt="Budget Friendly" class="cat-option-img" loading="lazy">
+                                <div class="cat-option-overlay"></div>
+                                <div class="cat-option-badge">💰 TOP VALUE</div>
+                                <div class="cat-option-count" id="count-budget">30 Stays</div>
+                            </div>
+                            <div class="cat-option-content">
+                                <div class="cat-option-title-row">
+                                    <span class="cat-option-icon">💰</span>
+                                    <h3 class="cat-option-title">Smart Budget Gems</h3>
+                                </div>
+                                <p class="cat-option-desc">Stylish, clean and exceptionally cozy apartments under KES 4,500 / night.</p>
+                                <div class="cat-option-footer">
+                                    <span class="cat-option-price">Under KES 4,500 / nt</span>
+                                    <span class="cat-option-cta">Open Gallery &rarr;</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. All Nairobi Stays -->
+                        <div class="category-option-card cat-option-card--all" onclick="window.location.href='gallery.html?category=all'" role="button" tabindex="0">
+                            <div class="cat-option-img-wrap">
+                                <img src="../images/home-bg.jpg" alt="All Nairobi Stays" class="cat-option-img" loading="lazy">
+                                <div class="cat-option-overlay"></div>
+                                <div class="cat-option-badge">🏠 ALL PROPERTIES</div>
+                                <div class="cat-option-count" id="count-all">78+ Stays</div>
+                            </div>
+                            <div class="cat-option-content">
+                                <div class="cat-option-title-row">
+                                    <span class="cat-option-icon">🏙️</span>
+                                    <h3 class="cat-option-title">All Nairobi Stays</h3>
+                                </div>
+                                <p class="cat-option-desc">Browse every verified apartment across Kilimani, Westlands, Kileleshwa & more.</p>
+                                <div class="cat-option-footer">
+                                    <span class="cat-option-price">All Neighborhoods</span>
+                                    <span class="cat-option-cta">Open Gallery &rarr;</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. CATEGORY SLIDERS (CLICK ANY TO OPEN ITS DEDICATED GALLERY PAGE) -->
-        <section class="category-sliders-section" id="category-sliders-container">
-            <!-- Dynamically populated category sliders -->
-        </section>
-
-        <!-- 4. WHY CHOOSE JIRANI STAYS (4 BOUTIQUE PILLARS) -->
+        <!-- 3. WHY CHOOSE JIRANI STAYS (4 BOUTIQUE PILLARS) -->
         <section class="hospitality-pillars-section">
             <div class="container">
                 <div class="section-header-centered">
@@ -881,68 +960,35 @@
             </div>
         </section>
 
-        <!-- 5. MAIN ORGANIZED GALLERY SECTION -->
+        <!-- 4. HANDPICKED FEATURED STAYS (CLEAN CURATED SHOWCASE — NOT CLUTTERED) -->
         <section class="featured luxury-gallery-section" id="airbnbs">
             <div class="container">
-                <!-- Category Switcher Pill Strip -->
-                <div class="gallery-category-pills">
-                    <button type="button" class="category-chip active" data-category="all" onclick="filterByNeighborhood('all', null)">
-                        <span class="chip-icon">🏠</span> All Stays
-                    </button>
-                    <button type="button" class="category-chip" data-category="romantic" onclick="window.location.href='gallery.html?category=romantic'">
-                        <span class="chip-icon">💑</span> Romantic Gallery
-                    </button>
-                    <button type="button" class="category-chip" data-category="family" onclick="window.location.href='gallery.html?category=family'">
-                        <span class="chip-icon">👨‍👩‍👧</span> Family Gallery
-                    </button>
-                    <button type="button" class="category-chip" data-category="business" onclick="window.location.href='gallery.html?category=business'">
-                        <span class="chip-icon">💼</span> Business Gallery
-                    </button>
-                    <button type="button" class="category-chip" data-category="luxury" onclick="window.location.href='gallery.html?category=luxury'">
-                        <span class="chip-icon">✨</span> Luxury Gallery
-                    </button>
-                    <button type="button" class="category-chip" data-category="budget" onclick="window.location.href='gallery.html?category=budget'">
-                        <span class="chip-icon">💰</span> Budget Gallery
-                    </button>
-                </div>
-
-                <!-- Neighborhood Explorer & Header Row -->
-                <div class="neighborhood-explorer">
-                    <div class="neighborhood-heading-row">
-                        <div>
-                            <h2 class="section-title">All Airbnb Stays in Nairobi</h2>
-                            <div class="section-subtitle">
-                                <span class="section-subtitle-text">Curated stays in top locations &bull; Instant confirmation</span>
-                            </div>
-                        </div>
-                        <div class="sort-wrapper">
-                            <label for="sort-select" style="font-size:0.85rem;color:#777;font-weight:600;">Sort:</label>
-                            <select id="sort-select" onchange="onSortChange(this.value)" class="luxury-sort-select">
-                                <option value="recommended">Featured Stays</option>
-                                <option value="price-asc">Price: Low to High</option>
-                                <option value="price-desc">Price: High to Low</option>
-                                <option value="beds-desc">Most Bedrooms</option>
-                            </select>
+                <div class="neighborhood-heading-row">
+                    <div>
+                        <div class="section-tagline">HANDPICKED FOR YOU</div>
+                        <h2 class="section-title">Trending Stays in Nairobi</h2>
+                        <div class="section-subtitle">
+                            <span class="section-subtitle-text">Curated top picks &bull; Click any stay for details or explore by category above</span>
                         </div>
                     </div>
-
-                    <!-- Neighborhood Chips Filter -->
-                    <div class="neighborhood-chips-scroll">
-                        <button type="button" class="neighborhood-chip active" onclick="filterByNeighborhood('all', this)">All Nairobi</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('kilimani', this)">Kilimani</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('westlands', this)">Westlands</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('kileleshwa', this)">Kileleshwa</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('south b', this)">South B</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('syokimau', this)">Syokimau</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('roysambu', this)">Roysambu</button>
-                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('lavington', this)">Lavington</button>
-                    </div>
+                    <a href="gallery.html?category=all" class="slider-view-all-btn">
+                        Explore Full Gallery (78+ Stays) &rarr;
+                    </a>
                 </div>
 
-                <!-- THE ORGANIZED GALLERY GRID -->
+                <!-- Clean Curated Grid -->
                 <div class="airbnb-gallery-grid" id="airbnb-grid">
                     <!-- Loaded via JS -->
                 </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="gallery.html?category=all" class="slider-view-all-btn" style="background: var(--bnb-accent); color: #fff !important; font-size: 0.95rem; padding: 15px 36px; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>View All Categories & Stays in Dedicated Gallery</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
             </div>
         </section>
 

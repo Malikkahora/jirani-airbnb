@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("Rendering Airbnbs from cache (Pre-Init)");
             const urlParams = new URLSearchParams(window.location.search);
             const activeCat = urlParams.get('category') || 'all';
+            updateCategoryCounts(cachedAirbnbs);
             if (typeof renderCategorySliders === 'function') {
                 renderCategorySliders(cachedAirbnbs, 'all');
             }
@@ -121,6 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("Rendering fresh Airbnbs");
         const urlParams = new URLSearchParams(window.location.search);
         const activeCat = urlParams.get('category') || (document.querySelector('.category-chip.active') ? document.querySelector('.category-chip.active').getAttribute('data-category') : 'all');
+        updateCategoryCounts(freshAirbnbs);
         if (typeof renderCategorySliders === 'function') {
             renderCategorySliders(freshAirbnbs, 'all');
         }
@@ -724,6 +726,30 @@ function renderAirbnbs(items, activeCategory = 'all') {
 
 function renderProperties(items) {
     renderGroupedListings('property-grid', items, 'property');
+}
+
+// Category Options Slider Scroll & Live Counts
+window.scrollCategoryOptions = function(direction) {
+    const track = document.getElementById('category-options-track');
+    if (!track) return;
+    const card = track.querySelector('.category-option-card');
+    const scrollAmount = card ? (card.offsetWidth + 22) : 340;
+    track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+};
+
+function updateCategoryCounts(items) {
+    if (!items || !items.length || typeof CATEGORY_CONFIG === 'undefined') return;
+    CATEGORY_CONFIG.forEach(cat => {
+        const countEl = document.getElementById(`count-${cat.id}`);
+        if (countEl && cat.filter) {
+            const count = items.filter(cat.filter).length;
+            countEl.textContent = `${count} Stays`;
+        }
+    });
+    const countAll = document.getElementById('count-all');
+    if (countAll) {
+        countAll.textContent = `${items.length}+ Stays`;
+    }
 }
 
 // Profile Dropdown Functionality
