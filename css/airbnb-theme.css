@@ -1805,6 +1805,134 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
 @media (max-width: 768px) {
     .luxury-hero { padding: 135px 0 60px !important; }
     .luxury-hero .hero__title { font-size: 2.2rem; }
+
+    /* Mobile Unified Luxury Search Pill */
+    .luxury-search-bar {
+        padding: 0 !important;
+        border-radius: 9999px !important;
+        background: #FFFFFF !important;
+        border: 1px solid rgba(85, 122, 104, 0.22) !important;
+        box-shadow: 0 10px 28px rgba(31, 36, 33, 0.1) !important;
+        width: 100% !important;
+        max-width: 440px !important;
+        margin: 0 auto !important;
+        transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s;
+    }
+
+    body.dark-mode .luxury-search-bar {
+        background: #1f2722 !important;
+        border-color: rgba(123, 178, 152, 0.25) !important;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .luxury-search-bar .search-mobile-toggle {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 10px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        cursor: pointer;
+    }
+
+    .search-mobile-toggle__left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+    }
+
+    .search-mobile-toggle__icon-wrap {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(85, 122, 104, 0.12);
+        color: var(--bnb-accent, #557A68);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    body.dark-mode .search-mobile-toggle__icon-wrap {
+        background: rgba(123, 178, 152, 0.2);
+        color: #7bb298;
+    }
+
+    .search-mobile-toggle__title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--bnb-text, #1F2421);
+        line-height: 1.2;
+    }
+
+    body.dark-mode .search-mobile-toggle__title {
+        color: #FFFFFF;
+    }
+
+    .search-mobile-toggle__sub {
+        font-size: 0.74rem;
+        color: var(--bnb-text-soft, #5A625D);
+        line-height: 1.2;
+        margin-top: 2px;
+    }
+
+    body.dark-mode .search-mobile-toggle__sub {
+        color: #9ba59f;
+    }
+
+    .search-mobile-toggle__filter-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid rgba(85, 122, 104, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bnb-text-soft, #5A625D);
+        flex-shrink: 0;
+        background: rgba(250, 248, 245, 0.7);
+    }
+
+    body.dark-mode .search-mobile-toggle__filter-btn {
+        border-color: rgba(123, 178, 152, 0.25);
+        color: #9ba59f;
+        background: rgba(35, 42, 38, 0.7);
+    }
+
+    /* Mobile: Allow fixed floating search bar to escape collapsed hero container */
+    .hero-search-collapsible-wrap.is-collapsed {
+        overflow: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* Fixed floating search bar appears in full when scrolling up on mobile */
+    .luxury-search-bar.mobile-scroll-up-active {
+        position: fixed !important;
+        top: 68px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100% - 28px) !important;
+        max-width: 440px !important;
+        z-index: 1001 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid rgba(85, 122, 104, 0.35) !important;
+        animation: mobileSearchSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    body.dark-mode .luxury-search-bar.mobile-scroll-up-active {
+        background: #1f2722 !important;
+        border-color: rgba(123, 178, 152, 0.35) !important;
+        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.5) !important;
+    }
+
     .luxury-search-bar .search-form {
         flex-direction: column;
         align-items: stretch;
@@ -1830,6 +1958,17 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     .neighborhood-heading-row { flex-direction: column; align-items: flex-start; }
     .editorial-heading { font-size: 1.8rem; }
     .canva-about-features { grid-template-columns: 1fr; }
+}
+
+@keyframes mobileSearchSlideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
 }
 
 @media (max-width: 480px) {

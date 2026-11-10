@@ -840,39 +840,101 @@ window.toggleMobileSearch = function (show = true) {
         if (form) form.classList.add('active');
         if (toggle) toggle.style.display = 'none';
         if (backdrop) backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
     } else {
         if (form) form.classList.remove('active');
         if (toggle) toggle.style.display = 'flex';
         if (backdrop) backdrop.classList.remove('active');
+        document.body.style.overflow = '';
     }
 };
 
-// Search Card & Ratings Ribbon Disappear on Scroll Down & Smoothly Move Up Space
+// Search Bar & Ratings Scroll Behavior:
+// - Desktop: Search bar & ratings ribbon disappear on scroll down (> 60px) and collapse space so below content moves up; reappear at top.
+// - Mobile: Retain search bar! Hides when scrolling down (> 70px); appears in full as a floating sticky bar when scrolling UP.
+let lastScrollY = window.scrollY || window.pageYOffset || 0;
+
 window.addEventListener('scroll', () => {
-    const scrollPos = window.scrollY || window.pageYOffset || 0;
-    const scrollElements = document.querySelectorAll('.search-bar, .luxury-search-bar, .hero-trust-ribbon');
+    const scrollPos = Math.max(0, window.scrollY || window.pageYOffset || 0);
+    const diff = scrollPos - lastScrollY;
+    const isMobile = window.innerWidth <= 768;
+    const searchBars = document.querySelectorAll('.search-bar, .luxury-search-bar');
+    const heroTrustRibbon = document.querySelector('.hero-trust-ribbon');
     const collapsibleWrap = document.getElementById('hero-search-collapsible-wrap');
     const heroSection = document.querySelector('.luxury-hero');
 
-    // 1. Auto-dismiss mobile search card if open when user scrolls
+    // 1. Auto-dismiss mobile search card if open when user scrolled significantly
     const activeForm = document.querySelector('.search-form.active');
-    if (activeForm && scrollPos > 20) {
+    if (activeForm && Math.abs(diff) > 35) {
         if (typeof toggleMobileSearch === 'function') {
             toggleMobileSearch(false);
         }
     }
 
-    // 2. Hide search card and ratings ribbon when scrolling down past 60px; collapse height so below content moves up
-    if (scrollPos > 60) {
-        scrollElements.forEach(el => el.classList.add('search-card--hidden'));
-        if (collapsibleWrap) collapsibleWrap.classList.add('is-collapsed');
-        if (heroSection) heroSection.classList.add('hero-scrolled-collapsed');
+    if (isMobile) {
+        // MOBILE LOGIC:
+        if (scrollPos <= 70) {
+            // Near top hero section: search bar rests in normal inline hero position
+            searchBars.forEach(bar => {
+                bar.classList.remove('search-card--hidden');
+                bar.classList.remove('mobile-scroll-up-active');
+            });
+            if (heroTrustRibbon) heroTrustRibbon.classList.remove('search-card--hidden');
+            if (collapsibleWrap) collapsibleWrap.classList.remove('is-collapsed');
+            if (heroSection) heroSection.classList.remove('hero-scrolled-collapsed');
+        } else {
+            // Below top scroll point on mobile:
+            // Hero space stays collapsed so listings occupy top space smoothly
+            if (collapsibleWrap) collapsibleWrap.classList.add('is-collapsed');
+            if (heroSection) heroSection.classList.add('hero-scrolled-collapsed');
+            if (heroTrustRibbon) heroTrustRibbon.classList.add('search-card--hidden');
+
+            if (diff < -6) {
+                // SCROLLING UP: Search bar appears in full!
+                searchBars.forEach(bar => {
+                    bar.classList.remove('search-card--hidden');
+                    bar.classList.add('mobile-scroll-up-active');
+                });
+            } else if (diff > 6) {
+                // SCROLLING DOWN: Search bar hides
+                searchBars.forEach(bar => {
+                    bar.classList.add('search-card--hidden');
+                    bar.classList.remove('mobile-scroll-up-active');
+                });
+            }
+        }
     } else {
-        scrollElements.forEach(el => el.classList.remove('search-card--hidden'));
-        if (collapsibleWrap) collapsibleWrap.classList.remove('is-collapsed');
-        if (heroSection) heroSection.classList.remove('hero-scrolled-collapsed');
+        // DESKTOP LOGIC:
+        if (scrollPos > 60) {
+            searchBars.forEach(bar => {
+                bar.classList.add('search-card--hidden');
+                bar.classList.remove('mobile-scroll-up-active');
+            });
+            if (heroTrustRibbon) heroTrustRibbon.classList.add('search-card--hidden');
+            if (collapsibleWrap) collapsibleWrap.classList.add('is-collapsed');
+            if (heroSection) heroSection.classList.add('hero-scrolled-collapsed');
+        } else {
+            searchBars.forEach(bar => {
+                bar.classList.remove('search-card--hidden');
+                bar.classList.remove('mobile-scroll-up-active');
+            });
+            if (heroTrustRibbon) heroTrustRibbon.classList.remove('search-card--hidden');
+            if (collapsibleWrap) collapsibleWrap.classList.remove('is-collapsed');
+            if (heroSection) heroSection.classList.remove('hero-scrolled-collapsed');
+        }
     }
+
+    lastScrollY = scrollPos;
 }, { passive: true });
+
+// Window resize listener to cleanly reset mobile-specific classes when transitioning to desktop
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        document.querySelectorAll('.luxury-search-bar').forEach(bar => {
+            bar.classList.remove('mobile-scroll-up-active');
+        });
+    }
+});
 
 
 window.scrollCategorySlider = function (catId, direction) {
