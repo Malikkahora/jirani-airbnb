@@ -847,10 +847,12 @@ window.toggleMobileSearch = function (show = true) {
     }
 };
 
-// Search Card & Ratings Ribbon Disappear on Scroll Down
+// Search Card & Ratings Ribbon Disappear on Scroll Down & Smoothly Move Up Space
 window.addEventListener('scroll', () => {
     const scrollPos = window.scrollY || window.pageYOffset || 0;
     const scrollElements = document.querySelectorAll('.search-bar, .luxury-search-bar, .hero-trust-ribbon');
+    const collapsibleWrap = document.getElementById('hero-search-collapsible-wrap');
+    const heroSection = document.querySelector('.luxury-hero');
 
     // 1. Auto-dismiss mobile search card if open when user scrolls
     const activeForm = document.querySelector('.search-form.active');
@@ -860,14 +862,16 @@ window.addEventListener('scroll', () => {
         }
     }
 
-    // 2. Hide search card and ratings ribbon when scrolling down past 60px; reappear when near top
-    scrollElements.forEach(el => {
-        if (scrollPos > 60) {
-            el.classList.add('search-card--hidden');
-        } else {
-            el.classList.remove('search-card--hidden');
-        }
-    });
+    // 2. Hide search card and ratings ribbon when scrolling down past 60px; collapse height so below content moves up
+    if (scrollPos > 60) {
+        scrollElements.forEach(el => el.classList.add('search-card--hidden'));
+        if (collapsibleWrap) collapsibleWrap.classList.add('is-collapsed');
+        if (heroSection) heroSection.classList.add('hero-scrolled-collapsed');
+    } else {
+        scrollElements.forEach(el => el.classList.remove('search-card--hidden'));
+        if (collapsibleWrap) collapsibleWrap.classList.remove('is-collapsed');
+        if (heroSection) heroSection.classList.remove('hero-scrolled-collapsed');
+    }
 }, { passive: true });
 
 

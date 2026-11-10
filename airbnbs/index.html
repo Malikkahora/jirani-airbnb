@@ -678,100 +678,103 @@
                     </div>
                 </div>
 
-                <!-- Floating Luxury Booking Bar -->
-                <div class="search-bar luxury-search-bar">
-                    <div class="search-mobile-toggle mobile-only" onclick="toggleMobileSearch(true)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <span>Find your perfect stay...</span>
-                    </div>
-                    <form class="search-form" id="main-search-form">
-                        <div class="search-form__field">
-                            <label for="location">Location / Area</label>
-                            <input type="text" id="location" placeholder="Kilimani, Westlands, Kileleshwa...">
-                        </div>
-                        <div class="search-form__field">
-                            <label for="stay-experience">Stay Experience</label>
-                            <select id="stay-experience" onchange="onExperienceSelect(this.value)"
-                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
-                                <option value="all">All Experiences</option>
-                                <option value="romantic">💑 Romantic Stays</option>
-                                <option value="family">👨‍👩‍👧 Family Stays</option>
-                                <option value="business">💼 Business & Work</option>
-                                <option value="luxury">✨ Luxury Penthouses</option>
-                                <option value="budget">💰 Budget Friendly</option>
-                            </select>
-                        </div>
-                        <div class="search-form__field">
-                            <label for="rooms">Bedrooms</label>
-                            <select id="rooms"
-                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
-                                <option value="">Any Beds</option>
-                                <option value="studio">Studio</option>
-                                <option value="1">1 Bed</option>
-                                <option value="2">2 Beds</option>
-                                <option value="3">3 Beds</option>
-                                <option value="4">4+ Beds</option>
-                            </select>
-                        </div>
-                        <div class="search-form__field">
-                            <label for="budget">Price / Night</label>
-                            <select id="budget"
-                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
-                                <option value="">Any Budget</option>
-                                <option value="0-3500">Under KES 3,500</option>
-                                <option value="3500-6000">KES 3,500 - 6,000</option>
-                                <option value="6000-10000">KES 6,000 - 10,000</option>
-                                <option value="10000-1000000">KES 10,000+ Luxury</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn--primary search-btn" aria-label="Search listings">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                stroke-linejoin="round">
+                <!-- Collapsible Search & Ratings Wrapper (Collapses height on scroll) -->
+                <div class="hero-search-collapsible-wrap" id="hero-search-collapsible-wrap">
+                    <!-- Floating Luxury Booking Bar -->
+                    <div class="search-bar luxury-search-bar">
+                        <div class="search-mobile-toggle mobile-only" onclick="toggleMobileSearch(true)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
-                        </button>
-                        <button type="button" class="btn btn--secondary search-btn-cancel mobile-only"
-                            onclick="toggleMobileSearch(false)">Cancel</button>
-                    </form>
-                </div>
+                            <span>Find your perfect stay...</span>
+                        </div>
+                        <form class="search-form" id="main-search-form">
+                            <div class="search-form__field">
+                                <label for="location">Location / Area</label>
+                                <input type="text" id="location" placeholder="Kilimani, Westlands, Kileleshwa...">
+                            </div>
+                            <div class="search-form__field">
+                                <label for="stay-experience">Stay Experience</label>
+                                <select id="stay-experience" onchange="onExperienceSelect(this.value)"
+                                    style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
+                                    <option value="all">All Experiences</option>
+                                    <option value="romantic">💑 Romantic Stays</option>
+                                    <option value="family">👨‍👩‍👧 Family Stays</option>
+                                    <option value="business">💼 Business & Work</option>
+                                    <option value="luxury">✨ Luxury Penthouses</option>
+                                    <option value="budget">💰 Budget Friendly</option>
+                                </select>
+                            </div>
+                            <div class="search-form__field">
+                                <label for="rooms">Bedrooms</label>
+                                <select id="rooms"
+                                    style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
+                                    <option value="">Any Beds</option>
+                                    <option value="studio">Studio</option>
+                                    <option value="1">1 Bed</option>
+                                    <option value="2">2 Beds</option>
+                                    <option value="3">3 Beds</option>
+                                    <option value="4">4+ Beds</option>
+                                </select>
+                            </div>
+                            <div class="search-form__field">
+                                <label for="budget">Price / Night</label>
+                                <select id="budget"
+                                    style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
+                                    <option value="">Any Budget</option>
+                                    <option value="0-3500">Under KES 3,500</option>
+                                    <option value="3500-6000">KES 3,500 - 6,000</option>
+                                    <option value="6000-10000">KES 6,000 - 10,000</option>
+                                    <option value="10000-1000000">KES 10,000+ Luxury</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn--primary search-btn" aria-label="Search listings">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn--secondary search-btn-cancel mobile-only"
+                                onclick="toggleMobileSearch(false)">Cancel</button>
+                        </form>
+                    </div>
 
-                <!-- Trust Stats Strip -->
-                <div class="hero-trust-ribbon">
-                    <div class="trust-ribbon-item">
-                        <span class="trust-icon">⭐️</span>
-                        <div class="trust-text">
-                            <strong>4.98 / 5.0 Rating</strong>
-                            <span>500+ Verified Guest Stays</span>
+                    <!-- Trust Stats Strip -->
+                    <div class="hero-trust-ribbon">
+                        <div class="trust-ribbon-item">
+                            <span class="trust-icon">⭐️</span>
+                            <div class="trust-text">
+                                <strong>4.98 / 5.0 Rating</strong>
+                                <span>500+ Verified Guest Stays</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="trust-ribbon-divider"></div>
-                    <div class="trust-ribbon-item">
-                        <span class="trust-icon">🛡️</span>
-                        <div class="trust-text">
-                            <strong>100% Inspected</strong>
-                            <span>Spotless & Quality Verified</span>
+                        <div class="trust-ribbon-divider"></div>
+                        <div class="trust-ribbon-item">
+                            <span class="trust-icon">🛡️</span>
+                            <div class="trust-text">
+                                <strong>100% Inspected</strong>
+                                <span>Spotless & Quality Verified</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="trust-ribbon-divider"></div>
-                    <div class="trust-ribbon-item">
-                        <span class="trust-icon">⚡</span>
-                        <div class="trust-text">
-                            <strong>Keyless Self Check-In</strong>
-                            <span>Arrive Anytime 24/7</span>
+                        <div class="trust-ribbon-divider"></div>
+                        <div class="trust-ribbon-item">
+                            <span class="trust-icon">⚡</span>
+                            <div class="trust-text">
+                                <strong>Keyless Self Check-In</strong>
+                                <span>Arrive Anytime 24/7</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="trust-ribbon-divider"></div>
-                    <div class="trust-ribbon-item">
-                        <span class="trust-icon">🛎️</span>
-                        <div class="trust-text">
-                            <strong>Dedicated Host</strong>
-                            <span>Instant WhatsApp Support</span>
+                        <div class="trust-ribbon-divider"></div>
+                        <div class="trust-ribbon-item">
+                            <span class="trust-icon">🛎️</span>
+                            <div class="trust-text">
+                                <strong>Dedicated Host</strong>
+                                <span>Instant WhatsApp Support</span>
+                            </div>
                         </div>
                     </div>
                 </div>
