@@ -1,4 +1,4 @@
-﻿// Theme Logic
+// Theme Logic
 function initTheme() {
     const savedTheme = localStorage.getItem('jirani_theme');
     if (savedTheme === 'dark') {
@@ -491,8 +491,8 @@ function renderGroupedListings(containerId, items, pageType) {
                 <div class="property-card__image-wrapper">
                     ${imageHtml}
                     ${pageType === 'property' ?
-                    `<div style="position: absolute; top: 10px; left: 10px; background: ${item.type === 'sale' ? '#2d60ff' : '#00C853'}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">${item.type === 'sale' ? 'For Sale' : 'For Rent'}</div>`
-                    : `<div style="position: absolute; top: 10px; left: 10px; background: #FF5A5F; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">Airbnb</div>`}
+                    `<div style="position: absolute; top: 10px; left: 10px; background: ${item.type === 'sale' ? 'rgba(45, 96, 255, 0.88)' : 'rgba(0, 200, 83, 0.88)'}; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">${item.type === 'sale' ? 'For Sale' : 'For Rent'}</div>`
+                    : `<div style="position: absolute; top: 10px; left: 10px; background: rgba(255, 90, 95, 0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(255, 90, 95, 0.25);">Airbnb</div>`}
                     <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${item.id})">
                         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false"><path d="M16 28c-7-4.73-14-10-14-17a6.98 6.98 0 0 1 7-7c1.8 0 3.58.68 4.95 2.05L16 8.1l2.05-2.05a6.98 6.98 0 0 1 9.9 0 6.98 6.98 0 0 1 0 9.9L16 28z"></path></svg>
                     </button>

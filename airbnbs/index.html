@@ -342,30 +342,6 @@
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
         }
 
-        .search-bar.sticky {
-            position: fixed;
-            top: 108px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.95);
-            width: 90%;
-            max-width: 1000px;
-            padding: 6px 10px 6px 20px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(24px) saturate(190%);
-            -webkit-backdrop-filter: blur(24px) saturate(190%);
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            border-radius: 60px;
-        }
-
-        .search-bar.sticky .search-btn {
-            transform: scale(0.92);
-        }
-
-        .search-bar.sticky:hover {
-            transform: translateX(-50%) translateY(-2px) scale(0.96);
-        }
-
         .search-form {
             display: flex;
             align-items: center;
@@ -1160,22 +1136,9 @@
             `;
                 grid.appendChild(card);
             });
-            // 3. Sticky & Auto-Scroll Search Logic
-            const searchBar = document.querySelector('.search-bar');
+            // 3. Auto-Scroll Search Logic
             const searchForm = document.querySelector('.search-form');
-            const hero = document.querySelector('.hero');
             const resultsSection = document.getElementById('airbnbs');
-
-            if (searchBar && hero) {
-                window.addEventListener('scroll', () => {
-                    const heroBottom = hero.offsetTop + hero.offsetHeight;
-                    if (window.scrollY > heroBottom - 100) {
-                        searchBar.classList.add('sticky');
-                    } else {
-                        searchBar.classList.remove('sticky');
-                    }
-                });
-            }
 
             if (searchForm && resultsSection) {
                 searchForm.addEventListener('submit', (e) => {
