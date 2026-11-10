@@ -823,21 +823,52 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMultiSelect('amenities-select-airbnb', 'amenities-text-airbnb', 'amenities');
 });
 
-// Mobile Search Toggle
+// Mobile Search Toggle & Backdrop
 window.toggleMobileSearch = function (show = true) {
     const form = document.querySelector('.search-form');
     const toggle = document.querySelector('.search-mobile-toggle');
+    let backdrop = document.querySelector('.search-modal-backdrop');
+
+    if (!backdrop && document.body) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'search-modal-backdrop';
+        backdrop.addEventListener('click', () => toggleMobileSearch(false));
+        document.body.appendChild(backdrop);
+    }
 
     if (show) {
         if (form) form.classList.add('active');
         if (toggle) toggle.style.display = 'none';
-        document.body.style.overflow = 'hidden';
+        if (backdrop) backdrop.classList.add('active');
     } else {
         if (form) form.classList.remove('active');
         if (toggle) toggle.style.display = 'flex';
-        document.body.style.overflow = '';
+        if (backdrop) backdrop.classList.remove('active');
     }
 };
+
+// Search Card Disappears on Scroll Down
+window.addEventListener('scroll', () => {
+    const scrollPos = window.scrollY || window.pageYOffset || 0;
+    const searchBars = document.querySelectorAll('.search-bar, .luxury-search-bar');
+
+    // 1. Auto-dismiss mobile search card if open when user scrolls
+    const activeForm = document.querySelector('.search-form.active');
+    if (activeForm && scrollPos > 20) {
+        if (typeof toggleMobileSearch === 'function') {
+            toggleMobileSearch(false);
+        }
+    }
+
+    // 2. Hide search card when scrolling down past 60px; reappear when near top
+    searchBars.forEach(bar => {
+        if (scrollPos > 60) {
+            bar.classList.add('search-card--hidden');
+        } else {
+            bar.classList.remove('search-card--hidden');
+        }
+    });
+}, { passive: true });
 
 
 window.scrollCategorySlider = function (catId, direction) {
