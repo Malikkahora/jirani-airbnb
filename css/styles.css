@@ -3543,3 +3543,772 @@ body.dark-mode {
     border-color: rgba(255, 255, 255, 0.4) !important;
     box-shadow: 0 6px 20px rgba(255, 179, 0, 0.45) !important;
 }
+
+/* ============================================
+   LUXURY EDITORIAL AIRBNB REDESIGN
+   ============================================ */
+
+/* 1. Luxury Boutique Hero */
+.luxury-hero {
+    position: relative;
+    padding: 170px 0 70px;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #121118;
+}
+
+.hero-overlay-tint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(10, 10, 18, 0.45) 0%, rgba(10, 10, 18, 0.82) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.luxury-hero .hero__container {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #FFD54F;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.badge-sparkle {
+    color: #FFB300;
+    font-size: 0.9rem;
+}
+
+.luxury-hero .hero__title {
+    font-size: 3.6rem;
+    font-weight: 850;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+    text-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title-accent {
+    background: linear-gradient(135deg, #FFB300 0%, #FFE082 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.luxury-hero .hero__subtitle {
+    font-size: 1.18rem;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 720px;
+    margin: 0 auto 38px;
+    line-height: 1.65;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Floating Luxury Search Bar */
+.luxury-search-bar {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 50px;
+    padding: 10px 14px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    max-width: 980px;
+    margin: 0 auto 32px;
+    z-index: 10;
+    position: relative;
+}
+
+body.dark-mode .luxury-search-bar {
+    background: rgba(28, 27, 38, 0.88);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .luxury-search-bar label {
+    color: #ffffff;
+}
+
+body.dark-mode .luxury-search-bar input,
+body.dark-mode .luxury-search-bar select {
+    color: #e0e0e0;
+}
+
+/* Trust Stats Ribbon */
+.hero-trust-ribbon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.trust-ribbon-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trust-icon {
+    font-size: 1.3rem;
+}
+
+.trust-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.trust-text strong {
+    font-size: 0.86rem;
+    font-weight: 750;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.trust-text span {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.trust-ribbon-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+/* 2. Experience Bento Grid */
+.experience-bento-section {
+    padding: 85px 0 65px;
+    background: #fafafa;
+    position: relative;
+}
+
+body.dark-mode .experience-bento-section {
+    background: #0d0c14;
+}
+
+.section-header-centered {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 48px;
+}
+
+.section-tagline {
+    font-size: 0.74rem;
+    font-weight: 850;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #FFB300;
+    margin-bottom: 8px;
+}
+
+.editorial-heading {
+    font-size: 2.65rem;
+    font-weight: 850;
+    letter-spacing: -0.03em;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+body.dark-mode .editorial-heading {
+    color: #ffffff;
+}
+
+.editorial-subheading {
+    font-size: 1.05rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+body.dark-mode .editorial-subheading {
+    color: #aaa;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 22px;
+}
+
+.bento-card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bento-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.22);
+    border-color: rgba(255, 179, 0, 0.6);
+}
+
+.bento-card--large {
+    grid-column: span 7;
+    min-height: 380px;
+}
+
+.bento-card:nth-child(2) {
+    grid-column: span 5;
+    min-height: 380px;
+}
+
+.bento-card:nth-child(3),
+.bento-card:nth-child(4),
+.bento-card:nth-child(5) {
+    grid-column: span 4;
+    min-height: 330px;
+}
+
+.bento-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.85) 100%);
+    z-index: 1;
+    transition: background 0.3s;
+}
+
+.bento-card:hover .bento-card__overlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.92) 100%);
+}
+
+.bento-card__badge {
+    position: relative;
+    z-index: 2;
+    align-self: flex-start;
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.bento-card__content {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+}
+
+.bento-card__title {
+    font-size: 1.85rem;
+    font-weight: 850;
+    color: #ffffff;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+
+.bento-card__desc {
+    font-size: 0.94rem;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    max-width: 480px;
+}
+
+.bento-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: #FFB300;
+    transition: transform 0.25s, color 0.25s;
+}
+
+.bento-card:hover .bento-card__cta {
+    transform: translateX(6px);
+    color: #FFE082;
+}
+
+/* 4. Hospitality Pillars */
+.hospitality-pillars-section {
+    padding: 75px 0 65px;
+    background: #ffffff;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+body.dark-mode .hospitality-pillars-section {
+    background: #13121b;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.pillar-card {
+    background: rgba(248, 249, 252, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 22px;
+    padding: 34px 24px;
+    text-align: center;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+body.dark-mode .pillar-card {
+    background: rgba(28, 27, 38, 0.7);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.pillar-card:hover {
+    transform: translateY(-7px);
+    background: #ffffff;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    border-color: rgba(255, 179, 0, 0.45);
+}
+
+body.dark-mode .pillar-card:hover {
+    background: rgba(35, 34, 48, 0.95);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.pillar-icon-wrap {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: rgba(255, 179, 0, 0.12);
+    color: #FFB300;
+    font-size: 1.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    border: 1px solid rgba(255, 179, 0, 0.25);
+    transition: transform 0.3s;
+}
+
+.pillar-card:hover .pillar-icon-wrap {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.pillar-title {
+    font-size: 1.18rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+body.dark-mode .pillar-title {
+    color: #ffffff;
+}
+
+.pillar-desc {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.55;
+    margin: 0;
+}
+
+body.dark-mode .pillar-desc {
+    color: #aaa;
+}
+
+/* 5. Neighborhood Explorer & Sort Header */
+.neighborhood-explorer {
+    margin-bottom: 30px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+body.dark-mode .neighborhood-explorer {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.neighborhood-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.luxury-sort-select {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: #2a2a2a;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.2s;
+}
+
+.luxury-sort-select:hover,
+.luxury-sort-select:focus {
+    border-color: #FFB300;
+}
+
+body.dark-mode .luxury-sort-select {
+    background: #232230;
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #eee;
+}
+
+.neighborhood-chips-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.neighborhood-chips-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.neighborhood-chip {
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #444;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.neighborhood-chip:hover {
+    border-color: #FFB300;
+    color: #FFB300;
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 179, 0, 0.2);
+}
+
+.neighborhood-chip.active {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-color: #1a1a1a;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+body.dark-mode .neighborhood-chip {
+    background: rgba(35, 34, 48, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+}
+
+body.dark-mode .neighborhood-chip.active {
+    background: #FFB300;
+    color: #1a1a1a;
+    border-color: #FFB300;
+}
+
+/* 6. Testimonials Strip */
+.testimonials-strip-section {
+    padding: 75px 0 65px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    border-top: 1px solid #f0f0f0;
+}
+
+body.dark-mode .testimonials-strip-section {
+    background: linear-gradient(180deg, #0e0d16 0%, #151420 100%);
+    border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.review-card {
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 32px 28px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .review-card {
+    background: rgba(28, 27, 38, 0.85);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.review-stars {
+    color: #FFB300;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+    letter-spacing: 2px;
+}
+
+.review-quote {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.65;
+    font-style: italic;
+    margin-bottom: 24px;
+}
+
+body.dark-mode .review-quote {
+    color: #ccc;
+}
+
+.review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB300, #FF8F00);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 850;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(255, 179, 0, 0.3);
+}
+
+.review-author strong {
+    display: block;
+    font-size: 0.94rem;
+    color: #1a1a1a;
+}
+
+body.dark-mode .review-author strong {
+    color: #ffffff;
+}
+
+.review-author span {
+    font-size: 0.78rem;
+    color: #888;
+}
+
+/* 7. VIP Concierge Banner */
+.concierge-vip-section {
+    padding: 45px 0 85px;
+}
+
+.concierge-vip-card {
+    background: linear-gradient(135deg, #181724 0%, #29263d 100%);
+    border-radius: 28px;
+    padding: 52px 48px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.vip-badge {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 850;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: #FFB300;
+    margin-bottom: 14px;
+}
+
+.vip-title {
+    font-size: 2.3rem;
+    font-weight: 850;
+    color: #ffffff;
+    margin-bottom: 14px;
+    letter-spacing: -0.025em;
+}
+
+.vip-desc {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.88);
+    max-width: 680px;
+    line-height: 1.65;
+    margin-bottom: 30px;
+}
+
+.vip-action-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn--vip-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    background: #25D366;
+    color: white;
+    font-weight: 750;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.25s;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+}
+
+.btn--vip-whatsapp:hover {
+    background: #1ebd5a;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
+    color: white;
+}
+
+.btn--vip-call {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    font-weight: 750;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: all 0.25s;
+    backdrop-filter: blur(10px);
+}
+
+.btn--vip-call:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px);
+    color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .bento-card--large,
+    .bento-card:nth-child(2) {
+        grid-column: span 12;
+        min-height: 320px;
+    }
+
+    .bento-card:nth-child(3),
+    .bento-card:nth-child(4),
+    .bento-card:nth-child(5) {
+        grid-column: span 12;
+        min-height: 280px;
+    }
+
+    .pillars-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .luxury-hero .hero__title {
+        font-size: 2.8rem;
+    }
+
+    .concierge-vip-card {
+        padding: 36px 28px;
+    }
+
+    .vip-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .luxury-hero {
+        padding: 130px 0 50px;
+        min-height: 75vh;
+    }
+
+    .luxury-hero .hero__title {
+        font-size: 2.2rem;
+    }
+
+    .hero-trust-ribbon {
+        gap: 16px;
+    }
+
+    .trust-ribbon-divider {
+        display: none;
+    }
+
+    .trust-ribbon-item {
+        width: 45%;
+        text-align: left;
+    }
+
+    .pillars-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .editorial-heading {
+        font-size: 2rem;
+    }
+}

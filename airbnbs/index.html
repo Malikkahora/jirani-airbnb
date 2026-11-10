@@ -652,134 +652,339 @@
         </div> <!-- Close header__container -->
     </header>
     <main>
-        <section class="hero">
+        <!-- 1. LUXURY BOUTIQUE HERO SECTION -->
+        <section class="luxury-hero">
             <div class="hero-slider" id="hero-slider">
-                <div class="hero-slide active" style="background-image: url('../images/IMG-20251208-WA0014.jpg');">
-                </div>
+                <div class="hero-slide active" style="background-image: url('../images/IMG-20251208-WA0014.jpg');"></div>
                 <div class="hero-slide" style="background-image: url('../images/IMG-20251208-WA0015.jpg');"></div>
                 <div class="hero-slide" style="background-image: url('../images/IMG-20251208-WA0016.jpg');"></div>
                 <div class="hero-slide" style="background-image: url('../images/IMG-20251208-WA0017.jpg');"></div>
-                <div class="hero-slide" style="background-image: url('../images/IMG-20251208-WA0018.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('../images/home-bg.jpg');"></div>
             </div>
+            <div class="hero-overlay-tint"></div>
+
             <div class="container hero__container">
                 <div class="hero__content">
-                    <h1 class="hero__title">Find your next <br>stay with Jirani</h1>
-                    <p class="hero__subtitle">Discover unique homes and unforgettable experiences tailored just for you.
-                    </p>
+                    <div class="hero-badge-pill">
+                        <span class="badge-sparkle">✦</span>
+                        <span>BOUTIQUE SERVICED APARTMENTS & SHORT STAYS IN NAIROBI</span>
+                    </div>
+                    <h1 class="hero__title">Comfort You Can Feel<br><span class="hero-title-accent">The Moment You Arrive</span></h1>
+                    <p class="hero__subtitle">Curated boutique suites, romantic retreats & executive skyline penthouses across Kilimani, Westlands, Kileleshwa & Nairobi.</p>
                 </div>
-                <div class="search-bar">
+
+                <!-- Floating Luxury Booking Bar -->
+                <div class="search-bar luxury-search-bar">
                     <div class="search-mobile-toggle mobile-only" onclick="toggleMobileSearch(true)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <span>Where to?</span>
+                        <span>Find your perfect stay...</span>
                     </div>
-                    <form class="search-form">
-                        <div class="search-form__field"><label for="location">Location</label><input type="text"
-                                id="location" placeholder="Where are you going?"></div>
-                        <div class="search-form__field"><label for="rooms">Beds</label><select id="rooms"
+                    <form class="search-form" id="main-search-form">
+                        <div class="search-form__field">
+                            <label for="location">Location / Area</label>
+                            <input type="text" id="location" placeholder="Kilimani, Westlands, Kileleshwa...">
+                        </div>
+                        <div class="search-form__field">
+                            <label for="stay-experience">Stay Experience</label>
+                            <select id="stay-experience" onchange="onExperienceSelect(this.value)"
                                 style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
-                                <option value="">Any</option>
+                                <option value="all">All Experiences</option>
+                                <option value="romantic">💑 Romantic Stays</option>
+                                <option value="family">👨‍👩‍👧 Family Stays</option>
+                                <option value="business">💼 Business & Work</option>
+                                <option value="luxury">✨ Luxury Penthouses</option>
+                                <option value="budget">💰 Budget Friendly</option>
+                            </select>
+                        </div>
+                        <div class="search-form__field">
+                            <label for="rooms">Bedrooms</label>
+                            <select id="rooms"
+                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
+                                <option value="">Any Beds</option>
                                 <option value="studio">Studio</option>
                                 <option value="1">1 Bed</option>
                                 <option value="2">2 Beds</option>
                                 <option value="3">3 Beds</option>
-                                <option value="4">4 Beds</option>
-                                <option value="5">5+ Beds</option>
-                            </select></div>
-                        <div class="search-form__field">
-                            <label for="budget">Budget</label>
-                            <select id="budget"
-                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
-                                <option value="">Any</option>
-                                <option value="0-3000">Under KES 3,000</option>
-                                <option value="3000-5000">KES 3,000 - 5,000</option>
-                                <option value="5000-10000">KES 5,000 - 10,000</option>
-                                <option value="10000-1000000">KES 10,000+</option>
+                                <option value="4">4+ Beds</option>
                             </select>
                         </div>
-
                         <div class="search-form__field">
-                            <label for="amenities">Amenities</label>
-                            <div class="multi-select" id="amenities-select-airbnb">
-                                <div class="select-box">
-                                    <span id="amenities-text-airbnb">Select Amenities</span>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M6 9l6 6 6-6" />
-                                    </svg>
-                                </div>
-                                <div class="checkboxes">
-                                    <label><input type="checkbox" value="wifi"> Wifi</label>
-                                    <label><input type="checkbox" value="pool"> Pool</label>
-                                    <label><input type="checkbox" value="gym"> Gym</label>
-                                    <label><input type="checkbox" value="parking"> Parking</label>
-                                    <label><input type="checkbox" value="kitchen"> Kitchen</label>
-                                    <label><input type="checkbox" value="ac"> AC</label>
-                                    <label><input type="checkbox" value="garden"> Garden</label>
-                                    <label><input type="checkbox" value="security"> Security</label>
-                                </div>
-                                <input type="hidden" id="amenities" value="">
-                            </div>
+                            <label for="budget">Price / Night</label>
+                            <select id="budget"
+                                style="border:none; width:100%; color:var(--color-text-secondary); font-size:0.875rem; outline:none; background:transparent;">
+                                <option value="">Any Budget</option>
+                                <option value="0-3500">Under KES 3,500</option>
+                                <option value="3500-6000">KES 3,500 - 6,000</option>
+                                <option value="6000-10000">KES 6,000 - 10,000</option>
+                                <option value="10000-1000000">KES 10,000+ Luxury</option>
+                            </select>
                         </div>
-                        <button type="submit" class="btn btn--primary search-btn"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-search">
+                        <button type="submit" class="btn btn--primary search-btn" aria-label="Search listings">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg></button>
+                            </svg>
+                        </button>
                         <button type="button" class="btn btn--secondary search-btn-cancel mobile-only"
                             onclick="toggleMobileSearch(false)">Cancel</button>
                     </form>
                 </div>
-            </div>
-        </section>
 
-        <!-- Category Filter Bar -->
-        <section class="category-filter-bar">
-            <div class="container">
-                <div class="category-chips" id="category-chips">
-                    <button class="category-chip active" data-category="all" onclick="filterByCategory('all', this)">
-                        <span class="chip-icon">🏠</span> All Stays
-                    </button>
-                    <button class="category-chip" data-category="romantic" onclick="filterByCategory('romantic', this)">
-                        <span class="chip-icon">💑</span> Romantic
-                    </button>
-                    <button class="category-chip" data-category="family" onclick="filterByCategory('family', this)">
-                        <span class="chip-icon">👨‍👩‍👧</span> Family
-                    </button>
-                    <button class="category-chip" data-category="business" onclick="filterByCategory('business', this)">
-                        <span class="chip-icon">💼</span> Business
-                    </button>
-                    <button class="category-chip" data-category="budget" onclick="filterByCategory('budget', this)">
-                        <span class="chip-icon">💰</span> Budget
-                    </button>
-                    <button class="category-chip" data-category="luxury" onclick="filterByCategory('luxury', this)">
-                        <span class="chip-icon">✨</span> Luxury
-                    </button>
+                <!-- Trust Stats Strip -->
+                <div class="hero-trust-ribbon">
+                    <div class="trust-ribbon-item">
+                        <span class="trust-icon">⭐️</span>
+                        <div class="trust-text">
+                            <strong>4.98 / 5.0 Rating</strong>
+                            <span>500+ Verified Guest Stays</span>
+                        </div>
+                    </div>
+                    <div class="trust-ribbon-divider"></div>
+                    <div class="trust-ribbon-item">
+                        <span class="trust-icon">🛡️</span>
+                        <div class="trust-text">
+                            <strong>100% Inspected</strong>
+                            <span>Spotless & Quality Verified</span>
+                        </div>
+                    </div>
+                    <div class="trust-ribbon-divider"></div>
+                    <div class="trust-ribbon-item">
+                        <span class="trust-icon">⚡</span>
+                        <div class="trust-text">
+                            <strong>Keyless Self Check-In</strong>
+                            <span>Arrive Anytime 24/7</span>
+                        </div>
+                    </div>
+                    <div class="trust-ribbon-divider"></div>
+                    <div class="trust-ribbon-item">
+                        <span class="trust-icon">🛎️</span>
+                        <div class="trust-text">
+                            <strong>Dedicated Host</strong>
+                            <span>Instant WhatsApp Support</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Interactive Category Sliders Section -->
+        <!-- 2. BROWSE BY STAY EXPERIENCE (EDITORIAL BENTO SHOWCASE) -->
+        <section class="experience-bento-section">
+            <div class="container">
+                <div class="section-header-centered">
+                    <div class="section-tagline">TAILORED TO YOUR TRAVEL STYLE</div>
+                    <h2 class="editorial-heading">Explore By Stay Experience</h2>
+                    <p class="editorial-subheading">From romantic couple escapes to spacious family homes and executive work suites, find your bespoke stay.</p>
+                </div>
+
+                <div class="bento-grid">
+                    <!-- Romantic Card (Large Featured) -->
+                    <div class="bento-card bento-card--large" onclick="filterByCategory('romantic', null)" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg');">
+                        <div class="bento-card__overlay"></div>
+                        <div class="bento-card__badge">💑 COUPLES & GETAWAYS</div>
+                        <div class="bento-card__content">
+                            <h3 class="bento-card__title">Romantic Stays</h3>
+                            <p class="bento-card__desc">Intimate studio suites, mood lighting, plush bedding & private sunset balconies.</p>
+                            <span class="bento-card__cta">Explore Collection &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Family Card -->
+                    <div class="bento-card" onclick="filterByCategory('family', null)" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316281/fef1ibgclv5yawyfhznj.jpg');">
+                        <div class="bento-card__overlay"></div>
+                        <div class="bento-card__badge">👨‍👩‍👧 ROOM TO GATHER</div>
+                        <div class="bento-card__content">
+                            <h3 class="bento-card__title">Family Stays</h3>
+                            <p class="bento-card__desc">Spacious 2-4 bedroom apartments with fully-equipped kitchens & quiet compounds.</p>
+                            <span class="bento-card__cta">Explore Collection &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Business Card -->
+                    <div class="bento-card" onclick="filterByCategory('business', null)" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316280/tr3auzjcr38xyfeajbiz.jpg');">
+                        <div class="bento-card__overlay"></div>
+                        <div class="bento-card__badge">💼 WORK-READY</div>
+                        <div class="bento-card__content">
+                            <h3 class="bento-card__title">Executive & Business</h3>
+                            <p class="bento-card__desc">Dedicated desks, ultra-fast fiber Wi-Fi & central access to Westlands and CBD.</p>
+                            <span class="bento-card__cta">Explore Collection &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Luxury Card -->
+                    <div class="bento-card" onclick="filterByCategory('luxury', null)" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316282/dl8tklgck0jc4npsn5kk.jpg');">
+                        <div class="bento-card__overlay"></div>
+                        <div class="bento-card__badge">✨ PREMIER LIVING</div>
+                        <div class="bento-card__content">
+                            <h3 class="bento-card__title">Luxury Penthouses</h3>
+                            <p class="bento-card__desc">Heated rooftop pools, panoramic skyline views, elevator access & designer finishes.</p>
+                            <span class="bento-card__cta">Explore Collection &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Budget Card -->
+                    <div class="bento-card" onclick="filterByCategory('budget', null)" style="background-image: url('https://res.cloudinary.com/dfx52cix9/image/upload/v1767316276/sqkfnwwodlyww2665yvm.jpg');">
+                        <div class="bento-card__overlay"></div>
+                        <div class="bento-card__badge">💰 TOP VALUE</div>
+                        <div class="bento-card__content">
+                            <h3 class="bento-card__title">Smart Budget Gems</h3>
+                            <p class="bento-card__desc">Stylish, clean and exceptionally cozy apartments under KES 4,500 / night.</p>
+                            <span class="bento-card__cta">Explore Collection &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SPOTLIGHT CAROUSEL (HANDPICKED FEATURED STAYS) -->
         <section class="category-sliders-section" id="category-sliders-container">
             <!-- Dynamically populated category sliders -->
         </section>
 
-        <section class="featured" id="airbnbs">
+        <!-- 4. WHY CHOOSE JIRANI STAYS (4 BOUTIQUE PILLARS) -->
+        <section class="hospitality-pillars-section">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Latest Airbnb Listings</h2>
-                    <div class="section-subtitle">
-                        <span class="section-accent-bar"></span>
-                        <span class="section-subtitle-text">Curated stays in top locations</span>
+                <div class="section-header-centered">
+                    <div class="section-tagline">BOUTIQUE HOSPITALITY STANDARDS</div>
+                    <h2 class="editorial-heading">Why Choose Jirani Stays</h2>
+                    <p class="editorial-subheading">Every apartment is carefully vetted, deep-cleaned, and equipped to deliver hotel comfort with the freedom of home.</p>
+                </div>
+
+                <div class="pillars-grid">
+                    <div class="pillar-card">
+                        <div class="pillar-icon-wrap">🔑</div>
+                        <h3 class="pillar-title">Keyless Self Check-In</h3>
+                        <p class="pillar-desc">Smart digital door locks for private, hassle-free check-in at any hour of the day or night.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon-wrap">📶</div>
+                        <h3 class="pillar-title">Superfast Fiber Internet</h3>
+                        <p class="pillar-desc">Dedicated, unthrottled Wi-Fi in every unit for seamless video calls, remote work, and 4K streaming.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon-wrap">🧼</div>
+                        <h3 class="pillar-title">Hotel-Grade Sanitization</h3>
+                        <p class="pillar-desc">Professionally cleaned before your arrival with crisp luxury linens, fresh towels & complimentary toiletries.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon-wrap">🛎️</div>
+                        <h3 class="pillar-title">Dedicated Local Concierge</h3>
+                        <p class="pillar-desc">Instant assistance on WhatsApp for airport pickups, housekeeping, local dining tips, and extended stays.</p>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- 5. MAIN LISTINGS SECTION WITH NEIGHBORHOOD FILTER -->
+        <section class="featured" id="airbnbs">
+            <div class="container">
+                <!-- Neighborhood Explorer & Header Row -->
+                <div class="neighborhood-explorer">
+                    <div class="neighborhood-heading-row">
+                        <div>
+                            <h2 class="section-title">All Airbnb Stays in Nairobi</h2>
+                            <div class="section-subtitle">
+                                <span class="section-subtitle-text">Curated stays in top locations &bull; Instant confirmation</span>
+                            </div>
+                        </div>
+                        <div class="sort-wrapper">
+                            <label for="sort-select" style="font-size:0.85rem;color:#777;font-weight:600;">Sort:</label>
+                            <select id="sort-select" onchange="onSortChange(this.value)" class="luxury-sort-select">
+                                <option value="recommended">Featured Stays</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="beds-desc">Most Bedrooms</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Neighborhood Chips Filter -->
+                    <div class="neighborhood-chips-scroll">
+                        <button type="button" class="neighborhood-chip active" onclick="filterByNeighborhood('all', this)">All Nairobi</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('kilimani', this)">Kilimani</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('westlands', this)">Westlands</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('kileleshwa', this)">Kileleshwa</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('south b', this)">South B</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('syokimau', this)">Syokimau</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('roysambu', this)">Roysambu</button>
+                        <button type="button" class="neighborhood-chip" onclick="filterByNeighborhood('lavington', this)">Lavington</button>
+                    </div>
+                </div>
+
                 <div class="property-grid" id="airbnb-grid">
                     <!-- Loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. GUEST REVIEWS & TESTIMONIALS STRIP -->
+        <section class="testimonials-strip-section">
+            <div class="container">
+                <div class="section-header-centered">
+                    <div class="section-tagline">GUEST STORIES</div>
+                    <h2 class="editorial-heading">Loved By Travelers Around The Globe</h2>
+                </div>
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-quote">"The apartment in Kilimani exceeded our expectations. The smart check-in was seamless, Wi-Fi was blazing fast, and the view from the balcony was stunning. Will definitely rebook!"</p>
+                        <div class="review-author">
+                            <div class="author-avatar">DM</div>
+                            <div>
+                                <strong>David M.</strong>
+                                <span>Business Traveler &bull; Stayed in Kilimani</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-quote">"Traveling with a family can be tricky, but the 2-bedroom home in Kileleshwa was perfect. Spotlessly clean, fully equipped kitchen, and super safe compound."</p>
+                        <div class="review-author">
+                            <div class="author-avatar">SK</div>
+                            <div>
+                                <strong>Sarah & Family</strong>
+                                <span>Vacation Stay &bull; Stayed in Kileleshwa</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-quote">"The Jirani team is top notch! Responsive within 5 minutes on WhatsApp, arranged our airport pickup, and the place looked even better than the photos."</p>
+                        <div class="review-author">
+                            <div class="author-avatar">AN</div>
+                            <div>
+                                <strong>Alex N.</strong>
+                                <span>Digital Nomad &bull; Stayed in Westlands</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. VIP CONCIERGE & DIRECT BOOKING BANNER -->
+        <section class="concierge-vip-section">
+            <div class="container">
+                <div class="concierge-vip-card">
+                    <div class="vip-card-content">
+                        <span class="vip-badge">✦ DIRECT BOOKING PRIVILEGES</span>
+                        <h2 class="vip-title">Planning an Extended Stay or Group Retreat?</h2>
+                        <p class="vip-desc">Enjoy up to 25% off monthly bookings, complimentary weekly housekeeping, and bespoke airport transfers when booking directly with our Nairobi concierge team.</p>
+                        <div class="vip-action-row">
+                            <a href="https://wa.me/254725833232?text=Hello%20Jirani%20Hospitality,%20I'm%20looking%20to%20inquire%20about%20booking%20a%20stay" target="_blank" rel="noopener" class="btn btn--vip-whatsapp">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                </svg>
+                                Chat on WhatsApp (Instant Response)
+                            </a>
+                            <a href="tel:+254725833232" class="btn btn--vip-call">Call +254 725 833 232</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1164,6 +1369,65 @@ function getListingCategory(item) {
     return 'all';
 }
 
+window.onExperienceSelect = function(category) {
+    filterByCategory(category, null, true);
+};
+
+window.filterByNeighborhood = async function(neighborhood, btn) {
+    document.querySelectorAll('.neighborhood-chip').forEach(c => c.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const items = await JiraniData.getAirbnbs();
+    let filtered = items;
+    if (neighborhood !== 'all') {
+        filtered = items.filter(item => {
+            const loc = (item.location || '').toLowerCase();
+            return loc.includes(neighborhood.toLowerCase());
+        });
+    }
+
+    const titleEl = document.querySelector('#airbnbs .section-title');
+    const subEl = document.querySelector('#airbnbs .section-subtitle-text');
+    if (neighborhood !== 'all') {
+        const capitalLoc = neighborhood.charAt(0).toUpperCase() + neighborhood.slice(1);
+        if (titleEl) titleEl.innerText = `Airbnb Stays in ${capitalLoc}`;
+        if (subEl) subEl.innerHTML = `Showing ${filtered.length} verified stays in ${capitalLoc} &bull; Instant confirmation`;
+    } else {
+        if (titleEl) titleEl.innerText = `All Airbnb Stays in Nairobi`;
+        if (subEl) subEl.innerHTML = `Curated stays across top locations &bull; Instant confirmation`;
+    }
+
+    if (typeof renderAirbnbs === 'function') {
+        renderAirbnbs(filtered.length > 0 ? filtered : items);
+    }
+
+    // Scroll down to listings
+    setTimeout(() => {
+        const section = document.getElementById('airbnbs');
+        if (section) {
+            const headerOffset = 110;
+            const elementPosition = section.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
+        }
+    }, 60);
+};
+
+window.onSortChange = async function(sortBy) {
+    const items = await JiraniData.getAirbnbs();
+    let sorted = [...items];
+    if (sortBy === 'price-asc') {
+        sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sortBy === 'price-desc') {
+        sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else if (sortBy === 'beds-desc') {
+        sorted.sort((a, b) => (parseInt(b.rooms) || 1) - (parseInt(a.rooms) || 1));
+    }
+    if (typeof renderAirbnbs === 'function') {
+        renderAirbnbs(sorted);
+    }
+};
+
 window.filterByCategory = async function(category, btn, shouldScroll = true) {
     // 1. Update active chip
     document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
@@ -1175,6 +1439,12 @@ window.filterByCategory = async function(category, btn, shouldScroll = true) {
         try {
             btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         } catch (e) {}
+    }
+
+    // Also update experience dropdown if present
+    const expSelect = document.getElementById('stay-experience');
+    if (expSelect && category) {
+        expSelect.value = category;
     }
 
     const items = await JiraniData.getAirbnbs();
@@ -1211,8 +1481,8 @@ window.filterByCategory = async function(category, btn, shouldScroll = true) {
         if (sectionTitle) sectionTitle.innerHTML = `<span style="margin-right:8px;">${categoryObj.icon}</span>${categoryObj.title} in Nairobi`;
         if (sectionSubtitle) sectionSubtitle.innerHTML = `${categoryObj.subtitle} &bull; <strong>${filtered.length} stays available</strong>`;
     } else {
-        if (sectionTitle) sectionTitle.innerHTML = `Latest Airbnb Listings`;
-        if (sectionSubtitle) sectionSubtitle.innerHTML = `Curated stays in top locations`;
+        if (sectionTitle) sectionTitle.innerHTML = `All Airbnb Stays in Nairobi`;
+        if (sectionSubtitle) sectionSubtitle.innerHTML = `Curated stays across top locations &bull; Instant confirmation`;
     }
 
     // 5. Render Main Grid
