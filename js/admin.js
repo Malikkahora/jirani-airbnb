@@ -90,14 +90,21 @@ function renderTable(items) {
 
         const typeCell = currentTab === 'properties' ? `<td><span class="badge badge-info">${item.type || 'N/A'}</span></td>` : '';
 
+        // Category Tags Display
+        const catList = Array.isArray(item.categories) ? item.categories : (item.category ? [item.category] : []);
+        const catBadges = catList.length > 0 
+            ? `<div style="display:flex; gap:4px; margin-top:4px; flex-wrap:wrap;">${catList.map(c => `<span class="badge" style="background:#e8f4ec; color:#2d6a4f; font-size:0.7rem; padding:2px 6px; text-transform:capitalize;">${c}</span>`).join('')}</div>`
+            : '';
+
         tr.innerHTML = `
             <td>${displayImg}</td>
             <td>
                 <div style="font-weight:600;">${item.title}</div>
                 <div style="font-size:0.8rem; color:#888;">${item.id}</div>
+                ${catBadges}
             </td>
             <td>${item.location}</td>
-            <td>TES ${item.price ? item.price.toLocaleString() : '0'}</td>
+            <td>KES ${item.price ? item.price.toLocaleString() : '0'}</td>
             ${typeCell}
             <td>
                 <button class="btn btn-primary" style="padding:4px 8px; font-size:0.8rem;" onclick="openEditModal('${item.id}')">Edit</button>
@@ -119,6 +126,28 @@ function handleSearch(query) {
     renderTable(filtered);
 }
 
+// Category Tag Toggle Logic
+function toggleCategoryTag(cat) {
+    const btn = document.querySelector(`.btn-cat-tag[data-val="${cat}"]`);
+    if (!btn) return;
+    btn.classList.toggle('active');
+
+    // Collect all active tags
+    const activeTags = [];
+    document.querySelectorAll('.btn-cat-tag.active').forEach(b => {
+        activeTags.push(b.getAttribute('data-val'));
+    });
+
+    // Preserve any custom category tags typed by the admin
+    const input = document.getElementById('edit-categories');
+    const existing = (input.value || '').split(',').map(s => s.trim()).filter(Boolean);
+    const standard = ['romantic', 'family', 'business', 'luxury', 'budget'];
+    const customs = existing.filter(t => !standard.includes(t.toLowerCase()));
+
+    const combined = [...new Set([...activeTags, ...customs])];
+    input.value = combined.join(', ');
+}
+
 // Modal Logic
 async function openEditModal(id = null) {
     const modal = document.querySelector('.modal-overlay');
@@ -128,6 +157,11 @@ async function openEditModal(id = null) {
     form.reset();
     editingImages = [];
     document.getElementById('upload-preview').innerHTML = '';
+
+    // Reset Category Tags
+    document.querySelectorAll('.btn-cat-tag').forEach(b => b.classList.remove('active'));
+    const catInput = document.getElementById('edit-categories');
+    if (catInput) catInput.value = '';
 
     if (id) {
         // Edit Mode
@@ -143,6 +177,17 @@ async function openEditModal(id = null) {
             document.getElementById('edit-rooms').value = item.rooms || item.beds || '';
             document.getElementById('edit-baths').value = item.baths || '';
             document.getElementById('edit-amenities').value = item.amenities || '';
+
+            // Populate Category Tags
+            const catList = Array.isArray(item.categories) 
+                ? item.categories 
+                : (item.category ? String(item.category).split(',').map(s => s.trim()) : []);
+
+            if (catInput) catInput.value = catList.join(', ');
+            catList.forEach(c => {
+                const btn = document.querySelector(`.btn-cat-tag[data-val="${c.toLowerCase()}"]`);
+                if (btn) btn.classList.add('active');
+            });
 
             // Type for properties
             const typeContainer = document.getElementById('type-group');
@@ -214,6 +259,10 @@ async function handleFormSubmit(e) {
             }
         }
 
+        // Parse Category Tags
+        const rawCategories = (document.getElementById('edit-categories')?.value || '');
+        const categoriesArray = rawCategories.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+
         const formData = {
             title: document.getElementById('edit-title').value,
             desc: document.getElementById('edit-desc').value,
@@ -222,6 +271,8 @@ async function handleFormSubmit(e) {
             rooms: document.getElementById('edit-rooms').value,
             baths: document.getElementById('edit-baths').value,
             amenities: document.getElementById('edit-amenities').value,
+            categories: categoriesArray,
+            category: categoriesArray[0] || '',
             images: finalImages,
             image: finalImages[0] || ''
         };
@@ -299,6 +350,19 @@ function setupEventListeners() {
     document.getElementById('search-input').addEventListener('input', (e) => {
         handleSearch(e.target.value);
     });
+
+    // Category Input Sync
+    const catInput = document.getElementById('edit-categories');
+    if (catInput) {
+        catInput.addEventListener('input', () => {
+            const current = catInput.value.toLowerCase();
+            document.querySelectorAll('.btn-cat-tag').forEach(btn => {
+                const val = btn.getAttribute('data-val');
+                if (current.includes(val)) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        });
+    }
 
     // Form Submit
     document.getElementById('edit-form').addEventListener('submit', handleFormSubmit);

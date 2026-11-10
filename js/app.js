@@ -583,6 +583,17 @@ function renderGroupedListings(containerId, items, pageType) {
     });
 }
 
+// Helper to check explicit category tag from admin form
+const hasExplicitCat = (item, catId) => {
+    if (!item) return false;
+    if (item.category && String(item.category).toLowerCase().includes(catId)) return true;
+    if (Array.isArray(item.categories)) {
+        return item.categories.some(c => String(c).toLowerCase().trim() === catId);
+    }
+    if (typeof item.categories === 'string' && item.categories.toLowerCase().includes(catId)) return true;
+    return false;
+};
+
 // ============================================
 // CATEGORY CONFIGURATION FOR AIRBNBS
 // ============================================
@@ -595,6 +606,7 @@ const CATEGORY_CONFIG = [
         icon: '💖',
         badge: 'Romantic',
         filter: (item) => {
+            if (hasExplicitCat(item, 'romantic')) return true;
             const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
             const keywords = ['romantic', 'couple', 'honeymoon', 'cozy', 'intimate', 'retreat', 'getaway', 'private', 'quiet', 'serene', 'view', 'balcony', 'jacuzzi'];
             const rooms = parseInt(item.rooms) || 1;
@@ -609,6 +621,7 @@ const CATEGORY_CONFIG = [
         icon: '👨‍👩‍👧',
         badge: 'Family',
         filter: (item) => {
+            if (hasExplicitCat(item, 'family')) return true;
             const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
             const keywords = ['family', 'kids', 'children', 'spacious', 'large', 'group', 'master', 'garden', 'compound', 'playground'];
             const rooms = parseInt(item.rooms) || 0;
@@ -623,6 +636,7 @@ const CATEGORY_CONFIG = [
         icon: '💼',
         badge: 'Business',
         filter: (item) => {
+            if (hasExplicitCat(item, 'business')) return true;
             const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
             const keywords = ['business', 'work', 'wifi', 'desk', 'office', 'corporate', 'central', 'executive', 'workstation', 'laptop'];
             const hasWifi = item.amenities && item.amenities.toLowerCase().includes('wifi');
@@ -639,6 +653,7 @@ const CATEGORY_CONFIG = [
         icon: '✨',
         badge: 'Luxury',
         filter: (item) => {
+            if (hasExplicitCat(item, 'luxury')) return true;
             const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
             const keywords = ['luxury', 'premium', 'penthouse', 'rooftop', 'executive', 'suite', 'villa', 'pool', 'modern', 'elegance', 'plush', 'jacuzzi'];
             return keywords.some(k => text.includes(k)) || (item.price && item.price >= 6500);
@@ -652,6 +667,7 @@ const CATEGORY_CONFIG = [
         icon: '💰',
         badge: 'Budget Friendly',
         filter: (item) => {
+            if (hasExplicitCat(item, 'budget')) return true;
             return item.price && item.price <= 4500;
         }
     }

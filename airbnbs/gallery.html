@@ -202,12 +202,13 @@
         </div>
     </footer>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs & Seed Data -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="../js/firebase-config.js"></script>
+    <script src="../js/seed-data.js"></script>
     <script src="../js/data.js"></script>
     <script src="../js/app.js"></script>
 
@@ -223,33 +224,38 @@
             const urlParams = new URLSearchParams(window.location.search);
             currentCategory = urlParams.get('category') || 'romantic';
 
-            // 1. Immediately render from local cache for instant load (0ms delay)
+            // 1. Immediately render from local cache or seed data (0ms instant render)
             let allItems = (typeof JiraniData !== 'undefined' && typeof JiraniData.getAirbnbsCached === 'function')
                 ? JiraniData.getAirbnbsCached()
                 : [];
 
+            if (!allItems || allItems.length === 0) {
+                if (typeof savedExportData !== 'undefined' && savedExportData.airbnbs && savedExportData.airbnbs.length > 0) {
+                    allItems = savedExportData.airbnbs;
+                }
+            }
+
             if (allItems && allItems.length > 0) {
-                console.log(`Gallery: Loaded ${allItems.length} items from cache`);
                 updateCategoryView(currentCategory, allItems);
             }
 
-            // 2. Fetch fresh items asynchronously from Firebase
+            // 2. Fetch fresh items asynchronously from Firebase (background update)
             try {
                 if (typeof JiraniData !== 'undefined' && typeof JiraniData.getAirbnbs === 'function') {
-                    const freshItems = await JiraniData.getAirbnbs();
+                    const freshItems = await Promise.race([
+                        JiraniData.getAirbnbs(),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase timeout')), 3000))
+                    ]);
                     if (freshItems && freshItems.length > 0) {
                         allItems = freshItems;
                         updateCategoryView(currentCategory, allItems);
                     }
                 }
             } catch (e) {
-                console.warn("Could not fetch live Firebase data:", e);
-            }
-
-            // 3. Fallback to sample data if cache & network were both empty
-            if ((!allItems || allItems.length === 0) && typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
-                console.log("Gallery: Falling back to savedExportData");
-                updateCategoryView(currentCategory, savedExportData.airbnbs);
+                console.warn("Firebase fetch skipped/timed out, using offline dataset:", e);
+                if ((!allItems || allItems.length === 0) && typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
+                    updateCategoryView(currentCategory, savedExportData.airbnbs);
+                }
             }
         }
 

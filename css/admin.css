@@ -322,6 +322,33 @@ tr:last-child td {
     outline: none;
 }
 
+/* Category Tag Buttons */
+.btn-cat-tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #f1f5f9;
+    border: 1.5px solid #cbd5e1;
+    color: #475569;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-cat-tag:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #1e293b;
+}
+.btn-cat-tag.active {
+    background: #2d60ff;
+    border-color: #2d60ff;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(45, 96, 255, 0.25);
+}
+
 .modal-footer {
     padding: 20px;
     border-top: 1px solid var(--border-color);

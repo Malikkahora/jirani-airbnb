@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -152,7 +152,20 @@
 
                     <div class="form-group">
                         <label class="form-label">Amenities (Comma separated)</label>
-                        <input type="text" id="edit-amenities" class="form-control">
+                        <input type="text" id="edit-amenities" class="form-control" placeholder="Wi-Fi, Heated Pool, Balcony, Elevator...">
+                    </div>
+
+                    <div class="form-group" id="categories-group">
+                        <label class="form-label">Category Tags</label>
+                        <div class="cat-tags-container" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                            <button type="button" class="btn-cat-tag" data-val="romantic" onclick="toggleCategoryTag('romantic')">💖 Romantic</button>
+                            <button type="button" class="btn-cat-tag" data-val="family" onclick="toggleCategoryTag('family')">👨‍👩‍👧 Family</button>
+                            <button type="button" class="btn-cat-tag" data-val="business" onclick="toggleCategoryTag('business')">💼 Business</button>
+                            <button type="button" class="btn-cat-tag" data-val="luxury" onclick="toggleCategoryTag('luxury')">✨ Luxury</button>
+                            <button type="button" class="btn-cat-tag" data-val="budget" onclick="toggleCategoryTag('budget')">💰 Budget</button>
+                        </div>
+                        <input type="text" id="edit-categories" class="form-control" placeholder="Select tags above or enter categories (comma-separated)">
+                        <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Assigns which category sliders and dedicated gallery pages this listing appears in.</small>
                     </div>
 
                     <div class="form-group">
