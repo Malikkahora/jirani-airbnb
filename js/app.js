@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cachedAirbnbs.length > 0) {
             console.log("Rendering Airbnbs from cache (Pre-Init)");
             renderAirbnbs(cachedAirbnbs);
+            if (typeof renderCategorySliders === 'function') {
+                renderCategorySliders(cachedAirbnbs);
+            }
         } else {
             renderLoadingState('airbnb-grid');
         }
@@ -110,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const freshAirbnbs = await JiraniData.getAirbnbs();
         console.log("Rendering fresh Airbnbs");
         renderAirbnbs(freshAirbnbs);
-        renderFeaturedSlider(freshAirbnbs);
+        renderCategorySliders(freshAirbnbs);
     } else if (isPropertyPage) {
         const freshProperties = await JiraniData.getProperties();
         console.log("Rendering fresh Properties");
@@ -641,37 +644,179 @@ window.toggleMobileSearch = function (show = true) {
     }
 };
 
-// Render Featured Random Slider
-function renderFeaturedSlider(items) {
-    const track = document.getElementById('slider-track');
+// ============================================
+// CATEGORY SLIDERS SYSTEM
+// ============================================
+
+const CATEGORY_CONFIG = [
+    {
+        id: 'romantic',
+        title: 'Romantic Stays',
+        tagline: 'HANDPICKED FOR COUPLES & COZY GETAWAYS',
+        subtitle: 'Intimate escapes with ambient lighting, cozy interiors and serene vibes',
+        icon: '💖',
+        badge: 'Romantic',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['romantic', 'couple', 'honeymoon', 'cozy', 'intimate', 'retreat', 'getaway', 'private', 'quiet', 'serene', 'view', 'balcony', 'jacuzzi'];
+            const rooms = parseInt(item.rooms) || 1;
+            return keywords.some(k => text.includes(k)) || rooms === 1 || text.includes('studio') || text.includes('1 bedroom');
+        }
+    },
+    {
+        id: 'family',
+        title: 'Family Stays',
+        tagline: 'SPACIOUS & WELCOMING FOR THE WHOLE FAMILY',
+        subtitle: 'Multi-bedroom homes with room to play, full kitchens, and family comforts',
+        icon: '👨‍👩‍👧',
+        badge: 'Family',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['family', 'kids', 'children', 'spacious', 'large', 'group', 'master', 'garden', 'compound', 'playground'];
+            const rooms = parseInt(item.rooms) || 0;
+            return keywords.some(k => text.includes(k)) || rooms >= 2 || text.includes('2 bedroom') || text.includes('3 bedroom') || text.includes('4 bedroom');
+        }
+    },
+    {
+        id: 'business',
+        title: 'Business Stays',
+        tagline: 'WORK-READY WITH HIGH-SPEED CONNECTIVITY',
+        subtitle: 'Dedicated workstations, ultra-fast Wi-Fi, and prime central business locations',
+        icon: '💼',
+        badge: 'Business',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['business', 'work', 'wifi', 'desk', 'office', 'corporate', 'central', 'executive', 'workstation', 'laptop'];
+            const hasWifi = item.amenities && item.amenities.toLowerCase().includes('wifi');
+            const primeLocs = ['westlands', 'kilimani', 'upperhill', 'cbd', 'kileleshwa'];
+            const inPrimeLoc = primeLocs.some(loc => (item.location || '').toLowerCase().includes(loc));
+            return keywords.some(k => text.includes(k)) || hasWifi || inPrimeLoc;
+        }
+    },
+    {
+        id: 'luxury',
+        title: 'Luxury Stays',
+        tagline: 'PREMIUM COMFORTS & ELEVATED LIVING',
+        subtitle: 'High-end penthouses, modern aesthetics, swimming pools & premier views',
+        icon: '✨',
+        badge: 'Luxury',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['luxury', 'premium', 'penthouse', 'rooftop', 'executive', 'suite', 'villa', 'pool', 'modern', 'elegance', 'plush', 'jacuzzi'];
+            return keywords.some(k => text.includes(k)) || (item.price && item.price >= 6500);
+        }
+    },
+    {
+        id: 'budget',
+        title: 'Budget Stays',
+        tagline: 'TOP VALUE UNDER KES 4,500 / NIGHT',
+        subtitle: 'Quality stays and great comfort without breaking your budget',
+        icon: '💰',
+        badge: 'Budget Friendly',
+        filter: (item) => {
+            return item.price && item.price <= 4500;
+        }
+    }
+];
+
+window.CATEGORY_CONFIG = CATEGORY_CONFIG;
+
+window.scrollCategorySlider = function (catId, direction) {
+    const track = document.getElementById(`cat-track-${catId}`);
     if (!track) return;
+    const scrollAmount = Math.max(300, Math.floor(track.clientWidth * 0.75)) * direction;
+    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+};
 
-    // Shuffle and pick 8 random items
-    const shuffled = [...items].sort(() => 0.5 - Math.random());
-    const featured = shuffled.slice(0, 8);
+window.renderCategorySliders = function (items, activeCategory = 'all') {
+    const container = document.getElementById('category-sliders-container');
+    if (!container) return;
 
-    track.innerHTML = '';
+    if (!items || items.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
 
-    featured.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'slider-card';
-        card.onclick = () => {
-            window.location.href = `/listing-details/?id=${item.id}&type=airbnb`;
-        };
+    const favorites = getFavorites().map(String);
 
-        const image = item.images && item.images.length > 0 ? item.images[0] : (item.image || '');
-        const optimizedImage = optimizeCloudinaryUrl(image, 300);
+    let catsToShow = CATEGORY_CONFIG;
+    if (activeCategory && activeCategory !== 'all') {
+        const matched = CATEGORY_CONFIG.find(c => c.id === activeCategory);
+        if (matched) {
+            catsToShow = [matched];
+        }
+    }
 
-        card.innerHTML = `
-            <div class="slider-card-img-wrapper">
-                <img src="${optimizedImage}" alt="${item.title}" class="slider-card-img" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.padding='20px';this.style.backgroundColor='#f8f9fa';">
-            </div>
-            <div class="slider-card-info">
-                <div class="slider-card-loc">${item.location}</div>
-                <h3 class="slider-card-title">${item.title}</h3>
-                <div class="slider-card-price">KES ${item.price.toLocaleString()} <span class="price-suffix">/ night</span></div>
-            </div>
+    let html = '';
+    catsToShow.forEach(cat => {
+        let catItems = items.filter(cat.filter);
+        if (catItems.length === 0) {
+            catItems = items.slice(0, 8);
+        }
+
+        html += `
+        <div class="category-slider-block" id="cat-block-${cat.id}">
+            <div class="slider-container">
+                <div class="slider-header-flex">
+                    <div class="slider-title-group">
+                        <div class="slider-tagline">${cat.tagline}</div>
+                        <div class="slider-title-row">
+                            <span class="slider-icon">${cat.icon}</span>
+                            <h2 class="slider-title">${cat.title}</h2>
+                            <span class="category-count-badge">${catItems.length} stays</span>
+                        </div>
+                        <p class="slider-subtitle-text">${cat.subtitle}</p>
+                    </div>
+                    <div class="slider-nav-arrows">
+                        <button type="button" class="slider-arrow-btn prev" onclick="scrollCategorySlider('${cat.id}', -1)" aria-label="Previous ${cat.title}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        <button type="button" class="slider-arrow-btn next" onclick="scrollCategorySlider('${cat.id}', 1)" aria-label="Next ${cat.title}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="slider-track" id="cat-track-${cat.id}">
         `;
-        track.appendChild(card);
+
+        catItems.forEach(item => {
+            const isFav = favorites.includes(String(item.id));
+            const image = item.images && item.images.length > 0 ? item.images[0] : (item.image || '');
+            const optimizedImage = optimizeCloudinaryUrl(image, 400);
+
+            html += `
+                <div class="slider-card" onclick="window.location.href='/listing-details/?id=${item.id}&type=airbnb'">
+                    <div class="slider-card-img-wrapper">
+                        <img src="${optimizedImage}" alt="${item.title}" class="slider-card-img" loading="lazy" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.padding='20px';this.style.backgroundColor='#f8f9fa';">
+                        <div class="slider-card-badge">${cat.icon} ${cat.badge}</div>
+                        <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(event, ${item.id});" aria-label="Save to favorites">
+                            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 28c-7-4.73-14-10-14-17a6.98 6.98 0 0 1 7-7c1.8 0 3.58.68 4.95 2.05L16 8.1l2.05-2.05a6.98 6.98 0 0 1 9.9 0 6.98 6.98 0 0 1 0 9.9L16 28z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="slider-card-info">
+                        <div class="slider-card-loc">${item.location || 'Nairobi'}</div>
+                        <h3 class="slider-card-title">${item.title}</h3>
+                        <div class="slider-card-stats">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg> ${item.rooms || item.beds || 1} Bed</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 19v2"/><path d="M17 19v2"/><path d="M2 12h20"/><path d="M2 12v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5"/><path d="M4 12V9a2 2 0 0 1 2-2h2"/></svg> ${item.baths || 1} Bath</span>
+                        </div>
+                        <div class="slider-card-price">KES ${item.price.toLocaleString()} <span class="price-suffix">/ night</span></div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                </div>
+            </div>
+        </div>
+        `;
     });
-}
+
+    container.innerHTML = html;
+};
+
+// Backward compatibility alias
+window.renderFeaturedSlider = function (items) {
+    window.renderCategorySliders(items);
+};

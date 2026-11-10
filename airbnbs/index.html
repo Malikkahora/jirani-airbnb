@@ -764,17 +764,9 @@
             </div>
         </section>
 
-        <!-- New Random Featured Slider -->
-        <section class="featured-random">
-            <div class="slider-container">
-                <div class="slider-header">
-                    <h2 class="slider-title">Explore Top Stays</h2>
-                    <p class="section-subtitle-text">Handpicked selections just for you</p>
-                </div>
-                <div class="slider-track" id="slider-track">
-                    <!-- Loaded via JS -->
-                </div>
-            </div>
+        <!-- Interactive Category Sliders Section -->
+        <section class="category-sliders-section" id="category-sliders-container">
+            <!-- Dynamically populated category sliders -->
         </section>
 
         <section class="featured" id="airbnbs">
@@ -1178,13 +1170,23 @@ window.filterByCategory = async function(category, btn) {
     if (btn) btn.classList.add('active');
 
     const items = await JiraniData.getAirbnbs();
+    
+    // Update Category Sliders
+    if (typeof window.renderCategorySliders === 'function') {
+        window.renderCategorySliders(items, category);
+    }
+
     if (category === 'all') {
         renderAirbnbs(items);
     } else {
         const filtered = items.filter(item => {
-            const text = `${item.title} ${item.desc} ${item.amenities || ''}`.toLowerCase();
-            if (category === 'budget') return item.price <= 4000;
-            const keywords = CATEGORY_KEYWORDS[category] || [];
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            if (category === 'budget') return item.price && item.price <= 4500;
+            if (typeof CATEGORY_CONFIG !== 'undefined') {
+                const cfg = CATEGORY_CONFIG.find(c => c.id === category);
+                if (cfg && cfg.filter) return cfg.filter(item);
+            }
+            const keywords = (typeof CATEGORY_KEYWORDS !== 'undefined' && CATEGORY_KEYWORDS[category]) || [];
             return keywords.some(k => text.includes(k));
         });
         renderAirbnbs(filtered.length > 0 ? filtered : items);
@@ -1199,11 +1201,16 @@ window.filterByCategory = async function(category, btn) {
     else url.searchParams.delete('category');
     window.history.replaceState({}, '', url);
     
-    // Scroll to listings
+    // Smooth scroll to relevant category slider or listings
     setTimeout(() => {
-        const section = document.getElementById('airbnbs');
-        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+        const targetBlock = category !== 'all' ? document.getElementById(`cat-block-${category}`) : document.getElementById('category-sliders-container');
+        if (targetBlock) {
+            targetBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            const section = document.getElementById('airbnbs');
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 120);
 };
 
 // Auto-trigger from URL param on load
