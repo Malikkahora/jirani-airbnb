@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Category Gallery | Jirani Properties</title>
+    <link rel="icon" href="../images/favicon.png">
+    <meta name="description" content="Explore curated Airbnb stays in Nairobi by category: Romantic getaways, family homes, executive stays, luxury penthouses, and budget friendly apartments.">
+    <link rel="canonical" href="https://jiraniproperties.co.ke/airbnbs/gallery.html">
+    <link rel="stylesheet" href="../css/styles.css?v=2.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/airbnb-theme.css?v=1.0">
+</head>
+
+<body class="airbnb-page">
+    <!-- Top Navigation Header -->
+    <header class="header">
+        <div class="container header__container">
+            <a href="../" class="logo">
+                <span class="logo__text">Jirani<span class="logo__accent">Group</span></span>
+            </a>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
+                    <li class="nav__item"><a href="../airbnbs/" class="nav__link active">Airbnbs</a></li>
+                    <li class="nav__item"><a href="../properties/" class="nav__link">Properties</a></li>
+                    <li class="nav__item"><a href="../blog/" class="nav__link">Blog</a></li>
+                    <li class="nav__item"><a href="../contact/" class="nav__link">Contacts</a></li>
+                    <li class="nav__item"><a href="../about/" class="nav__link">About Us</a></li>
+                </ul>
+            </nav>
+            <div class="header__actions">
+                <a href="../airbnbs/" class="favorites-link" aria-label="Favorites" style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--color-border); margin-right: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span class="menu-toggle__bar"></span>
+                    <span class="menu-toggle__bar"></span>
+                    <span class="menu-toggle__bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="gallery-page-main">
+        <!-- Gallery Hero & Category Title -->
+        <section class="gallery-hero-banner">
+            <div class="container">
+                <div class="gallery-hero-content">
+                    <div class="gallery-breadcrumb">
+                        <a href="../">Home</a> &rsaquo; <a href="../airbnbs/">Airbnbs</a> &rsaquo; <span id="breadcrumb-category">Category Gallery</span>
+                    </div>
+                    <div class="gallery-tagline-badge" id="gallery-tagline-badge">✦ CURATED EXPERIENCE</div>
+                    <h1 class="gallery-main-title" id="gallery-main-title">Romantic Stays Gallery</h1>
+                    <p class="gallery-main-desc" id="gallery-main-desc">Handpicked intimate escapes with ambient lighting, cozy interiors and serene vibes in Nairobi.</p>
+                    
+                    <div class="gallery-stats-strip">
+                        <div class="gallery-stat-pill">
+                            <span class="stat-icon">🏡</span>
+                            <span id="gallery-total-count">Loading stays...</span>
+                        </div>
+                        <div class="gallery-stat-pill">
+                            <span class="stat-icon">⭐️</span>
+                            <span>4.98 Superhost Rating</span>
+                        </div>
+                        <div class="gallery-stat-pill">
+                            <span class="stat-icon">⚡</span>
+                            <span>Instant Confirmation</span>
+                        </div>
+                        <a href="../airbnbs/" class="gallery-back-link">
+                            &larr; Back to Stays Overview
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Switcher Pill Strip -->
+        <section class="gallery-nav-strip">
+            <div class="container">
+                <div class="gallery-category-chips">
+                    <button type="button" class="category-chip" data-category="all" onclick="switchCategory('all')">
+                        <span class="chip-icon">🏠</span> All Stays
+                    </button>
+                    <button type="button" class="category-chip" data-category="romantic" onclick="switchCategory('romantic')">
+                        <span class="chip-icon">💑</span> Romantic
+                    </button>
+                    <button type="button" class="category-chip" data-category="family" onclick="switchCategory('family')">
+                        <span class="chip-icon">👨‍👩‍👧</span> Family
+                    </button>
+                    <button type="button" class="category-chip" data-category="business" onclick="switchCategory('business')">
+                        <span class="chip-icon">💼</span> Business
+                    </button>
+                    <button type="button" class="category-chip" data-category="luxury" onclick="switchCategory('luxury')">
+                        <span class="chip-icon">✨</span> Luxury
+                    </button>
+                    <button type="button" class="category-chip" data-category="budget" onclick="switchCategory('budget')">
+                        <span class="chip-icon">💰</span> Budget
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Gallery Listings Section -->
+        <section class="gallery-listings-section">
+            <div class="container">
+                <!-- Neighborhood Filter & Sorting Bar -->
+                <div class="gallery-toolbar">
+                    <div class="gallery-toolbar-left">
+                        <span class="toolbar-label">Neighborhood:</span>
+                        <div class="gallery-neighborhood-chips">
+                            <button type="button" class="neighborhood-chip active" onclick="filterNeighborhood('all', this)">All</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('kilimani', this)">Kilimani</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('westlands', this)">Westlands</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('kileleshwa', this)">Kileleshwa</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('south b', this)">South B</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('syokimau', this)">Syokimau</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('roysambu', this)">Roysambu</button>
+                            <button type="button" class="neighborhood-chip" onclick="filterNeighborhood('lavington', this)">Lavington</button>
+                        </div>
+                    </div>
+                    <div class="gallery-toolbar-right">
+                        <label for="sort-select" class="toolbar-label">Sort By:</label>
+                        <select id="sort-select" onchange="sortGallery(this.value)" class="luxury-sort-select">
+                            <option value="recommended">Featured First</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="beds-desc">Most Bedrooms</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- THE ORGANIZED GALLERY GRID -->
+                <div class="airbnb-gallery-grid" id="gallery-grid">
+                    <div class="gallery-loading-placeholder" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: #666; font-size: 1.05rem;">Loading curated stays...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIP Concierge Direct Booking Banner -->
+        <section class="concierge-vip-section" style="padding-top: 30px;">
+            <div class="container">
+                <div class="concierge-vip-card">
+                    <div class="vip-card-content">
+                        <span class="vip-badge">✦ DIRECT BOOKING PRIVILEGES</span>
+                        <h2 class="vip-title">Looking for a Specific Stay or Extended Booking?</h2>
+                        <p class="vip-desc">Chat directly with our Nairobi Hospitality Manager on WhatsApp for personalized stay recommendations, monthly corporate discounts, and custom arrangements.</p>
+                        <div class="vip-action-row">
+                            <a href="https://wa.me/254725833232?text=Hello%20Jirani%20Hospitality,%20I'm%20looking%20to%20inquire%20about%20booking%20a%20stay" target="_blank" rel="noopener" class="btn btn--vip-whatsapp">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                </svg>
+                                Chat on WhatsApp (Instant Response)
+                            </a>
+                            <a href="tel:+254725833232" class="btn btn--vip-call">Call +254 725 833 232</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__container">
+            <div class="footer__col footer__brand">
+                <h3>Jirani Group</h3>
+                <p>Your trusted partner in luxury Airbnb stays and verified properties across Kenya.</p>
+            </div>
+            <div class="footer__col">
+                <h3>Quick Links</h3>
+                <ul class="footer__links">
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../airbnbs/">Airbnbs</a></li>
+                    <li><a href="../properties/">Properties</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <h3>Contact</h3>
+                <p>+254 725 833 232</p>
+                <p>jiranigroup.co@gmail.com</p>
+                <p>Nairobi, Kenya</p>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container" style="display: flex; justify-content: space-between;">
+                <p>&copy; 2026 Jirani Group. All rights reserved.</p>
+                <a href="../airbnbs/">Back to Airbnbs Overview</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/app.js"></script>
+
+    <!-- Gallery Controller Script -->
+    <script>
+        let allCategoryItems = [];
+        let currentDisplayedItems = [];
+        let currentCategory = 'all';
+        let currentNeighborhood = 'all';
+
+        async function initGallery() {
+            // Get category from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            currentCategory = urlParams.get('category') || 'romantic';
+
+            await JiraniData.init();
+            const allItems = await JiraniData.getAirbnbs();
+            
+            updateCategoryView(currentCategory, allItems);
+        }
+
+        function updateCategoryView(catId, items) {
+            currentCategory = catId;
+
+            // Highlight chip
+            document.querySelectorAll('.category-chip').forEach(c => {
+                if (c.getAttribute('data-category') === catId) {
+                    c.classList.add('active');
+                } else {
+                    c.classList.remove('active');
+                }
+            });
+
+            const categoryObj = (typeof CATEGORY_CONFIG !== 'undefined') ? CATEGORY_CONFIG.find(c => c.id === catId) : null;
+
+            // Filter items
+            if (catId === 'all') {
+                allCategoryItems = items;
+                document.getElementById('breadcrumb-category').innerText = 'All Stays Gallery';
+                document.getElementById('gallery-tagline-badge').innerText = '✦ ALL VERIFIED STAYS';
+                document.getElementById('gallery-main-title').innerHTML = '🏠 All Airbnb Stays in Nairobi';
+                document.getElementById('gallery-main-desc').innerText = 'Explore our complete portfolio of serviced apartments, boutique suites & executive penthouses across Nairobi.';
+            } else if (categoryObj) {
+                allCategoryItems = items.filter(categoryObj.filter);
+                if (allCategoryItems.length === 0) allCategoryItems = items.slice(0, 8);
+                document.getElementById('breadcrumb-category').innerText = `${categoryObj.title} Gallery`;
+                document.getElementById('gallery-tagline-badge').innerText = categoryObj.tagline || '✦ CURATED EXPERIENCE';
+                document.getElementById('gallery-main-title').innerHTML = `${categoryObj.icon} ${categoryObj.title} Gallery`;
+                document.getElementById('gallery-main-desc').innerText = categoryObj.subtitle || 'Handpicked premium stays.';
+            } else {
+                allCategoryItems = items;
+            }
+
+            document.getElementById('gallery-total-count').innerText = `${allCategoryItems.length} Verified Stays`;
+
+            // Reset neighborhood filter
+            currentNeighborhood = 'all';
+            document.querySelectorAll('.neighborhood-chip').forEach(c => c.classList.remove('active'));
+            const allNeighChip = document.querySelector('.neighborhood-chip');
+            if (allNeighChip) allNeighChip.classList.add('active');
+
+            currentDisplayedItems = [...allCategoryItems];
+            renderGalleryItems(currentDisplayedItems, catId);
+
+            // Update URL without reload
+            const url = new URL(window.location);
+            url.searchParams.set('category', catId);
+            window.history.replaceState({}, '', url);
+        }
+
+        function switchCategory(catId) {
+            JiraniData.getAirbnbs().then(items => {
+                updateCategoryView(catId, items);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        function filterNeighborhood(neigh, btn) {
+            currentNeighborhood = neigh;
+            document.querySelectorAll('.neighborhood-chip').forEach(c => c.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (neigh === 'all') {
+                currentDisplayedItems = [...allCategoryItems];
+            } else {
+                currentDisplayedItems = allCategoryItems.filter(item => {
+                    return (item.location || '').toLowerCase().includes(neigh.toLowerCase());
+                });
+            }
+            renderGalleryItems(currentDisplayedItems, currentCategory);
+        }
+
+        function sortGallery(sortBy) {
+            if (sortBy === 'price-asc') {
+                currentDisplayedItems.sort((a, b) => (a.price || 0) - (b.price || 0));
+            } else if (sortBy === 'price-desc') {
+                currentDisplayedItems.sort((a, b) => (b.price || 0) - (a.price || 0));
+            } else if (sortBy === 'beds-desc') {
+                currentDisplayedItems.sort((a, b) => (parseInt(b.rooms) || 1) - (parseInt(a.rooms) || 1));
+            }
+            renderGalleryItems(currentDisplayedItems, currentCategory);
+        }
+
+        function renderGalleryItems(items, catId) {
+            const container = document.getElementById('gallery-grid');
+            if (!container) return;
+            const favorites = (typeof getFavorites === 'function') ? getFavorites().map(String) : [];
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(0,0,0,0.02); border-radius: 20px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 12px;">🔍</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;">No stays found in this selection</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Try selecting "All" neighborhoods or explore another category.</p>
+                        <button type="button" class="btn btn--primary" onclick="filterNeighborhood('all', null)">Reset Neighborhood Filter</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const categoryObj = (typeof CATEGORY_CONFIG !== 'undefined') ? CATEGORY_CONFIG.find(c => c.id === catId) : null;
+            const badgeLabel = categoryObj ? `${categoryObj.icon} ${categoryObj.badge}` : 'Airbnb Verified';
+
+            let html = '';
+            items.forEach(item => {
+                const isFav = favorites.includes(String(item.id));
+                const images = item.images || (item.image ? [item.image] : []);
+                const imageUrl = images.length > 0 ? optimizeCloudinaryUrl(images[0], 500) : '/images/home-bg.jpg';
+
+                html += `
+                    <article class="gallery-card" onclick="window.location.href='/listing-details/?id=${item.id}&type=airbnb'">
+                        <div class="gallery-card__img-wrap">
+                            <img src="${imageUrl}" alt="${item.title}" loading="lazy" class="gallery-card__img" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.padding='20px';this.style.backgroundColor='#f8f9fa';">
+                            <div class="gallery-card__badge">${badgeLabel}</div>
+                            <button type="button" class="favorite-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(event, '${item.id}');" aria-label="Save to favorites">
+                                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 28c-7-4.73-14-10-14-17a6.98 6.98 0 0 1 7-7c1.8 0 3.58.68 4.95 2.05L16 8.1l2.05-2.05a6.98 6.98 0 0 1 9.9 0 6.98 6.98 0 0 1 0 9.9L16 28z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="gallery-card__body">
+                            <div class="gallery-card__loc">${item.location || 'Nairobi'}</div>
+                            <h3 class="gallery-card__title" title="${item.title}">${item.title}</h3>
+                            <div class="gallery-card__stats">
+                                <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg> ${item.rooms || item.beds || 1} Bed</span>
+                                <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 19v2"/><path d="M17 19v2"/><path d="M2 12h20"/><path d="M2 12v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5"/><path d="M4 12V9a2 2 0 0 1 2-2h2"/></svg> ${item.baths || 1} Bath</span>
+                                ${item.amenities && item.amenities.toLowerCase().includes('wifi') ? `<span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> Wifi</span>` : ''}
+                            </div>
+                            <div class="gallery-card__price-row">
+                                <div class="gallery-card__price">
+                                    <strong>KES ${item.price.toLocaleString()}</strong> <span class="night-label">/ night</span>
+                                </div>
+                                <span class="gallery-card__action">View Details &rarr;</span>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+</body>
+
+</html>

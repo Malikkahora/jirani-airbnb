@@ -579,8 +579,145 @@ function renderGroupedListings(containerId, items, pageType) {
     });
 }
 
-function renderAirbnbs(items) {
-    renderGroupedListings('airbnb-grid', items, 'airbnb');
+// ============================================
+// CATEGORY CONFIGURATION FOR AIRBNBS
+// ============================================
+const CATEGORY_CONFIG = [
+    {
+        id: 'romantic',
+        title: 'Romantic Stays',
+        tagline: 'HANDPICKED FOR COUPLES & COZY GETAWAYS',
+        subtitle: 'Intimate escapes with ambient lighting, cozy interiors and serene vibes',
+        icon: '💖',
+        badge: 'Romantic',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['romantic', 'couple', 'honeymoon', 'cozy', 'intimate', 'retreat', 'getaway', 'private', 'quiet', 'serene', 'view', 'balcony', 'jacuzzi'];
+            const rooms = parseInt(item.rooms) || 1;
+            return keywords.some(k => text.includes(k)) || rooms === 1 || text.includes('studio') || text.includes('1 bedroom');
+        }
+    },
+    {
+        id: 'family',
+        title: 'Family Stays',
+        tagline: 'SPACIOUS & WELCOMING FOR THE WHOLE FAMILY',
+        subtitle: 'Multi-bedroom homes with room to play, full kitchens, and family comforts',
+        icon: '👨‍👩‍👧',
+        badge: 'Family',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['family', 'kids', 'children', 'spacious', 'large', 'group', 'master', 'garden', 'compound', 'playground'];
+            const rooms = parseInt(item.rooms) || 0;
+            return keywords.some(k => text.includes(k)) || rooms >= 2 || text.includes('2 bedroom') || text.includes('3 bedroom') || text.includes('4 bedroom');
+        }
+    },
+    {
+        id: 'business',
+        title: 'Business Stays',
+        tagline: 'WORK-READY WITH HIGH-SPEED CONNECTIVITY',
+        subtitle: 'Dedicated workstations, ultra-fast Wi-Fi, and prime central business locations',
+        icon: '💼',
+        badge: 'Business',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['business', 'work', 'wifi', 'desk', 'office', 'corporate', 'central', 'executive', 'workstation', 'laptop'];
+            const hasWifi = item.amenities && item.amenities.toLowerCase().includes('wifi');
+            const primeLocs = ['westlands', 'kilimani', 'upperhill', 'cbd', 'kileleshwa'];
+            const inPrimeLoc = primeLocs.some(loc => (item.location || '').toLowerCase().includes(loc));
+            return keywords.some(k => text.includes(k)) || hasWifi || inPrimeLoc;
+        }
+    },
+    {
+        id: 'luxury',
+        title: 'Luxury Stays',
+        tagline: 'PREMIUM COMFORTS & ELEVATED LIVING',
+        subtitle: 'High-end penthouses, modern aesthetics, swimming pools & premier views',
+        icon: '✨',
+        badge: 'Luxury',
+        filter: (item) => {
+            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
+            const keywords = ['luxury', 'premium', 'penthouse', 'rooftop', 'executive', 'suite', 'villa', 'pool', 'modern', 'elegance', 'plush', 'jacuzzi'];
+            return keywords.some(k => text.includes(k)) || (item.price && item.price >= 6500);
+        }
+    },
+    {
+        id: 'budget',
+        title: 'Budget Stays',
+        tagline: 'TOP VALUE UNDER KES 4,500 / NIGHT',
+        subtitle: 'Quality stays and great comfort without breaking your budget',
+        icon: '💰',
+        badge: 'Budget Friendly',
+        filter: (item) => {
+            return item.price && item.price <= 4500;
+        }
+    }
+];
+
+window.CATEGORY_CONFIG = CATEGORY_CONFIG;
+
+function renderAirbnbGallery(containerId, items, activeCategory = 'all') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (!items || items.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(0,0,0,0.02); border-radius: 20px;">
+                <div style="font-size: 2.5rem; margin-bottom: 12px;">🔍</div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;">No stays found</h3>
+                <p style="color: #666; margin-bottom: 20px;">Try adjusting your search criteria or explore another neighborhood.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const favorites = (typeof getFavorites === 'function') ? getFavorites().map(String) : [];
+    const categoryObj = (typeof CATEGORY_CONFIG !== 'undefined') ? CATEGORY_CONFIG.find(c => c.id === activeCategory) : null;
+    const badgeLabel = categoryObj ? `${categoryObj.icon} ${categoryObj.badge}` : 'Airbnb Verified';
+
+    let html = '';
+    items.forEach(item => {
+        const isFav = favorites.includes(String(item.id));
+        const images = item.images || (item.image ? [item.image] : []);
+        const imageUrl = images.length > 0 ? optimizeCloudinaryUrl(images[0], 500) : '/images/home-bg.jpg';
+
+        html += `
+            <article class="gallery-card" onclick="window.location.href='/listing-details/?id=${item.id}&type=airbnb'">
+                <div class="gallery-card__img-wrap">
+                    <img src="${imageUrl}" alt="${item.title}" loading="lazy" class="gallery-card__img" onerror="this.onerror=null;this.src='/images/logo.png';this.style.objectFit='contain';this.style.padding='20px';this.style.backgroundColor='#f8f9fa';">
+                    <div class="gallery-card__badge">${badgeLabel}</div>
+                    <button type="button" class="favorite-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(event, '${item.id}');" aria-label="Save to favorites">
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 28c-7-4.73-14-10-14-17a6.98 6.98 0 0 1 7-7c1.8 0 3.58.68 4.95 2.05L16 8.1l2.05-2.05a6.98 6.98 0 0 1 9.9 0 6.98 6.98 0 0 1 0 9.9L16 28z"></path></svg>
+                    </button>
+                </div>
+                <div class="gallery-card__body">
+                    <div class="gallery-card__loc">${item.location || 'Nairobi'}</div>
+                    <h3 class="gallery-card__title" title="${item.title}">${item.title}</h3>
+                    <div class="gallery-card__stats">
+                        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg> ${item.rooms || item.beds || 1} Bed</span>
+                        <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 19v2"/><path d="M17 19v2"/><path d="M2 12h20"/><path d="M2 12v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5"/><path d="M4 12V9a2 2 0 0 1 2-2h2"/></svg> ${item.baths || 1} Bath</span>
+                        ${item.amenities && item.amenities.toLowerCase().includes('wifi') ? `<span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> Wifi</span>` : ''}
+                    </div>
+                    <div class="gallery-card__price-row">
+                        <div class="gallery-card__price">
+                            <strong>KES ${item.price ? item.price.toLocaleString() : '3,000'}</strong> <span class="night-label">/ night</span>
+                        </div>
+                        <span class="gallery-card__action">View Details &rarr;</span>
+                    </div>
+                </div>
+            </article>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function renderAirbnbs(items, activeCategory = 'all') {
+    const isGrid = document.querySelector('#airbnb-grid.airbnb-gallery-grid');
+    if (isGrid) {
+        renderAirbnbGallery('airbnb-grid', items, activeCategory);
+    } else {
+        renderGroupedListings('airbnb-grid', items, 'airbnb');
+    }
 }
 
 function renderProperties(items) {
@@ -658,82 +795,6 @@ window.toggleMobileSearch = function (show = true) {
     }
 };
 
-// ============================================
-// CATEGORY SLIDERS SYSTEM
-// ============================================
-
-const CATEGORY_CONFIG = [
-    {
-        id: 'romantic',
-        title: 'Romantic Stays',
-        tagline: 'HANDPICKED FOR COUPLES & COZY GETAWAYS',
-        subtitle: 'Intimate escapes with ambient lighting, cozy interiors and serene vibes',
-        icon: '💖',
-        badge: 'Romantic',
-        filter: (item) => {
-            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
-            const keywords = ['romantic', 'couple', 'honeymoon', 'cozy', 'intimate', 'retreat', 'getaway', 'private', 'quiet', 'serene', 'view', 'balcony', 'jacuzzi'];
-            const rooms = parseInt(item.rooms) || 1;
-            return keywords.some(k => text.includes(k)) || rooms === 1 || text.includes('studio') || text.includes('1 bedroom');
-        }
-    },
-    {
-        id: 'family',
-        title: 'Family Stays',
-        tagline: 'SPACIOUS & WELCOMING FOR THE WHOLE FAMILY',
-        subtitle: 'Multi-bedroom homes with room to play, full kitchens, and family comforts',
-        icon: '👨‍👩‍👧',
-        badge: 'Family',
-        filter: (item) => {
-            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
-            const keywords = ['family', 'kids', 'children', 'spacious', 'large', 'group', 'master', 'garden', 'compound', 'playground'];
-            const rooms = parseInt(item.rooms) || 0;
-            return keywords.some(k => text.includes(k)) || rooms >= 2 || text.includes('2 bedroom') || text.includes('3 bedroom') || text.includes('4 bedroom');
-        }
-    },
-    {
-        id: 'business',
-        title: 'Business Stays',
-        tagline: 'WORK-READY WITH HIGH-SPEED CONNECTIVITY',
-        subtitle: 'Dedicated workstations, ultra-fast Wi-Fi, and prime central business locations',
-        icon: '💼',
-        badge: 'Business',
-        filter: (item) => {
-            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
-            const keywords = ['business', 'work', 'wifi', 'desk', 'office', 'corporate', 'central', 'executive', 'workstation', 'laptop'];
-            const hasWifi = item.amenities && item.amenities.toLowerCase().includes('wifi');
-            const primeLocs = ['westlands', 'kilimani', 'upperhill', 'cbd', 'kileleshwa'];
-            const inPrimeLoc = primeLocs.some(loc => (item.location || '').toLowerCase().includes(loc));
-            return keywords.some(k => text.includes(k)) || hasWifi || inPrimeLoc;
-        }
-    },
-    {
-        id: 'luxury',
-        title: 'Luxury Stays',
-        tagline: 'PREMIUM COMFORTS & ELEVATED LIVING',
-        subtitle: 'High-end penthouses, modern aesthetics, swimming pools & premier views',
-        icon: '✨',
-        badge: 'Luxury',
-        filter: (item) => {
-            const text = `${item.title} ${item.desc || ''} ${item.amenities || ''}`.toLowerCase();
-            const keywords = ['luxury', 'premium', 'penthouse', 'rooftop', 'executive', 'suite', 'villa', 'pool', 'modern', 'elegance', 'plush', 'jacuzzi'];
-            return keywords.some(k => text.includes(k)) || (item.price && item.price >= 6500);
-        }
-    },
-    {
-        id: 'budget',
-        title: 'Budget Stays',
-        tagline: 'TOP VALUE UNDER KES 4,500 / NIGHT',
-        subtitle: 'Quality stays and great comfort without breaking your budget',
-        icon: '💰',
-        badge: 'Budget Friendly',
-        filter: (item) => {
-            return item.price && item.price <= 4500;
-        }
-    }
-];
-
-window.CATEGORY_CONFIG = CATEGORY_CONFIG;
 
 window.scrollCategorySlider = function (catId, direction) {
     const track = document.getElementById(`cat-track-${catId}`);
@@ -801,7 +862,7 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
                 <div class="slider-header-flex">
                     <div class="slider-title-group">
                         <div class="slider-tagline">${cat.tagline}</div>
-                        <div class="slider-title-row clickable" onclick="filterByCategory('${cat.id}', document.querySelector('[data-category=\\'${cat.id}\\']'))" title="Click to view all ${cat.title}">
+                        <div class="slider-title-row clickable" onclick="window.location.href='/airbnbs/gallery.html?category=${cat.id}'" title="Open ${cat.title} Gallery">
                             <span class="slider-icon">${cat.icon}</span>
                             <h2 class="slider-title">${cat.title}</h2>
                             <span class="category-count-badge">${catItems.length} stays</span>
@@ -809,11 +870,9 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
                         <p class="slider-subtitle-text">${cat.subtitle}</p>
                     </div>
                     <div class="slider-header-actions">
-                        ${!isSingleCategory ? `
-                        <button type="button" class="slider-view-all-btn" onclick="filterByCategory('${cat.id}', document.querySelector('[data-category=\\'${cat.id}\\']'))" title="Direct to ${cat.title}">
-                            View all ${cat.title} (${catItems.length}) &rarr;
+                        <button type="button" class="slider-view-all-btn" onclick="window.location.href='/airbnbs/gallery.html?category=${cat.id}'" title="Open ${cat.title} Gallery">
+                            Open ${cat.title} Gallery (${catItems.length}) &rarr;
                         </button>
-                        ` : ''}
                         <div class="slider-nav-arrows">
                             <button type="button" class="slider-arrow-btn prev" onclick="scrollCategorySlider('${cat.id}', -1)" aria-label="Previous ${cat.title}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -853,6 +912,19 @@ window.renderCategorySliders = function (items, activeCategory = 'all') {
                 </div>
             `;
         });
+
+        // Dedicated "Open Full Gallery" card at the end of every category slider track
+        html += `
+            <div class="slider-card slider-card--gallery-cta" onclick="window.location.href='/airbnbs/gallery.html?category=${cat.id}'" title="Open full ${cat.title} Gallery">
+                <div class="gallery-cta-inner">
+                    <span class="gallery-cta-icon">${cat.icon}</span>
+                    <div class="gallery-cta-badge">${catItems.length}+ STAYS</div>
+                    <h4 class="gallery-cta-title">See All ${cat.title}</h4>
+                    <p class="gallery-cta-desc">Explore all ${catItems.length} curated stays with neighborhood filters & sorting.</p>
+                    <span class="gallery-cta-btn">Open Gallery &rarr;</span>
+                </div>
+            </div>
+        `;
 
         html += `
                 </div>
