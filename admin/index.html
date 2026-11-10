@@ -150,9 +150,18 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Amenities (Comma separated)</label>
-                        <input type="text" id="edit-amenities" class="form-control" placeholder="Wi-Fi, Heated Pool, Balcony, Elevator...">
+                    <div class="form-group" id="amenities-group">
+                        <label class="form-label">Amenities Tags</label>
+                        <div class="amenity-tags-container" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                            <button type="button" class="btn-amenity-tag" data-val="swimming pool" onclick="toggleAmenityTag('swimming pool')">🏊 Swimming Pool</button>
+                            <button type="button" class="btn-amenity-tag" data-val="gym" onclick="toggleAmenityTag('gym')">🏋️ Gym</button>
+                            <button type="button" class="btn-amenity-tag" data-val="sauna" onclick="toggleAmenityTag('sauna')">🧖 Sauna</button>
+                            <button type="button" class="btn-amenity-tag" data-val="ample parking" onclick="toggleAmenityTag('ample parking')">🅿️ Ample Parking</button>
+                            <button type="button" class="btn-amenity-tag" data-val="rooftop bar" onclick="toggleAmenityTag('rooftop bar')">🍸 Rooftop Bar</button>
+                            <button type="button" class="btn-amenity-tag" data-val="balcony" onclick="toggleAmenityTag('balcony')">🌅 Balcony</button>
+                        </div>
+                        <input type="text" id="edit-amenities" class="form-control" placeholder="Select tags above or enter custom amenities (comma-separated)">
+                        <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Click tags to quickly assign features (Swimming Pool, Gym, Sauna, etc.) or add custom ones.</small>
                     </div>
 
                     <div class="form-group" id="categories-group">

@@ -67,7 +67,7 @@
                         <div class="canva-amenity-info">
                             <h3 class="canva-amenity-title">Private Pools & Spas</h3>
                             <p class="canva-amenity-desc">Sunlit rooftop pools, heated plunge tubs & private loungers for blissful Nairobi afternoons.</p>
-                            <a href="gallery.html?category=luxury" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
+                            <a href="#amenity-houses" onclick="filterByAmenity('swimming pool', this); return false;" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
                         </div>
                     </div>
                     <!-- Amenity 2 -->
@@ -78,7 +78,7 @@
                         <div class="canva-amenity-info">
                             <h3 class="canva-amenity-title">Boutique Suites</h3>
                             <p class="canva-amenity-desc">Plush king beds, ambient mood lighting, private balconies & serene quiet for deep sleep.</p>
-                            <a href="gallery.html?category=romantic" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
+                            <a href="#amenity-houses" onclick="filterByAmenity('balcony', this); return false;" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
                         </div>
                     </div>
                     <!-- Amenity 3 -->
@@ -89,7 +89,7 @@
                         <div class="canva-amenity-info">
                             <h3 class="canva-amenity-title">Gourmet Kitchens</h3>
                             <p class="canva-amenity-desc">Fully equipped with modern cooktops, microwaves, cookware, wine glasses & fresh coffee.</p>
-                            <a href="gallery.html?category=family" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
+                            <a href="#amenity-houses" onclick="filterByAmenity('all', this); return false;" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
                         </div>
                     </div>
                     <!-- Amenity 4 -->
@@ -99,10 +99,43 @@
                         </div>
                         <div class="canva-amenity-info">
                             <h3 class="canva-amenity-title">Work-Ready Wi-Fi</h3>
-                            <p class="canva-amenity-desc">Dedicated 50+ Mbps fiber optic Wi-Fi, ergonomic desks & plenty of power outlets.</p>
-                            <a href="gallery.html?category=business" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
+                            <p class="canva-amenity-desc">Dedicated 50+ Mbps fiber optic Wi-Fi, ergonomic desks & ample secure parking.</p>
+                            <a href="#amenity-houses" onclick="filterByAmenity('ample parking', this); return false;" class="canva-amenity-pill-btn">EXPLORE &rarr;</a>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Stays By Specific Amenity Section -->
+        <section class="amenity-houses-section" id="amenity-houses" style="padding: 70px 0; background: var(--bnb-bg, #FAF8F5); border-top: 1px solid var(--bnb-border, #E2DBD0);">
+            <div class="container">
+                <div class="section-header-centered" style="margin-bottom: 30px;">
+                    <div class="section-tagline">✦ LIVE FEATURE FINDER</div>
+                    <h2 class="editorial-heading">Houses By <em>Specific Amenities</em></h2>
+                    <p class="editorial-subheading">Select any feature below to instantly view all curated houses and suites equipped with that amenity in Nairobi.</p>
+                </div>
+
+                <!-- Amenity Filter Chips -->
+                <div class="amenity-filter-chips" style="display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-bottom:34px;">
+                    <button type="button" class="amenity-chip active" data-amenity="all" onclick="filterByAmenity('all', this)">✨ All Stays</button>
+                    <button type="button" class="amenity-chip" data-amenity="swimming pool" onclick="filterByAmenity('swimming pool', this)">🏊 Swimming Pool</button>
+                    <button type="button" class="amenity-chip" data-amenity="gym" onclick="filterByAmenity('gym', this)">🏋️ Gym</button>
+                    <button type="button" class="amenity-chip" data-amenity="sauna" onclick="filterByAmenity('sauna', this)">🧖 Sauna</button>
+                    <button type="button" class="amenity-chip" data-amenity="ample parking" onclick="filterByAmenity('ample parking', this)">🅿️ Ample Parking</button>
+                    <button type="button" class="amenity-chip" data-amenity="rooftop bar" onclick="filterByAmenity('rooftop bar', this)">🍸 Rooftop Bar</button>
+                    <button type="button" class="amenity-chip" data-amenity="balcony" onclick="filterByAmenity('balcony', this)">🌅 Balcony</button>
+                </div>
+
+                <!-- Result Status Bar -->
+                <div id="amenity-status-bar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:12px; border-bottom:1px solid var(--bnb-border, #E2DBD0);">
+                    <div style="font-weight:700; color:var(--bnb-text, #1F2421); font-size:1.05rem;" id="amenity-status-title">Showing All Verified Stays</div>
+                    <div style="font-size:0.85rem; color:var(--bnb-accent, #557A68); font-weight:700;" id="amenity-status-count">Loading stays...</div>
+                </div>
+
+                <!-- Houses Grid -->
+                <div class="airbnb-gallery-grid" id="amenity-houses-grid">
+                    <!-- Loaded dynamically via JavaScript -->
                 </div>
             </div>
         </section>
@@ -216,6 +249,164 @@
             </div>
         </div>
     </footer>
+
+    <!-- Firebase & Stays Data Dependencies -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/seed-data.js"></script>
+    <script src="../js/data.js"></script>
+
+    <script>
+        let allAmenityStays = [];
+        let currentAmenityFilter = 'all';
+
+        const AMENITY_META = {
+            'all': { title: 'All Verified Stays in Nairobi', icon: '✨' },
+            'swimming pool': { title: 'Stays with Swimming Pool', icon: '🏊' },
+            'gym': { title: 'Stays with Gym & Fitness Center', icon: '🏋️' },
+            'sauna': { title: 'Stays with Sauna & Steam Room', icon: '🧖' },
+            'ample parking': { title: 'Stays with Ample Dedicated Parking', icon: '🅿️' },
+            'rooftop bar': { title: 'Stays with Rooftop Bar & Lounge', icon: '🍸' },
+            'balcony': { title: 'Stays with Private Scenic Balcony', icon: '🌅' }
+        };
+
+        function optimizeCloudinary(url, width = 450) {
+            if (!url) return '../images/IMG-20251208-WA0014.jpg';
+            if (url.includes('res.cloudinary.com')) {
+                return url.replace('/upload/', `/upload/w_${width},f_auto,q_auto/`);
+            }
+            return url;
+        }
+
+        function checkItemMatchesAmenity(item, amenity) {
+            if (!item) return false;
+            if (amenity === 'all') return true;
+            const text = `${item.amenities || ''} ${item.desc || ''} ${item.title || ''}`.toLowerCase();
+            if (amenity === 'swimming pool') {
+                return text.includes('pool') || text.includes('swimming');
+            }
+            if (amenity === 'ample parking') {
+                return text.includes('parking') || text.includes('garage');
+            }
+            if (amenity === 'rooftop bar') {
+                return text.includes('rooftop bar') || (text.includes('rooftop') && text.includes('bar')) || text.includes('lounge');
+            }
+            return text.includes(amenity.toLowerCase());
+        }
+
+        function renderAmenityHouses(items, amenity) {
+            const grid = document.getElementById('amenity-houses-grid');
+            const titleEl = document.getElementById('amenity-status-title');
+            const countEl = document.getElementById('amenity-status-count');
+            if (!grid) return;
+
+            const meta = AMENITY_META[amenity] || { title: `Stays with ${amenity}`, icon: '✦' };
+            if (titleEl) titleEl.innerText = `${meta.icon} ${meta.title}`;
+            if (countEl) countEl.innerText = `${items.length} Stay${items.length === 1 ? '' : 's'} Found`;
+
+            if (!items || items.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(0,0,0,0.02); border-radius: 20px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 12px;">🔍</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;">No stays found with this amenity yet</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Try another amenity tag or browse all stays.</p>
+                        <button type="button" class="btn btn-canva-pill" onclick="filterByAmenity('all')" style="padding: 10px 26px !important; font-size: 0.82rem !important;">VIEW ALL STAYS</button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = items.map(item => {
+                const rawImg = (item.images && item.images.length > 0) ? item.images[0] : (item.image || '');
+                const img = optimizeCloudinary(rawImg, 500);
+                const amenitiesList = (item.amenities || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 3);
+                const priceFormatted = item.price ? Number(item.price).toLocaleString() : '3,500';
+
+                return `
+                    <div class="airbnb-card" onclick="window.location.href='/listing-details/?id=${item.id}&type=airbnb'" style="cursor: pointer;">
+                        <div class="airbnb-card__img-container">
+                            <img src="${img}" alt="${item.title}" class="airbnb-card__img" loading="lazy" onerror="this.onerror=null;this.src='../images/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
+                            <div class="airbnb-card__badge" style="background: rgba(255,255,255,0.92); color: var(--bnb-accent, #557A68); font-weight: 700;">${meta.icon} Verified</div>
+                        </div>
+                        <div class="airbnb-card__info" style="padding: 18px 20px;">
+                            <div class="airbnb-card__location" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--bnb-text-soft, #5A625D); margin-bottom: 4px;">${item.location || 'Nairobi'}</div>
+                            <h3 class="airbnb-card__title" style="font-size: 1.12rem; font-weight: 700; color: var(--bnb-text, #1F2421); margin-bottom: 10px; line-height: 1.3;">${item.title}</h3>
+                            
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+                                ${amenitiesList.map(a => `<span class="amenity-badge-tag">${a}</span>`).join('')}
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06);">
+                                <div>
+                                    <span style="font-weight: 800; font-size: 1.15rem; color: var(--bnb-text, #1F2421);">KES ${priceFormatted}</span>
+                                    <span style="font-size: 0.8rem; color: var(--bnb-text-soft, #5A625D);"> / night</span>
+                                </div>
+                                <span class="canva-amenity-pill-btn" style="padding: 6px 16px !important; font-size: 0.72rem !important;">VIEW &rarr;</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.filterByAmenity = function(amenity, btn = null) {
+            currentAmenityFilter = amenity;
+
+            // Update active chip
+            document.querySelectorAll('.amenity-chip').forEach(chip => {
+                if (chip.getAttribute('data-amenity') === amenity) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+
+            const matching = allAmenityStays.filter(item => checkItemMatchesAmenity(item, amenity));
+            renderAmenityHouses(matching, amenity);
+
+            // Update URL query string cleanly
+            try {
+                const url = new URL(window.location);
+                if (amenity === 'all') url.searchParams.delete('amenity');
+                else url.searchParams.set('amenity', amenity);
+                window.history.replaceState({}, '', url);
+            } catch (e) {}
+
+            // Smooth scroll to grid if called from signature cards
+            if (btn && btn.getAttribute('href') === '#amenity-houses') {
+                const target = document.getElementById('amenity-houses');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        // Initialize page data
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                if (typeof JiraniData !== 'undefined') {
+                    const cached = JiraniData.getAirbnbsCached();
+                    if (cached && cached.length > 0) {
+                        allAmenityStays = cached;
+                    } else if (typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
+                        allAmenityStays = savedExportData.airbnbs;
+                    }
+
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const initialAmenity = urlParams.get('amenity') || 'all';
+                    filterByAmenity(initialAmenity);
+
+                    // Fetch fresh data in background
+                    const fresh = await JiraniData.getAirbnbs();
+                    if (fresh && fresh.length > 0) {
+                        allAmenityStays = fresh;
+                        filterByAmenity(currentAmenityFilter);
+                    }
+                }
+            } catch (e) {
+                console.error("Error initializing amenities stays:", e);
+            }
+        });
+    </script>
 </body>
 
 </html>

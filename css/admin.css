@@ -322,8 +322,9 @@ tr:last-child td {
     outline: none;
 }
 
-/* Category Tag Buttons */
-.btn-cat-tag {
+/* Category & Amenity Tag Buttons */
+.btn-cat-tag,
+.btn-amenity-tag {
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.82rem;
@@ -337,7 +338,8 @@ tr:last-child td {
     align-items: center;
     gap: 4px;
 }
-.btn-cat-tag:hover {
+.btn-cat-tag:hover,
+.btn-amenity-tag:hover {
     background: #e2e8f0;
     border-color: #94a3b8;
     color: #1e293b;
@@ -347,6 +349,12 @@ tr:last-child td {
     border-color: #2d60ff;
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(45, 96, 255, 0.25);
+}
+.btn-amenity-tag.active {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 
 .modal-footer {

@@ -2297,3 +2297,54 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     background: var(--bnb-accent-hover);
     transform: scale(1.05);
 }
+
+/* --------------------------------------------------------------------------
+   INTERACTIVE AMENITY STAYS FINDER
+   -------------------------------------------------------------------------- */
+.amenity-chip {
+    padding: 10px 22px;
+    background: #FFFFFF;
+    border: 1.5px solid var(--bnb-border, #E2DBD0);
+    border-radius: 9999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--bnb-text, #1F2421);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+body.dark-mode .amenity-chip {
+    background: #232A26;
+    border-color: rgba(123, 178, 152, 0.2);
+    color: #FFFFFF;
+}
+.amenity-chip:hover {
+    border-color: var(--bnb-accent, #557A68);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(85, 122, 104, 0.15);
+}
+.amenity-chip.active {
+    background: var(--bnb-accent, #557A68) !important;
+    border-color: var(--bnb-accent, #557A68) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 18px rgba(85, 122, 104, 0.3) !important;
+}
+
+.amenity-badge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(85, 122, 104, 0.1);
+    color: var(--bnb-accent, #557A68);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+}
+body.dark-mode .amenity-badge-tag {
+    background: rgba(123, 178, 152, 0.18);
+    color: #7bb298;
+}

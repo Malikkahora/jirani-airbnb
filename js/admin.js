@@ -148,6 +148,37 @@ function toggleCategoryTag(cat) {
     input.value = combined.join(', ');
 }
 
+// Amenity Tag Toggle Logic
+function toggleAmenityTag(amenity) {
+    const btn = document.querySelector(`.btn-amenity-tag[data-val="${amenity}"]`);
+    if (!btn) return;
+    btn.classList.toggle('active');
+
+    // Collect all active tags
+    const activeAmenityTags = [];
+    document.querySelectorAll('.btn-amenity-tag.active').forEach(b => {
+        activeAmenityTags.push(b.getAttribute('data-val'));
+    });
+
+    const standardMap = {
+        'swimming pool': 'Swimming Pool',
+        'gym': 'Gym',
+        'sauna': 'Sauna',
+        'ample parking': 'Ample Parking',
+        'rooftop bar': 'Rooftop Bar',
+        'balcony': 'Balcony'
+    };
+
+    const input = document.getElementById('edit-amenities');
+    const existing = (input.value || '').split(',').map(s => s.trim()).filter(Boolean);
+    const standardKeys = Object.keys(standardMap);
+    const customs = existing.filter(t => !standardKeys.some(k => t.toLowerCase() === k));
+
+    const formattedActive = activeAmenityTags.map(k => standardMap[k] || k);
+    const combined = [...new Set([...formattedActive, ...customs])];
+    input.value = combined.join(', ');
+}
+
 // Modal Logic
 async function openEditModal(id = null) {
     const modal = document.querySelector('.modal-overlay');
@@ -163,6 +194,11 @@ async function openEditModal(id = null) {
     const catInput = document.getElementById('edit-categories');
     if (catInput) catInput.value = '';
 
+    // Reset Amenity Tags
+    document.querySelectorAll('.btn-amenity-tag').forEach(b => b.classList.remove('active'));
+    const amenityInput = document.getElementById('edit-amenities');
+    if (amenityInput) amenityInput.value = '';
+
     if (id) {
         // Edit Mode
         editingId = id;
@@ -177,6 +213,19 @@ async function openEditModal(id = null) {
             document.getElementById('edit-rooms').value = item.rooms || item.beds || '';
             document.getElementById('edit-baths').value = item.baths || '';
             document.getElementById('edit-amenities').value = item.amenities || '';
+
+            // Populate Amenity Tags
+            const amenitiesText = (item.amenities || '').toLowerCase();
+            const standardAmenityKeys = ['swimming pool', 'gym', 'sauna', 'ample parking', 'rooftop bar', 'balcony'];
+            standardAmenityKeys.forEach(key => {
+                const btn = document.querySelector(`.btn-amenity-tag[data-val="${key}"]`);
+                if (!btn) return;
+                let hasIt = amenitiesText.includes(key);
+                if (key === 'swimming pool' && (amenitiesText.includes('pool') || amenitiesText.includes('swimming'))) hasIt = true;
+                if (key === 'ample parking' && (amenitiesText.includes('parking') || amenitiesText.includes('garage'))) hasIt = true;
+                if (key === 'rooftop bar' && (amenitiesText.includes('rooftop bar') || (amenitiesText.includes('rooftop') && amenitiesText.includes('bar')))) hasIt = true;
+                if (hasIt) btn.classList.add('active');
+            });
 
             // Populate Category Tags
             const catList = Array.isArray(item.categories) 
@@ -365,6 +414,23 @@ function setupEventListeners() {
             document.querySelectorAll('.btn-cat-tag').forEach(btn => {
                 const val = btn.getAttribute('data-val');
                 if (current.includes(val)) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        });
+    }
+
+    // Amenity Input Sync
+    const amenityInputSync = document.getElementById('edit-amenities');
+    if (amenityInputSync) {
+        amenityInputSync.addEventListener('input', () => {
+            const current = amenityInputSync.value.toLowerCase();
+            document.querySelectorAll('.btn-amenity-tag').forEach(btn => {
+                const val = btn.getAttribute('data-val');
+                let hasIt = current.includes(val);
+                if (val === 'swimming pool' && (current.includes('pool') || current.includes('swimming'))) hasIt = true;
+                if (val === 'ample parking' && (current.includes('parking') || current.includes('garage'))) hasIt = true;
+                if (val === 'rooftop bar' && (current.includes('rooftop bar') || (current.includes('rooftop') && current.includes('bar')))) hasIt = true;
+                if (hasIt) btn.classList.add('active');
                 else btn.classList.remove('active');
             });
         });
