@@ -1550,13 +1550,25 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     background: var(--bnb-bg);
 }
 
-/* Gallery Hero Banner — with 150px clearance for fixed floating header! */
+/* Gallery Hero Banner — with clearance for fixed header! */
 .gallery-hero-banner {
-    padding: 150px 0 45px;
+    padding: 135px 0 32px;
     background: linear-gradient(180deg, var(--bnb-bg-alt) 0%, var(--bnb-bg) 100%);
     border-bottom: 1px solid var(--bnb-border);
     position: relative;
     text-align: center;
+    transition: padding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gallery-hero-banner.hero-scrolled-collapsed {
+    padding-bottom: 10px !important;
+}
+@media (max-width: 820px) {
+    .gallery-hero-banner {
+        padding: 110px 0 22px;
+    }
+    .gallery-hero-banner.hero-scrolled-collapsed {
+        padding-bottom: 6px !important;
+    }
 }
 .gallery-hero-content {
     max-width: 820px;
@@ -1619,14 +1631,32 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     line-height: 1.6;
 }
 
-/* Stats Pill Strip */
+/* Stats Pill Strip (Smoothly collapses on scroll down) */
 .gallery-stats-strip {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 10px;
+    margin-top: 14px;
+    max-height: 250px;
+    opacity: 1;
+    overflow: visible;
+    transform: translateY(0);
+    transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.32s ease,
+                margin 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s ease;
+    will-change: max-height, opacity, transform;
+}
+.gallery-stats-strip.is-collapsed {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    transform: translateY(-20px) scale(0.96) !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
 }
 .gallery-stat-pill {
     display: inline-flex;
@@ -1685,6 +1715,13 @@ body.dark-mode .gallery-nav-strip {
 .gallery-nav-strip.is-hidden {
     transform: translateY(-130%) !important;
     opacity: 0 !important;
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom: none !important;
+    overflow: hidden !important;
     pointer-events: none !important;
 }
 .gallery-category-chips {
@@ -1755,7 +1792,19 @@ body.dark-mode .gallery-nav-strip {
 
 /* Gallery Listings Section */
 .gallery-listings-section {
-    padding: 40px 0 80px;
+    padding: 30px 0 80px;
+    transition: padding-top 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gallery-listings-section.listings-scrolled-up {
+    padding-top: 12px !important;
+}
+@media (max-width: 820px) {
+    .gallery-listings-section {
+        padding: 20px 0 60px;
+    }
+    .gallery-listings-section.listings-scrolled-up {
+        padding-top: 8px !important;
+    }
 }
 
 /* Toolbar */
