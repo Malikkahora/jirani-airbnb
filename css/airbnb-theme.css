@@ -82,6 +82,12 @@ body.dark-mode {
 /* --------------------------------------------------------------------------
    BASE PAGE
    -------------------------------------------------------------------------- */
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+}
+
 body.airbnb-page {
     background-color: var(--bnb-bg);
     color: var(--bnb-text);
@@ -600,8 +606,10 @@ body.dark-mode .hero-trust-ribbon {
 
 .category-options-track-wrapper {
     position: relative;
-    margin: 0 -20px;
-    padding: 0 20px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
 }
 .category-options-track {
     display: flex;
@@ -1892,7 +1900,10 @@ body.dark-mode .gallery-nav-strip {
 }
 
 @media (max-width: 768px) {
-    .luxury-hero { padding: 135px 0 60px !important; }
+    .luxury-hero { 
+        padding: 110px 0 35px !important; 
+        min-height: auto !important;
+    }
     .luxury-hero .hero__title { font-size: 2.2rem; }
 
     /* Mobile Unified Luxury Search Pill */
@@ -2022,19 +2033,72 @@ body.dark-mode .gallery-nav-strip {
         box-shadow: 0 14px 38px rgba(0, 0, 0, 0.5) !important;
     }
 
-    .luxury-search-bar .search-form {
-        flex-direction: column;
-        align-items: stretch;
+    /* Mobile Search Form: Hidden by default inside the sleek pill */
+    .luxury-search-bar .search-form:not(.active) {
+        display: none !important;
     }
-    .luxury-search-bar .search-form__field {
-        border-right: none;
-        border-bottom: 1px solid var(--bnb-border);
-        padding: 10px 14px;
+
+    /* Mobile Search Form: When tapped, pops up as a clean centered modal card */
+    .luxury-search-bar .search-form.active {
+        display: flex !important;
+        flex-direction: column !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: calc(100% - 32px) !important;
+        max-width: 380px !important;
+        height: auto !important;
+        max-height: 85vh !important;
+        background: var(--color-bg-white, #FFFFFF) !important;
+        z-index: 2005 !important;
+        padding: 24px !important;
+        border-radius: 24px !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28) !important;
+        overflow-y: auto !important;
+        border: 1px solid var(--bnb-border, rgba(0, 0, 0, 0.08)) !important;
+        animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-    .luxury-search-bar .search-form__field:last-of-type { border-bottom: none; }
-    .luxury-search-bar .search-btn {
-        width: 100%; height: 46px;
-        border-radius: var(--bnb-radius-sm) !important;
+
+    body.dark-mode .luxury-search-bar .search-form.active {
+        background: #1f2722 !important;
+        border-color: rgba(123, 178, 152, 0.3) !important;
+        color: #FFFFFF !important;
+    }
+
+    .luxury-search-bar .search-form.active .search-form__field {
+        border-right: none !important;
+        border-bottom: 1px solid var(--bnb-border, rgba(0, 0, 0, 0.08)) !important;
+        padding: 10px 4px !important;
+        width: 100% !important;
+    }
+    .luxury-search-bar .search-form.active .search-form__field:last-of-type { 
+        border-bottom: none !important; 
+    }
+    .luxury-search-bar .search-form.active .search-btn {
+        width: 100% !important; 
+        height: 48px !important;
+        border-radius: 12px !important;
+        margin-top: 14px !important;
+        background: var(--bnb-accent, #557A68) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
+    }
+    .luxury-search-bar .search-form.active .search-btn-cancel {
+        margin-top: 8px !important;
+        width: 100% !important;
+        height: 44px !important;
+        border-radius: 12px !important;
+        background: rgba(0, 0, 0, 0.05) !important;
+        color: var(--bnb-text, #1F2421) !important;
+        border: none !important;
+        font-weight: 600 !important;
+        cursor: pointer;
+    }
+    body.dark-mode .luxury-search-bar .search-form.active .search-btn-cancel {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #FFFFFF !important;
     }
     .hero-trust-ribbon { gap: 8px 16px; border-radius: var(--bnb-radius-md); }
     .trust-ribbon-divider { display: none; }
@@ -2230,16 +2294,18 @@ body.dark-mode .gallery-nav-strip {
 /* --------------------------------------------------------------------------
    12. CANVA EDITABLE VILLA TEMPLATE STYLES
    -------------------------------------------------------------------------- */
-.luxury-hero {
-    position: relative;
-    display: block !important;
-    padding-top: 155px !important;
-    padding-bottom: 75px !important;
-    min-height: 680px;
-    overflow: hidden;
-    background: var(--bnb-bg);
-    transition: min-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                padding-bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+@media (min-width: 769px) {
+    .luxury-hero {
+        position: relative;
+        display: block !important;
+        padding-top: 155px !important;
+        padding-bottom: 75px !important;
+        min-height: 680px;
+        overflow: hidden;
+        background: var(--bnb-bg);
+        transition: min-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                    padding-bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 }
 
 .luxury-hero.hero-scrolled-collapsed {
