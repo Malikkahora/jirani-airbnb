@@ -1664,15 +1664,28 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     box-shadow: var(--bnb-accent-glow);
 }
 
-/* Category Nav Strip (Sticky) */
+/* Category Nav Strip (Smart Sticky & Auto-Hide on Scroll Down) */
 .gallery-nav-strip {
-    background: var(--bnb-surface);
-    border-bottom: 1px solid var(--bnb-border);
-    padding: 14px 0;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--bnb-border, #E2DBD0);
+    padding: 10px 0;
     position: sticky;
-    top: 90px;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(31, 36, 33, 0.04);
+    top: 80px;
+    z-index: 95;
+    box-shadow: 0 4px 16px rgba(31, 36, 33, 0.04);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    will-change: transform, opacity;
+}
+body.dark-mode .gallery-nav-strip {
+    background: rgba(26, 32, 28, 0.96);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+.gallery-nav-strip.is-hidden {
+    transform: translateY(-130%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 .gallery-category-chips {
     display: flex;
@@ -1681,8 +1694,11 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     gap: 10px;
     overflow-x: auto;
     scrollbar-width: none;
-    padding: 4px 0;
-    flex-wrap: wrap;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 16px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 .gallery-category-chips::-webkit-scrollbar {
     display: none;
@@ -1694,23 +1710,47 @@ body.airbnb-page .footer a:hover { color: var(--bnb-accent); }
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    background: var(--bnb-surface-mid);
-    border: 1.5px solid var(--bnb-border);
-    color: var(--bnb-text-soft);
+    background: var(--bnb-surface-mid, #F3EFEA);
+    border: 1.5px solid var(--bnb-border, #E2DBD0);
+    color: var(--bnb-text-soft, #5A625D);
     transition: all 0.2s;
-    box-shadow: var(--bnb-shadow-sm);
+    box-shadow: var(--bnb-shadow-sm, 0 2px 6px rgba(0,0,0,0.03));
+    flex-shrink: 0;
+    user-select: none;
 }
 .gallery-category-chips .category-chip:hover {
-    border-color: var(--bnb-accent-border);
-    color: var(--bnb-accent);
-    background: var(--bnb-accent-soft);
+    border-color: var(--bnb-accent-border, #A3C9B8);
+    color: var(--bnb-accent, #557A68);
+    background: var(--bnb-accent-soft, #E8F1EC);
 }
 .gallery-category-chips .category-chip.active {
-    background: var(--bnb-accent);
-    border-color: var(--bnb-accent);
-    color: #FFFFFF;
+    background: var(--bnb-accent, #557A68) !important;
+    border-color: var(--bnb-accent, #557A68) !important;
+    color: #FFFFFF !important;
     font-weight: 700;
-    box-shadow: var(--bnb-accent-glow);
+    box-shadow: 0 4px 14px rgba(85, 122, 104, 0.35) !important;
+}
+.gallery-category-chips .category-chip[data-category="luxury"].active {
+    background: linear-gradient(135deg, #FFB300, #FF8F00) !important;
+    border-color: #FFB300 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(255, 179, 0, 0.4) !important;
+}
+
+@media (max-width: 820px) {
+    .gallery-nav-strip {
+        top: 65px;
+        padding: 6px 0;
+    }
+    .gallery-category-chips {
+        justify-content: flex-start;
+        padding: 4px 12px;
+        gap: 8px;
+    }
+    .gallery-category-chips .category-chip {
+        padding: 7px 15px;
+        font-size: 0.8rem;
+    }
 }
 
 /* Gallery Listings Section */

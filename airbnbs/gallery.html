@@ -8,9 +8,98 @@
     <link rel="icon" href="../images/favicon.png">
     <meta name="description" content="Explore curated Airbnb stays in Nairobi by category: Romantic getaways, family homes, executive stays, luxury penthouses, and budget friendly apartments.">
     <link rel="canonical" href="https://jiraniproperties.co.ke/airbnbs/gallery.html">
-    <link rel="stylesheet" href="../css/styles.css?v=2.0">
+    <link rel="stylesheet" href="../css/styles.css?v=2.2">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.1">
+    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.6">
+    <style>
+        /* Smooth Hide/Show for Category Nav Strip on Scroll */
+        .gallery-nav-strip {
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--bnb-border, #E2DBD0);
+            padding: 10px 0;
+            position: sticky;
+            top: 80px;
+            z-index: 95;
+            box-shadow: 0 4px 16px rgba(31, 36, 33, 0.04);
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+            will-change: transform, opacity;
+        }
+        body.dark-mode .gallery-nav-strip {
+            background: rgba(26, 32, 28, 0.97);
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+        }
+        .gallery-nav-strip.is-hidden {
+            transform: translateY(-130%) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        .gallery-category-chips {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 16px;
+            flex-wrap: nowrap !important;
+            white-space: nowrap;
+        }
+        .gallery-category-chips::-webkit-scrollbar {
+            display: none;
+        }
+        .gallery-category-chips .category-chip {
+            padding: 9px 20px;
+            border-radius: 9999px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            background: var(--bnb-surface-mid, #F3EFEA);
+            border: 1.5px solid var(--bnb-border, #E2DBD0);
+            color: var(--bnb-text-soft, #5A625D);
+            transition: all 0.2s ease;
+            box-shadow: var(--bnb-shadow-sm, 0 2px 6px rgba(0,0,0,0.03));
+            flex-shrink: 0;
+            user-select: none;
+        }
+        .gallery-category-chips .category-chip:hover {
+            border-color: var(--bnb-accent-border, #A3C9B8);
+            color: var(--bnb-accent, #557A68);
+            background: var(--bnb-accent-soft, #E8F1EC);
+        }
+        .gallery-category-chips .category-chip.active {
+            background: var(--bnb-accent, #557A68) !important;
+            border-color: var(--bnb-accent, #557A68) !important;
+            color: #FFFFFF !important;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(85, 122, 104, 0.35) !important;
+        }
+        .gallery-category-chips .category-chip[data-category="luxury"].active {
+            background: linear-gradient(135deg, #FFB300, #FF8F00) !important;
+            border-color: #FFB300 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 14px rgba(255, 179, 0, 0.4) !important;
+        }
+        @media (max-width: 820px) {
+            .gallery-nav-strip {
+                top: 65px;
+                padding: 6px 0;
+            }
+            .gallery-category-chips {
+                justify-content: flex-start;
+                padding: 4px 12px;
+                gap: 8px;
+            }
+            .gallery-category-chips .category-chip {
+                padding: 7px 15px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 
 <body class="airbnb-page">
@@ -40,7 +129,7 @@
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </button>
-                <button class="menu-toggle" aria-label="Toggle menu">
+                <button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.header').classList.toggle('nav-open')">
                     <span class="menu-toggle__bar"></span>
                     <span class="menu-toggle__bar"></span>
                     <span class="menu-toggle__bar"></span>
@@ -262,10 +351,13 @@
             if (!items || items.length === 0) return;
             currentCategory = catId;
 
-            // Highlight chip
+            // Highlight chip & auto-scroll into view on mobile
             document.querySelectorAll('.category-chip').forEach(c => {
                 if (c.getAttribute('data-category') === catId) {
                     c.classList.add('active');
+                    try {
+                        c.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    } catch (e) {}
                 } else {
                     c.classList.remove('active');
                 }
@@ -416,6 +508,46 @@
 
             container.innerHTML = html;
         }
+
+        // --------------------------------------------------------------------------
+        // Smart Scroll Behavior for Category Options:
+        // Hides smoothly when user scrolls DOWN to give full focus to listings.
+        // Reveals smoothly when user scrolls UP or returns to top.
+        // --------------------------------------------------------------------------
+        (function setupCategoryNavScroll() {
+            const navStrip = document.querySelector('.gallery-nav-strip');
+            if (!navStrip) return;
+
+            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+            let ticking = false;
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+                        const scrollDelta = currentScrollY - lastScrollY;
+
+                        // Only hide when scrolling down past top section (> 100px)
+                        if (currentScrollY > 100) {
+                            if (scrollDelta > 6) {
+                                // Scrolling DOWN -> smoothly hide category bar
+                                navStrip.classList.add('is-hidden');
+                            } else if (scrollDelta < -6) {
+                                // Scrolling UP -> smoothly reveal category bar
+                                navStrip.classList.remove('is-hidden');
+                            }
+                        } else {
+                            // At top of page -> always show
+                            navStrip.classList.remove('is-hidden');
+                        }
+
+                        lastScrollY = Math.max(0, currentScrollY);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
 
         document.addEventListener('DOMContentLoaded', initGallery);
     </script>
