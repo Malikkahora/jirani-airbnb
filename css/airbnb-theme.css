@@ -103,6 +103,8 @@ body.airbnb-page .header {
     -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
     border: 1px solid rgba(85, 122, 104, 0.15) !important;
     box-shadow: 0 10px 35px rgba(31, 36, 33, 0.08) !important;
+    width: 95% !important;
+    max-width: 1680px !important;
 }
 body.dark-mode.airbnb-page .header {
     background: rgba(21, 25, 23, 0.88) !important;
@@ -126,6 +128,37 @@ body.airbnb-page .nav__link {
 body.airbnb-page .nav__link:hover,
 body.airbnb-page .nav__link.active {
     color: var(--bnb-accent);
+}
+
+/* --------------------------------------------------------------------------
+   EXPANSIVE LUXURY CONTAINER (ELIMINATES EXCESSIVE CORNER & SIDE GAPS)
+   -------------------------------------------------------------------------- */
+.container,
+body.airbnb-page .container,
+.category-options-slider-section .container,
+.luxury-gallery-section .container,
+.gallery-listings-section .container,
+.gallery-nav-strip .container,
+.gallery-hero-banner .container,
+.testimonials-strip-section .container,
+.header__container {
+    width: 100% !important;
+    max-width: 1680px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: clamp(16px, 2.5vw, 40px) !important;
+    padding-right: clamp(16px, 2.5vw, 40px) !important;
+    box-sizing: border-box !important;
+}
+
+@media (min-width: 1440px) {
+    .category-options-slider-section .container,
+    .luxury-gallery-section .container,
+    .gallery-listings-section .container {
+        max-width: 1720px !important;
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+    }
 }
 
 /* --------------------------------------------------------------------------
@@ -556,7 +589,7 @@ body.dark-mode .hero-trust-ribbon {
 .category-options-slider-section::before {
     content: '';
     position: absolute;
-    top: 0; left: 10%; right: 10%;
+    top: 0; left: clamp(16px, 2.5vw, 40px); right: clamp(16px, 2.5vw, 40px);
     height: 1px;
     background: var(--bnb-border);
 }
