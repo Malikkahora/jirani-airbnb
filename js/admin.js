@@ -343,6 +343,8 @@ async function handleFormSubmit(e) {
             const newItem = {
                 id: `${currentTab === 'airbnbs' ? 'airbnb' : 'property'}_${Date.now()}`,
                 ...formData,
+                createdAt: Date.now(),
+                timestamp: Date.now(),
                 rating: 'New'
             };
             if (currentTab === 'airbnbs') await JiraniData.addAirbnb(newItem);

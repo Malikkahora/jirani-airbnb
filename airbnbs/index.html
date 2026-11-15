@@ -1356,9 +1356,61 @@
             }
         }
 
+        function getListingTimestamp(item, fallbackIndex = 0) {
+            if (!item) return 0;
+            if (item.createdAt) {
+                if (typeof item.createdAt === 'number') return item.createdAt;
+                if (item.createdAt.seconds) return item.createdAt.seconds * 1000;
+                const t = new Date(item.createdAt).getTime();
+                if (!isNaN(t) && t > 0) return t;
+            }
+            if (item.timestamp) {
+                if (typeof item.timestamp === 'number') return item.timestamp;
+                if (item.timestamp.seconds) return item.timestamp.seconds * 1000;
+                const t = new Date(item.timestamp).getTime();
+                if (!isNaN(t) && t > 0) return t;
+            }
+            const id = String(item.id || '');
+            const epochMatch = id.match(/(\d{13})/);
+            if (epochMatch) {
+                const val = parseInt(epochMatch[1], 10);
+                if (val > 1000000000000) return val;
+            }
+            const epochSecMatch = id.match(/(\d{10})/);
+            if (epochSecMatch) {
+                const val = parseInt(epochSecMatch[1], 10);
+                if (val > 1500000000) return val * 1000;
+            }
+            const ymdMatch = id.match(/20\d{6,12}/);
+            if (ymdMatch) {
+                const y = ymdMatch[0];
+                const dt = new Date(`${y.slice(0,4)}-${y.slice(4,6)}-${y.slice(6,8)}`).getTime();
+                if (!isNaN(dt)) return dt;
+            }
+            const seedParts = id.match(/^(\d+)_(\d+)$/);
+            if (seedParts) {
+                return (parseInt(seedParts[2], 10) * 100) + parseInt(seedParts[1], 10);
+            }
+            const numOnly = id.match(/^(\d+)$/);
+            if (numOnly) {
+                return parseInt(numOnly[1], 10);
+            }
+            return fallbackIndex;
+        }
+
+        function sortByNewest(items) {
+            if (!Array.isArray(items)) return [];
+            return [...items].sort((a, b) => {
+                const timeA = getListingTimestamp(a);
+                const timeB = getListingTimestamp(b);
+                return timeB - timeA;
+            });
+        }
+
         (async function () {
             const grid = document.getElementById('airbnb-grid');
-            const items = await JiraniData.getAirbnbs();
+            const rawItems = await JiraniData.getAirbnbs();
+            const items = sortByNewest(rawItems);
 
             // 1. Setup Random Slider
             const sliderTrack = document.getElementById('slider-track');
@@ -1514,9 +1566,12 @@ window.filterByNeighborhood = async function(neighborhood, btn) {
 };
 
 window.onSortChange = async function(sortBy) {
-    const items = await JiraniData.getAirbnbs();
+    const rawItems = await JiraniData.getAirbnbs();
+    const items = sortByNewest(rawItems);
     let sorted = [...items];
-    if (sortBy === 'price-asc') {
+    if (sortBy === 'newest') {
+        sorted = sortByNewest(items);
+    } else if (sortBy === 'price-asc') {
         sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
     } else if (sortBy === 'price-desc') {
         sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
@@ -1547,7 +1602,8 @@ window.filterByCategory = async function(category, btn, shouldScroll = true) {
         expSelect.value = category;
     }
 
-    const items = await JiraniData.getAirbnbs();
+    const rawItems = await JiraniData.getAirbnbs();
+    const items = sortByNewest(rawItems);
     const categoryObj = (typeof CATEGORY_CONFIG !== 'undefined') ? CATEGORY_CONFIG.find(c => c.id === category) : null;
     
     // 2. Filter listings

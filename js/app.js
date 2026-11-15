@@ -39,6 +39,60 @@ function updateThemeIcon(isDark) {
     }
 }
 
+// Universal Listing Timestamp & Sorting Helper (Newest First)
+function getListingTimestamp(item, fallbackIndex = 0) {
+    if (!item) return 0;
+    if (item.createdAt) {
+        if (typeof item.createdAt === 'number') return item.createdAt;
+        if (item.createdAt.seconds) return item.createdAt.seconds * 1000;
+        const t = new Date(item.createdAt).getTime();
+        if (!isNaN(t) && t > 0) return t;
+    }
+    if (item.timestamp) {
+        if (typeof item.timestamp === 'number') return item.timestamp;
+        if (item.timestamp.seconds) return item.timestamp.seconds * 1000;
+        const t = new Date(item.timestamp).getTime();
+        if (!isNaN(t) && t > 0) return t;
+    }
+    const id = String(item.id || '');
+    const epochMatch = id.match(/(\d{13})/);
+    if (epochMatch) {
+        const val = parseInt(epochMatch[1], 10);
+        if (val > 1000000000000) return val;
+    }
+    const epochSecMatch = id.match(/(\d{10})/);
+    if (epochSecMatch) {
+        const val = parseInt(epochSecMatch[1], 10);
+        if (val > 1500000000) return val * 1000;
+    }
+    const ymdMatch = id.match(/20\d{6,12}/);
+    if (ymdMatch) {
+        const y = ymdMatch[0];
+        const dt = new Date(`${y.slice(0,4)}-${y.slice(4,6)}-${y.slice(6,8)}`).getTime();
+        if (!isNaN(dt)) return dt;
+    }
+    const seedParts = id.match(/^(\d+)_(\d+)$/);
+    if (seedParts) {
+        return (parseInt(seedParts[2], 10) * 100) + parseInt(seedParts[1], 10);
+    }
+    const numOnly = id.match(/^(\d+)$/);
+    if (numOnly) {
+        return parseInt(numOnly[1], 10);
+    }
+    return fallbackIndex;
+}
+
+function sortByNewest(items) {
+    if (!Array.isArray(items)) return [];
+    return [...items].sort((a, b) => {
+        const timeA = getListingTimestamp(a);
+        const timeB = getListingTimestamp(b);
+        return timeB - timeA;
+    });
+}
+window.getListingTimestamp = getListingTimestamp;
+window.sortByNewest = sortByNewest;
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Jirani Airbnb loaded');
 
@@ -63,7 +117,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Show Loading State Immediately (Pre-Init)
     if (isAirbnbPage) {
-        const cachedAirbnbs = JiraniData.getAirbnbsCached();
+        const rawCached = JiraniData.getAirbnbsCached();
+        const cachedAirbnbs = sortByNewest(rawCached);
         if (cachedAirbnbs.length > 0) {
             console.log("Rendering Airbnbs from cache (Pre-Init)");
             const urlParams = new URLSearchParams(window.location.search);
@@ -118,7 +173,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Render Fresh Data
     if (isAirbnbPage) {
-        const freshAirbnbs = await JiraniData.getAirbnbs();
+        const rawFresh = await JiraniData.getAirbnbs();
+        const freshAirbnbs = sortByNewest(rawFresh);
         console.log("Rendering fresh Airbnbs");
         const urlParams = new URLSearchParams(window.location.search);
         const activeCat = urlParams.get('category') || (document.querySelector('.category-chip.active') ? document.querySelector('.category-chip.active').getAttribute('data-category') : 'all');

@@ -112,6 +112,7 @@ const JiraniData = {
     addAirbnb: async function (item) {
         if (!window.db) return;
         try {
+            if (!item.createdAt) item.createdAt = Date.now();
             // Using ID from item if available to keep consistency
             if (item.id) {
                 await window.db.collection(STORE_AIRBNBS).doc(item.id.toString()).set(item);
@@ -129,6 +130,7 @@ const JiraniData = {
     addProperty: async function (item) {
         if (!window.db) return;
         try {
+            if (!item.createdAt) item.createdAt = Date.now();
             if (item.id) {
                 await window.db.collection(STORE_PROPERTIES).doc(item.id.toString()).set(item);
             } else {
