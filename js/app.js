@@ -844,16 +844,64 @@ window.scrollCategoryOptions = function(direction) {
 
 function updateCategoryCounts(items) {
     if (!items || !items.length || typeof CATEGORY_CONFIG === 'undefined') return;
+
+    // Sort items newest first to ensure the first match is the latest stay added
+    const sorted = (typeof sortByNewest === 'function') ? sortByNewest(items) : items;
+
     CATEGORY_CONFIG.forEach(cat => {
+        if (!cat.filter) return;
+        const matching = sorted.filter(cat.filter);
+
+        // Update count badge
         const countEl = document.getElementById(`count-${cat.id}`);
-        if (countEl && cat.filter) {
-            const count = items.filter(cat.filter).length;
-            countEl.textContent = `${count} Stays`;
+        if (countEl) {
+            countEl.textContent = `${matching.length} Stays`;
+        }
+
+        // Update card photo to the latest in this category
+        const imgEl = document.getElementById(`img-cat-${cat.id}`);
+        if (imgEl && matching.length > 0) {
+            // Find newest listing with a valid image
+            const itemWithImg = matching.find(it => {
+                const imgs = it.images || (it.image ? [it.image] : []);
+                return imgs.length > 0 && typeof imgs[0] === 'string' && imgs[0].trim() !== '';
+            }) || matching[0];
+
+            if (itemWithImg) {
+                const imgs = itemWithImg.images || (itemWithImg.image ? [itemWithImg.image] : []);
+                if (imgs.length > 0 && imgs[0]) {
+                    const optUrl = (typeof optimizeCloudinaryUrl === 'function')
+                        ? optimizeCloudinaryUrl(imgs[0], 800)
+                        : imgs[0];
+                    imgEl.src = optUrl;
+                    imgEl.alt = `${cat.title} - ${itemWithImg.title}`;
+                }
+            }
         }
     });
+
+    // Update "All" properties count & photo
     const countAll = document.getElementById('count-all');
     if (countAll) {
-        countAll.textContent = `${items.length}+ Stays`;
+        countAll.textContent = `${sorted.length}+ Stays`;
+    }
+    const imgAll = document.getElementById('img-cat-all');
+    if (imgAll && sorted.length > 0) {
+        const itemWithImg = sorted.find(it => {
+            const imgs = it.images || (it.image ? [it.image] : []);
+            return imgs.length > 0 && typeof imgs[0] === 'string' && imgs[0].trim() !== '';
+        }) || sorted[0];
+
+        if (itemWithImg) {
+            const imgs = itemWithImg.images || (itemWithImg.image ? [itemWithImg.image] : []);
+            if (imgs.length > 0 && imgs[0]) {
+                const optUrl = (typeof optimizeCloudinaryUrl === 'function')
+                    ? optimizeCloudinaryUrl(imgs[0], 800)
+                    : imgs[0];
+                imgAll.src = optUrl;
+                imgAll.alt = `All Nairobi Stays - ${itemWithImg.title}`;
+            }
+        }
     }
 }
 

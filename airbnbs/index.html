@@ -14,7 +14,7 @@
     <link rel="canonical" href="https://jiraniproperties.co.ke/airbnbs/">
     <link rel="stylesheet" href="../css/styles.css?v=2.3">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/airbnb-theme.css?v=4.9">
+    <link rel="stylesheet" href="../css/airbnb-theme.css?v=5.1">
     <meta property="og:title" content="Airbnb in Kilimani, Westlands & Nairobi | Jirani Properties">
     <meta property="og:description" content="Book luxury furnished apartments in Kilimani, Westlands, and Nairobi.">
     <meta property="og:image" content="https://jiraniproperties.co.ke/images/home-bg.jpg">
@@ -864,7 +864,7 @@
                         <!-- 1. Romantic Stays -->
                         <div class="category-option-card" onclick="window.location.href='gallery.html?category=romantic'" role="button" tabindex="0">
                             <div class="cat-option-img-wrap">
-                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg" alt="Romantic Stays" class="cat-option-img" loading="lazy">
+                                <img id="img-cat-romantic" src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg" alt="Romantic Stays" class="cat-option-img" loading="lazy">
                                 <div class="cat-option-overlay"></div>
                                 <div class="cat-option-badge">💑 COUPLES & GETAWAYS</div>
                                 <div class="cat-option-count" id="count-romantic">78 Stays</div>
@@ -885,7 +885,7 @@
                         <!-- 2. Family Stays -->
                         <div class="category-option-card" onclick="window.location.href='gallery.html?category=family'" role="button" tabindex="0">
                             <div class="cat-option-img-wrap">
-                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316281/fef1ibgclv5yawyfhznj.jpg" alt="Family Stays" class="cat-option-img" loading="lazy">
+                                <img id="img-cat-family" src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316281/fef1ibgclv5yawyfhznj.jpg" alt="Family Stays" class="cat-option-img" loading="lazy">
                                 <div class="cat-option-overlay"></div>
                                 <div class="cat-option-badge">👨‍👩‍👧 ROOM TO GATHER</div>
                                 <div class="cat-option-count" id="count-family">45 Stays</div>
@@ -906,7 +906,7 @@
                         <!-- 3. Business Stays -->
                         <div class="category-option-card" onclick="window.location.href='gallery.html?category=business'" role="button" tabindex="0">
                             <div class="cat-option-img-wrap">
-                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316280/tr3auzjcr38xyfeajbiz.jpg" alt="Business Stays" class="cat-option-img" loading="lazy">
+                                <img id="img-cat-business" src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316280/tr3auzjcr38xyfeajbiz.jpg" alt="Business Stays" class="cat-option-img" loading="lazy">
                                 <div class="cat-option-overlay"></div>
                                 <div class="cat-option-badge">💼 WORK-READY</div>
                                 <div class="cat-option-count" id="count-business">50 Stays</div>
@@ -927,7 +927,7 @@
                         <!-- 4. Luxury Penthouses -->
                         <div class="category-option-card" onclick="window.location.href='gallery.html?category=luxury'" role="button" tabindex="0">
                             <div class="cat-option-img-wrap">
-                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316282/dl8tklgck0jc4npsn5kk.jpg" alt="Luxury Penthouses" class="cat-option-img" loading="lazy">
+                                <img id="img-cat-luxury" src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316282/dl8tklgck0jc4npsn5kk.jpg" alt="Luxury Penthouses" class="cat-option-img" loading="lazy">
                                 <div class="cat-option-overlay"></div>
                                 <div class="cat-option-badge">✨ PREMIER LIVING</div>
                                 <div class="cat-option-count" id="count-luxury">25 Stays</div>
@@ -948,7 +948,7 @@
                         <!-- 5. Budget Friendly -->
                         <div class="category-option-card" onclick="window.location.href='gallery.html?category=budget'" role="button" tabindex="0">
                             <div class="cat-option-img-wrap">
-                                <img src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316276/sqkfnwwodlyww2665yvm.jpg" alt="Budget Friendly" class="cat-option-img" loading="lazy">
+                                <img id="img-cat-budget" src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316276/sqkfnwwodlyww2665yvm.jpg" alt="Budget Friendly" class="cat-option-img" loading="lazy">
                                 <div class="cat-option-overlay"></div>
                                 <div class="cat-option-badge">💰 TOP VALUE</div>
                                 <div class="cat-option-count" id="count-budget">30 Stays</div>
@@ -969,7 +969,7 @@
                         <!-- 6. All Nairobi Stays -->
                         <div class="category-option-card cat-option-card--all" onclick="window.location.href='gallery.html?category=all'" role="button" tabindex="0">
                             <div class="cat-option-img-wrap">
-                                <img src="../images/home-bg.jpg" alt="All Nairobi Stays" class="cat-option-img" loading="lazy">
+                                <img id="img-cat-all" src="https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg" alt="All Nairobi Stays" class="cat-option-img" loading="lazy">
                                 <div class="cat-option-overlay"></div>
                                 <div class="cat-option-badge">🏠 ALL PROPERTIES</div>
                                 <div class="cat-option-count" id="count-all">78+ Stays</div>
@@ -1251,7 +1251,7 @@
     <script src="../js/firebase-config.js"></script>
     <script src="../js/seed-data.js"></script>
     <script src="../js/data.js"></script>
-    <script src="../js/app.js"></script>
+    <script src="../js/app.js?v=5.1"></script>
     <!-- Floating WhatsApp Button -->
     <a href="https://wa.me/254725833232" class="whatsapp-fab" target="_blank" aria-label="Contact on WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
