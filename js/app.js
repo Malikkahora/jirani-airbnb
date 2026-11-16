@@ -961,6 +961,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Mobile Search Toggle & Backdrop
+let formOriginalParent = null;
+let formOriginalNextSibling = null;
+
 window.toggleMobileSearch = function (show = true) {
     const form = document.querySelector('.search-form');
     const toggle = document.querySelector('.search-mobile-toggle');
@@ -974,17 +977,43 @@ window.toggleMobileSearch = function (show = true) {
     }
 
     if (show) {
-        if (form) form.classList.add('active');
+        if (form) {
+            // Save initial location in DOM
+            if (!formOriginalParent && form.parentNode && form.parentNode !== document.body) {
+                formOriginalParent = form.parentNode;
+                formOriginalNextSibling = form.nextSibling;
+            }
+            // Move directly under document.body so it is never trapped by hero transform/overflow/z-index
+            if (form.parentNode !== document.body) {
+                document.body.appendChild(form);
+            }
+            form.classList.add('active');
+        }
         if (toggle) toggle.style.display = 'none';
         if (backdrop) backdrop.classList.add('active');
         document.body.style.overflow = 'hidden';
     } else {
-        if (form) form.classList.remove('active');
+        if (form) {
+            form.classList.remove('active');
+            // Restore back to original location inside search bar
+            if (formOriginalParent && form.parentNode !== formOriginalParent) {
+                formOriginalParent.insertBefore(form, formOriginalNextSibling);
+            }
+        }
         if (toggle) toggle.style.display = 'flex';
         if (backdrop) backdrop.classList.remove('active');
         document.body.style.overflow = '';
     }
 };
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        const form = document.querySelector('.search-form');
+        if (form && formOriginalParent && form.parentNode !== formOriginalParent) {
+            window.toggleMobileSearch(false);
+        }
+    }
+});
 
 // Calculate dynamic hero scroll threshold:
 // Triggers only when the hero search bar reaches near the top header,

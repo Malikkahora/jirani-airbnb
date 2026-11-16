@@ -2074,7 +2074,8 @@ body.dark-mode .gallery-nav-strip {
     }
 
     /* Mobile Search Form: When tapped, pops up as a clean centered modal card */
-    .luxury-search-bar .search-form.active {
+    .luxury-search-bar .search-form.active,
+    .search-form.active {
         display: flex !important;
         flex-direction: column !important;
         position: fixed !important;
@@ -2089,28 +2090,43 @@ body.dark-mode .gallery-nav-strip {
         z-index: 2005 !important;
         padding: 24px !important;
         border-radius: 24px !important;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28) !important;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45) !important;
         overflow-y: auto !important;
         border: 1px solid var(--bnb-border, rgba(0, 0, 0, 0.08)) !important;
+        filter: none !important;
+        -webkit-filter: none !important;
         animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    body.dark-mode .luxury-search-bar .search-form.active {
+    /* Prevent parent containers from trapping modal under backdrop if left nested */
+    .luxury-hero:has(.search-form.active),
+    .hero__container:has(.search-form.active),
+    .hero-search-collapsible-wrap:has(.search-form.active),
+    .luxury-search-bar:has(.search-form.active) {
+        z-index: 2001 !important;
+        position: relative !important;
+    }
+
+    body.dark-mode .luxury-search-bar .search-form.active,
+    body.dark-mode .search-form.active {
         background: #1f2722 !important;
         border-color: rgba(123, 178, 152, 0.3) !important;
         color: #FFFFFF !important;
     }
 
-    .luxury-search-bar .search-form.active .search-form__field {
+    .luxury-search-bar .search-form.active .search-form__field,
+    .search-form.active .search-form__field {
         border-right: none !important;
         border-bottom: 1px solid var(--bnb-border, rgba(0, 0, 0, 0.08)) !important;
         padding: 10px 4px !important;
         width: 100% !important;
     }
-    .luxury-search-bar .search-form.active .search-form__field:last-of-type { 
+    .luxury-search-bar .search-form.active .search-form__field:last-of-type,
+    .search-form.active .search-form__field:last-of-type { 
         border-bottom: none !important; 
     }
-    .luxury-search-bar .search-form.active .search-btn {
+    .luxury-search-bar .search-form.active .search-btn,
+    .search-form.active .search-btn {
         width: 100% !important; 
         height: 48px !important;
         border-radius: 12px !important;
@@ -2120,7 +2136,8 @@ body.dark-mode .gallery-nav-strip {
         font-weight: 700 !important;
         font-size: 0.95rem !important;
     }
-    .luxury-search-bar .search-form.active .search-btn-cancel {
+    .luxury-search-bar .search-form.active .search-btn-cancel,
+    .search-form.active .search-btn-cancel {
         margin-top: 8px !important;
         width: 100% !important;
         height: 44px !important;
@@ -2131,7 +2148,8 @@ body.dark-mode .gallery-nav-strip {
         font-weight: 600 !important;
         cursor: pointer;
     }
-    body.dark-mode .luxury-search-bar .search-form.active .search-btn-cancel {
+    body.dark-mode .luxury-search-bar .search-form.active .search-btn-cancel,
+    body.dark-mode .search-form.active .search-btn-cancel {
         background: rgba(255, 255, 255, 0.08) !important;
         color: #FFFFFF !important;
     }
@@ -2320,12 +2338,12 @@ body.dark-mode .gallery-nav-strip {
 }
 
 .search-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(18, 25, 22, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 2000;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(18, 25, 22, 0.6) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    z-index: 1999 !important;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -2333,9 +2351,9 @@ body.dark-mode .gallery-nav-strip {
 }
 
 .search-modal-backdrop.active {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
 }
 
 /* --------------------------------------------------------------------------

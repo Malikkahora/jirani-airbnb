@@ -31,7 +31,8 @@
             .luxury-search-bar .search-form:not(.active) {
                 display: none !important;
             }
-            .luxury-search-bar .search-form.active {
+            .luxury-search-bar .search-form.active,
+            .search-form.active {
                 display: flex !important;
                 flex-direction: column !important;
                 position: fixed !important;
@@ -45,10 +46,13 @@
                 z-index: 2005 !important;
                 padding: 24px !important;
                 border-radius: 24px !important;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28) !important;
+                box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4) !important;
                 overflow-y: auto !important;
+                filter: none !important;
+                -webkit-filter: none !important;
             }
-            body.dark-mode .luxury-search-bar .search-form.active {
+            body.dark-mode .luxury-search-bar .search-form.active,
+            body.dark-mode .search-form.active {
                 background: #1f2722 !important;
                 color: #FFFFFF !important;
             }
