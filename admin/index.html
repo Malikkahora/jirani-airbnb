@@ -8,7 +8,7 @@
     <link rel="icon" href="../images/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Admin Styles -->
-    <link rel="stylesheet" href="../css/admin.css?v=3.0">
+    <link rel="stylesheet" href="../css/admin.css?v=4.0">
     <style>
         .btn-cat-tag, .btn-amenity-tag {
             padding: 7px 16px;
@@ -99,84 +99,128 @@
 
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" id="search-input" placeholder="Search listings...">
+                <input type="text" class="search-input" id="search-input" placeholder="Search by title, location, or ID...">
             </div>
         </div>
 
-        <!-- Actions -->
-        <div class="actions-bar">
-            <div>
-                <!-- Could add filters here later -->
+        <!-- Dashboard Stats Ribbon -->
+        <div class="stats-ribbon">
+            <div class="stat-card">
+                <div class="stat-card__icon stat-card__icon--blue">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div>
+                    <div class="stat-card__val" id="stat-total-count">0</div>
+                    <div class="stat-card__lbl">Total Listings</div>
+                </div>
             </div>
-            <button class="btn btn-primary" onclick="openEditModal()">
-                <i class="fas fa-plus"></i> Add New
-            </button>
+
+            <div class="stat-card">
+                <div class="stat-card__icon stat-card__icon--green">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                    <div class="stat-card__val" id="stat-locations-count">0</div>
+                    <div class="stat-card__lbl">Active Locations</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card__icon stat-card__icon--amber">
+                    <i class="fas fa-tag"></i>
+                </div>
+                <div>
+                    <div class="stat-card__val" id="stat-avg-price">KES 0</div>
+                    <div class="stat-card__lbl">Average Rate / Night</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Listings Table -->
-        <div class="table-card">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th width="80">Image</th>
-                            <th>Title/ID</th>
-                            <th>Location</th>
-                            <th>Price</th>
-                            <th id="th-type" style="display:none;">Type</th>
-                            <th width="150">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <!-- Data inserted by JS -->
-                    </tbody>
-                </table>
+        <!-- Location Separation & View Toolbar -->
+        <div class="admin-toolbar-card">
+            <div class="toolbar-top-row">
+                <div class="view-mode-bar">
+                    <button type="button" class="btn-view-toggle active" id="view-mode-grouped" onclick="setViewMode('grouped')">
+                        <i class="fas fa-layer-group"></i> Separate by Location
+                    </button>
+                    <button type="button" class="btn-view-toggle" id="view-mode-table" onclick="setViewMode('table')">
+                        <i class="fas fa-list"></i> Single Table View
+                    </button>
+                </div>
+
+                <button class="btn btn-primary" onclick="openEditModal()">
+                    <i class="fas fa-plus"></i> Add New Listing
+                </button>
             </div>
+
+            <!-- Dynamic Location Filter Ribbon -->
+            <div class="loc-filter-strip" id="location-filters-bar">
+                <span class="loc-filter-label"><i class="fas fa-filter"></i> Filter:</span>
+                <button type="button" class="loc-chip active" data-loc="all" onclick="filterByLocation('all')">
+                    All Locations <span class="chip-count" id="count-all">0</span>
+                </button>
+                <!-- Populated dynamically by JS -->
+            </div>
+        </div>
+
+        <!-- Dynamic Listings View Container (Renders Grouped Cards or Single Table) -->
+        <div id="listings-view-container">
+            <!-- Rendered by JS -->
         </div>
     </main>
 
-    <!-- Edit Modal -->
+    <!-- Edit / Create Modal -->
     <div class="modal-overlay">
-        <div class="modal">
+        <div class="modal" style="max-width:680px;">
             <div class="modal-header">
-                <h3 id="modal-title">Edit Listing</h3>
-                <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;"
+                <div>
+                    <h3 id="modal-title" style="margin:0;">Edit Listing</h3>
+                    <small id="modal-subtitle" style="color:#64748b; font-size:0.8rem;">Fill in details below and click Save</small>
+                </div>
+                <button style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748b;"
                     onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="edit-form">
                     <div class="form-group">
-                        <label class="form-label">Title</label>
-                        <input type="text" id="edit-title" class="form-control" required>
+                        <label class="form-label">Title / Heading</label>
+                        <input type="text" id="edit-title" class="form-control" placeholder="e.g. 1 Bedroom Luxury Suite" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Description</label>
-                        <textarea id="edit-desc" class="form-control" rows="3"></textarea>
+                        <textarea id="edit-desc" class="form-control" rows="3" placeholder="Brief summary of the stay, ambiance, and highlights..."></textarea>
                     </div>
 
+                    <!-- Location with Quick Chips -->
+                    <div class="form-group">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <label class="form-label" style="margin-bottom:0;">Location / Neighborhood</label>
+                            <span style="font-size:0.75rem; color:#64748b;">Click chip to auto-fill</span>
+                        </div>
+                        <div class="quick-chips-row" id="location-quick-chips">
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Kilimani')">Kilimani</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Westlands')">Westlands</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Kileleshwa')">Kileleshwa</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('South B')">South B</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('South C')">South C</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Syokimau')">Syokimau</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Lavington')">Lavington</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Roysambu')">Roysambu</button>
+                            <button type="button" class="btn-quick-chip" onclick="setQuickLocation('Ruaka')">Ruaka</button>
+                        </div>
+                        <input type="text" id="edit-location" class="form-control" placeholder="e.g. Kilimani, Westlands, etc." required>
+                    </div>
+
+                    <!-- Price & Type -->
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                         <div class="form-group">
-                            <label class="form-label">Location</label>
-                            <input type="text" id="edit-location" class="form-control" required>
-                        </div>
-                        <div class="form-group">
                             <label class="form-label">Price (KES)</label>
-                            <input type="number" id="edit-price" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
-                        <div class="form-group">
-                            <label class="form-label">Beds/Rooms</label>
-                            <input type="text" id="edit-rooms" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Baths</label>
-                            <input type="number" id="edit-baths" class="form-control">
+                            <input type="number" id="edit-price" class="form-control" placeholder="e.g. 5500" required>
+                            <small id="price-preview-helper" style="color:#64748b; font-size:0.75rem; display:block; margin-top:3px;">Preview: KES 0 / night</small>
                         </div>
                         <div class="form-group" id="type-group" style="display:none;">
-                            <label class="form-label">Type</label>
+                            <label class="form-label">Listing Type</label>
                             <select id="edit-type" class="form-control">
                                 <option value="rent">Rent</option>
                                 <option value="sale">Sale</option>
@@ -184,6 +228,30 @@
                         </div>
                     </div>
 
+                    <!-- Beds & Baths with Quick Chips -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label class="form-label">Beds / Rooms</label>
+                            <div class="quick-chips-row">
+                                <button type="button" class="btn-quick-chip" onclick="setQuickRooms('Studio')">Studio</button>
+                                <button type="button" class="btn-quick-chip" onclick="setQuickRooms('1 Bed')">1 Bed</button>
+                                <button type="button" class="btn-quick-chip" onclick="setQuickRooms('2 Beds')">2 Beds</button>
+                                <button type="button" class="btn-quick-chip" onclick="setQuickRooms('3 Beds')">3 Beds</button>
+                            </div>
+                            <input type="text" id="edit-rooms" class="form-control" placeholder="e.g. 1 Bed or Studio">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Baths</label>
+                            <div class="quick-chips-row">
+                                <button type="button" class="btn-quick-chip" onclick="setQuickBaths('1')">1 Bath</button>
+                                <button type="button" class="btn-quick-chip" onclick="setQuickBaths('2')">2 Baths</button>
+                                <button type="button" class="btn-quick-chip" onclick="setQuickBaths('3')">3 Baths</button>
+                            </div>
+                            <input type="number" id="edit-baths" class="form-control" placeholder="e.g. 1">
+                        </div>
+                    </div>
+
+                    <!-- Amenities Tags -->
                     <div class="form-group" id="amenities-group">
                         <label class="form-label">Amenities Tags</label>
                         <div class="amenity-tags-container" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
@@ -195,9 +263,10 @@
                             <button type="button" class="btn-amenity-tag" data-val="balcony" onclick="toggleAmenityTag('balcony', this)">🌅 Balcony</button>
                         </div>
                         <input type="text" id="edit-amenities" class="form-control" placeholder="Select tags above or enter custom amenities (comma-separated)">
-                        <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Click tags to quickly assign features (Swimming Pool, Gym, Sauna, etc.) or add custom ones.</small>
+                        <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Click tags to quickly assign features or add custom ones.</small>
                     </div>
 
+                    <!-- Categories Tags -->
                     <div class="form-group" id="categories-group">
                         <label class="form-label">Category Tags</label>
                         <div class="cat-tags-container" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
@@ -211,16 +280,39 @@
                         <small style="color:#64748b; font-size:0.75rem; display:block; margin-top:4px;">Assigns which category sliders and dedicated gallery pages this listing appears in.</small>
                     </div>
 
+                    <!-- Photos & Upload System -->
                     <div class="form-group">
-                        <label class="form-label">Images</label>
-                        <input type="file" id="image-input" multiple accept="image/*" class="form-control">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label class="form-label" style="margin-bottom:0;">Photos & Media</label>
+                            <span id="image-count-badge" style="font-size:0.8rem; font-weight:700; color:#2d60ff;">0 photos</span>
+                        </div>
+
+                        <!-- Drag and Drop Dropzone -->
+                        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('image-input').click()">
+                            <i class="fas fa-cloud-upload-alt" style="font-size:2rem; color:#2d60ff;"></i>
+                            <div class="drop-zone__title">Click to browse or drag & drop listing photos here</div>
+                            <div class="drop-zone__sub">Upload multiple JPG, PNG, WEBP. First photo is automatically set as the cover image.</div>
+                            <input type="file" id="image-input" multiple accept="image/*" style="display:none;">
+                        </div>
+
+                        <!-- Direct Image URL Input Row -->
+                        <div class="image-url-row" style="display:flex; gap:8px; margin-top:10px;">
+                            <input type="url" id="image-url-input" class="form-control" placeholder="Or paste image URL (Cloudinary, web link, etc.)" style="font-size:0.85rem;">
+                            <button type="button" class="btn btn-duplicate" onclick="addImageFromUrl()" style="white-space:nowrap; font-size:0.85rem; padding:6px 14px;">
+                                <i class="fas fa-link"></i> Add URL
+                            </button>
+                        </div>
+
+                        <!-- Upload Preview Grid -->
                         <div class="upload-grid" id="upload-preview"></div>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" style="background:transparent; color:#666;"
                             onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary" id="save-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
                     </div>
                 </form>
             </div>
@@ -228,9 +320,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../js/firebase-config.js?v=3.0"></script>
-    <script src="../js/data.js?v=3.0"></script>
-    <script src="../js/admin.js?v=3.0"></script>
+    <script src="../js/firebase-config.js?v=4.0"></script>
+    <script src="../js/data.js?v=4.0"></script>
+    <script src="../js/admin.js?v=4.0"></script>
 </body>
 
 </html>
