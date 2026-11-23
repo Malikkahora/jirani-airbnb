@@ -202,15 +202,6 @@
         <!-- Luxury Dark Vignette Overlay -->
         <div class="hero-home__overlay"></div>
 
-        <!-- Wallpaper Switcher Controls (Bottom Right) -->
-        <div class="hero-home__wallpaper-controls" id="hero-wallpaper-controls">
-            <span class="wallpaper-ctrl-label"><i class="fas fa-camera"></i> Wallpaper:</span>
-            <button type="button" class="wallpaper-dot active" onclick="switchWallpaper(0)" title="Twilight Villa">Villa</button>
-            <button type="button" class="wallpaper-dot" onclick="switchWallpaper(1)" title="Sunset Lounge">Sunset</button>
-            <button type="button" class="wallpaper-dot" onclick="switchWallpaper(2)" title="Modern Interior">Interior</button>
-            <button type="button" class="wallpaper-dot" onclick="switchWallpaper(3)" title="Skyline Suite">Skyline</button>
-        </div>
-
         <!-- Hero Content -->
         <div class="hero-home__content">
             <div class="hero-home__badge">
@@ -577,9 +568,7 @@
     <!-- Aesthetic Wallpaper Carousel Script -->
     <script>
         let currentWpIndex = 0;
-        let wpInterval = null;
         const wpSlides = document.querySelectorAll('.hero-home__wallpaper');
-        const wpDots = document.querySelectorAll('.wallpaper-dot');
 
         function switchWallpaper(idx) {
             if (!wpSlides.length) return;
@@ -588,28 +577,12 @@
             wpSlides.forEach((slide, i) => {
                 slide.classList.toggle('active', i === currentWpIndex);
             });
-
-            wpDots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentWpIndex);
-            });
-        }
-
-        function startWpAutoSlide() {
-            if (wpInterval) clearInterval(wpInterval);
-            wpInterval = setInterval(() => {
-                switchWallpaper(currentWpIndex + 1);
-            }, 6500);
         }
 
         if (wpSlides.length > 1) {
-            startWpAutoSlide();
-
-            // Pause auto-slide when hovering controls
-            const controls = document.getElementById('hero-wallpaper-controls');
-            if (controls) {
-                controls.addEventListener('mouseenter', () => clearInterval(wpInterval));
-                controls.addEventListener('mouseleave', startWpAutoSlide);
-            }
+            setInterval(() => {
+                switchWallpaper(currentWpIndex + 1);
+            }, 6500);
         }
     </script>
 </body>
