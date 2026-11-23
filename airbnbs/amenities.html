@@ -58,12 +58,118 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
             background: rgba(85, 122, 104, 0.1);
             color: #557A68;
             padding: 4px 10px;
-            border-radius: 6px;
+            border-radius: 9999px;
+            border: 1px solid rgba(85, 122, 104, 0.2);
+            white-space: nowrap;
+        }
+
+        /* Standardized Uniform Gallery Card for Amenities */
+        .amenity-houses-section {
+            scroll-margin-top: 120px !important;
+        }
+        .gallery-card {
+            background: var(--bnb-surface, #FFFFFF);
+            border: 1px solid var(--bnb-border, #E2DBD0);
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s, border-color 0.3s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            user-select: none;
+        }
+        .gallery-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(85, 122, 104, 0.16);
+            border-color: var(--bnb-accent-border, #A3C9B8);
+        }
+        .gallery-card__img-wrap {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            aspect-ratio: 4 / 3 !important;
+            height: 220px !important;
+            background: var(--bnb-surface-mid, #F4F1EA);
+        }
+        .gallery-card__img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .gallery-card:hover .gallery-card__img {
+            transform: scale(1.07);
+        }
+        .gallery-card__badge {
+            position: absolute !important;
+            top: 12px !important;
+            left: 12px !important;
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            color: var(--bnb-accent, #557A68) !important;
+            font-size: 0.7rem !important;
+            font-weight: 800 !important;
+            padding: 4px 12px !important;
+            border-radius: 9999px !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12) !important;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+        .gallery-card__body {
+            padding: 16px 18px 18px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 !important;
+        }
+        .gallery-card__location {
+            font-size: 0.76rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            color: var(--bnb-text-soft, #5A625D) !important;
+            margin-bottom: 4px !important;
+            font-weight: 600 !important;
+        }
+        .gallery-card__name {
+            font-family: var(--bnb-font-serif, 'Playfair Display', serif) !important;
+            font-size: 1.12rem !important;
+            font-weight: 700 !important;
+            color: var(--bnb-text, #1F2421) !important;
+            margin: 0 0 10px !important;
+            line-height: 1.3 !important;
+        }
+        .gallery-card__amenity-tags {
+            display: flex !important;
+            gap: 6px !important;
+            flex-wrap: wrap !important;
+            margin-bottom: 14px !important;
+        }
+        .gallery-card__footer {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding-top: 12px !important;
+            border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+            margin-top: auto !important;
+        }
+        .gallery-card__price {
+            font-weight: 800 !important;
+            font-size: 1.15rem !important;
+            color: var(--bnb-text, #1F2421) !important;
+        }
+        .gallery-card__price-unit {
+            font-size: 0.78rem !important;
+            font-weight: 500 !important;
+            color: var(--bnb-text-soft, #5A625D) !important;
         }
     </style>
 </head>
@@ -367,37 +473,42 @@
             const rooms = Number(item.rooms) || 0;
 
             if (amenity === 'swimming pool') {
+                // Budget areas (South B, Roysambu, Syokimau) only match if pool is explicitly written in amenities
+                if (location.includes('south b') || location.includes('roysambu') || location.includes('syokimau')) {
+                    return amText.toLowerCase().includes('pool') || amText.toLowerCase().includes('swimming');
+                }
                 return combinedText.includes('pool') ||
                        combinedText.includes('swimming') ||
                        categories.includes('luxury') ||
-                       location.includes('kilimani') ||
-                       location.includes('westlands') ||
-                       price >= 5000;
+                       (location.includes('kilimani') && price >= 5000) ||
+                       (location.includes('westlands') && price >= 5000) ||
+                       price >= 6500;
             }
             if (amenity === 'gym') {
+                if (location.includes('south b') || location.includes('syokimau')) {
+                    return amText.toLowerCase().includes('gym') || amText.toLowerCase().includes('fitness');
+                }
                 return combinedText.includes('gym') ||
                        combinedText.includes('fitness') ||
                        combinedText.includes('workout') ||
                        categories.includes('business') ||
                        categories.includes('luxury') ||
-                       location.includes('kilimani') ||
-                       location.includes('westlands') ||
-                       price >= 4500;
+                       (location.includes('kilimani') && price >= 4500) ||
+                       (location.includes('westlands') && price >= 4500);
             }
             if (amenity === 'sauna') {
+                if (location.includes('south b') || location.includes('roysambu') || location.includes('syokimau')) {
+                    return amText.toLowerCase().includes('saun') || amText.toLowerCase().includes('steam') || amText.toLowerCase().includes('spa');
+                }
                 return combinedText.includes('saun') ||
                        combinedText.includes('steam') ||
                        combinedText.includes('spa') ||
                        categories.includes('luxury') ||
                        (location.includes('kilimani') && price >= 5000) ||
-                       price >= 6000;
+                       price >= 6500;
             }
             if (amenity === 'ample parking') {
-                return combinedText.includes('parking') ||
-                       combinedText.includes('garage') ||
-                       combinedText.includes('car') ||
-                       combinedText.includes('park') ||
-                       !combinedText.includes('no parking');
+                return !combinedText.includes('no parking');
             }
             if (amenity === 'rooftop bar') {
                 return combinedText.includes('rooftop') ||
@@ -418,6 +529,73 @@
                        rooms >= 1;
             }
             return combinedText.includes(amenity.toLowerCase());
+        }
+
+        // Clean & Deduplicate Amenity Tags for UI Display
+        function cleanAmenityTags(item, currentAmenity) {
+            const raw = (item.amenities || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            const standardMap = {
+                'pool': '🏊 Swimming Pool',
+                'swimming pool': '🏊 Swimming Pool',
+                'swimming': '🏊 Swimming Pool',
+                'gym': '🏋️ Gym & Fitness',
+                'fitness': '🏋️ Gym & Fitness',
+                'workout': '🏋️ Gym & Fitness',
+                'sauna': '🧖 Sauna',
+                'saun': '🧖 Sauna',
+                'steam': '🧖 Steam Room',
+                'parking': '🅿️ Parking',
+                'ample parking': '🅿️ Ample Parking',
+                'wifi': '📶 High-Speed Wifi',
+                'kitchen': '🍳 Kitchen',
+                'lift': '🛗 Elevator',
+                'elevator': '🛗 Elevator',
+                'balcony': '🌅 Private Balcony',
+                'rooftop bar': '🍸 Rooftop Bar',
+                'washing matchine': '🧺 Washer',
+                'washing machine': '🧺 Washer'
+            };
+
+            const cleanTags = [];
+            const seen = new Set();
+
+            function addTag(tag) {
+                if (!seen.has(tag)) {
+                    seen.add(tag);
+                    cleanTags.push(tag);
+                }
+            }
+
+            // 1. If currently filtering by a specific amenity, put its clean label first
+            if (currentAmenity && currentAmenity !== 'all') {
+                const label = AMENITY_TAG_LABELS[currentAmenity] || currentAmenity;
+                addTag(label);
+            }
+
+            // 2. Map and deduplicate raw tags
+            raw.forEach(tag => {
+                let mapped = null;
+                for (const [key, val] of Object.entries(standardMap)) {
+                    if (tag === key || tag.includes(key)) {
+                        mapped = val;
+                        break;
+                    }
+                }
+                if (mapped) {
+                    addTag(mapped);
+                } else if (tag.length > 2) {
+                    addTag(tag.charAt(0).toUpperCase() + tag.slice(1));
+                }
+            });
+
+            // 3. Fallbacks if sparse
+            if (cleanTags.length === 0) {
+                addTag('📶 High-Speed Wifi');
+                addTag('🍳 Kitchen');
+                addTag('🅿️ Ample Parking');
+            }
+
+            return cleanTags.slice(0, 3);
         }
 
         function renderAmenityHouses(items, amenity) {
@@ -445,40 +623,31 @@
             grid.innerHTML = items.map(item => {
                 const rawImg = (item.images && item.images.length > 0) ? item.images[0] : (item.image || '');
                 const img = optimizeCloudinary(rawImg, 500);
-
-                let rawTags = (item.amenities || '').split(',').map(s => s.trim()).filter(Boolean);
-                if (amenity !== 'all') {
-                    const tagLabel = AMENITY_TAG_LABELS[amenity] || amenity;
-                    if (!rawTags.some(t => t.toLowerCase().includes(amenity.split(' ')[0]))) {
-                        rawTags = [tagLabel, ...rawTags];
-                    }
-                }
-                const amenitiesList = rawTags.slice(0, 3);
+                const cleanTags = cleanAmenityTags(item, amenity);
                 const priceFormatted = item.price ? Number(item.price).toLocaleString() : '3,500';
 
                 return `
-                    <div class="airbnb-card" onclick="window.location.href='/listing-details/?id=${item.id}&type=airbnb'" style="cursor: pointer;">
-                        <div class="airbnb-card__img-container">
-                            <img src="${img}" alt="${item.title}" class="airbnb-card__img" loading="lazy" onerror="this.onerror=null;this.src='../images/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
-                            <div class="airbnb-card__badge" style="background: rgba(255,255,255,0.92); color: var(--bnb-accent, #557A68); font-weight: 700;">${meta.icon} Verified</div>
+                    <article class="gallery-card" onclick="window.location.href='/listing-details/?id=${item.id}&type=airbnb'">
+                        <div class="gallery-card__img-wrap">
+                            <img src="${img}" alt="${item.title}" class="gallery-card__img" loading="lazy" onerror="this.onerror=null;this.src='../images/logo.png';this.style.objectFit='contain';this.style.padding='20px';">
+                            <div class="gallery-card__badge">${meta.icon} Verified</div>
                         </div>
-                        <div class="airbnb-card__info" style="padding: 18px 20px;">
-                            <div class="airbnb-card__location" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--bnb-text-soft, #5A625D); margin-bottom: 4px;">${item.location || 'Nairobi'}</div>
-                            <h3 class="airbnb-card__title" style="font-size: 1.12rem; font-weight: 700; color: var(--bnb-text, #1F2421); margin-bottom: 10px; line-height: 1.3;">${item.title}</h3>
+                        <div class="gallery-card__body">
+                            <div class="gallery-card__location">${item.location || 'Nairobi'}</div>
+                            <h3 class="gallery-card__name">${item.title}</h3>
                             
-                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
-                                ${amenitiesList.map(a => `<span class="amenity-badge-tag">${a}</span>`).join('')}
+                            <div class="gallery-card__amenity-tags">
+                                ${cleanTags.map(a => `<span class="amenity-badge-tag">${a}</span>`).join('')}
                             </div>
 
-                            <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06);">
-                                <div>
-                                    <span style="font-weight: 800; font-size: 1.15rem; color: var(--bnb-text, #1F2421);">KES ${priceFormatted}</span>
-                                    <span style="font-size: 0.8rem; color: var(--bnb-text-soft, #5A625D);"> / night</span>
+                            <div class="gallery-card__footer">
+                                <div class="gallery-card__price">
+                                    KES ${priceFormatted} <span class="gallery-card__price-unit">/ night</span>
                                 </div>
                                 <span class="canva-amenity-pill-btn" style="padding: 6px 16px !important; font-size: 0.72rem !important;">VIEW &rarr;</span>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 `;
             }).join('');
         }
@@ -506,10 +675,18 @@
                 window.history.replaceState({}, '', url);
             } catch (e) {}
 
-            // Smooth scroll to grid if called from signature cards
+            // Smooth scroll to grid with clearance below floating header
             if (btn && btn.getAttribute('href') === '#amenity-houses') {
                 const target = document.getElementById('amenity-houses');
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) {
+                    const headerOffset = 110;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             }
         };
 
