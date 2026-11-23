@@ -12,11 +12,11 @@
     <meta name="keywords"
         content="Jirani Properties, Airbnb Nairobi, Airbnb Kenya, Vacation Rentals Kilimani, Short Stays Nairobi, Airbnb Westlands, Airbnb Kileleshwa, Airbnb Lavington, Airbnb Syokimau, Airbnb Utawala, Airbnb Roysambu, Airbnb Mirema, Airbnb Ruaka, Airbnb Ngong Road, RealEstateKenya, NairobiRealEstate, PropertySearchKenya, KenyaHomes, LuxuryLivingKenya, InvestInKenya, HousesForSaleNairobi, HomeBuyingKenya, VacationRentalsKenya, NairobiStays, StaycationKenya, ShortTermRentalsKenya, FurnishedApartmentsNairobi, WestlandsStays, KilimaniApartments, KarenNairobi, LavingtonRealEstate, KileleshwaLiving, LangataRentals">
     <link rel="canonical" href="https://jiraniproperties.co.ke/">
-    <link rel="stylesheet" href="css/styles.css?v=1.1">
+    <link rel="stylesheet" href="css/styles.css?v=2.5">
     <link rel="stylesheet" href="css/footer-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta property="og:title" content="Jirani - Airbnb in Nairobi & Properties for Sale">
     <meta property="og:description" content="Your #1 source for Airbnb in Nairobi and Properties for Sale.">
     <meta property="og:image" content="https://jiraniproperties.co.ke/images/home-bg.jpg">
@@ -189,86 +189,167 @@
         </div>
     </header>
     <main>
-    <!-- Hero Section -->
+    <!-- Modernized Aesthetic Hero Section with House Wallpapers -->
     <section class="hero-home">
+        <!-- Aesthetic House Wallpaper Slides -->
+        <div class="hero-home__wallpaper-track" id="hero-wallpaper-track">
+            <div class="hero-home__wallpaper active" style="background-image: url('images/hero-aesthetic-house.jpg');" data-index="0" data-label="Twilight Villa"></div>
+            <div class="hero-home__wallpaper" style="background-image: url('images/hero-aesthetic-house-2.jpg');" data-index="1" data-label="Sunset Lounge"></div>
+            <div class="hero-home__wallpaper" style="background-image: url('images/home-bg.jpg');" data-index="2" data-label="Modern Interior"></div>
+            <div class="hero-home__wallpaper" style="background-image: url('images/hero-aesthetic-suite.png');" data-index="3" data-label="Skyline Suite"></div>
+        </div>
+
+        <!-- Luxury Dark Vignette Overlay -->
+        <div class="hero-home__overlay"></div>
+
+        <!-- Wallpaper Switcher Controls (Bottom Right) -->
+        <div class="hero-home__wallpaper-controls" id="hero-wallpaper-controls">
+            <span class="wallpaper-ctrl-label"><i class="fas fa-camera"></i> Wallpaper:</span>
+            <button type="button" class="wallpaper-dot active" onclick="switchWallpaper(0)" title="Twilight Villa">Villa</button>
+            <button type="button" class="wallpaper-dot" onclick="switchWallpaper(1)" title="Sunset Lounge">Sunset</button>
+            <button type="button" class="wallpaper-dot" onclick="switchWallpaper(2)" title="Modern Interior">Interior</button>
+            <button type="button" class="wallpaper-dot" onclick="switchWallpaper(3)" title="Skyline Suite">Skyline</button>
+        </div>
+
+        <!-- Hero Content -->
         <div class="hero-home__content">
             <div class="hero-home__badge">
-                🏆 Nairobi's #1 Trusted Stay Platform
+                <span class="badge-sparkle">✦</span>
+                <span>NAIROBI'S PREMIER STAY &amp; REAL ESTATE PLATFORM</span>
             </div>
             <h1 class="hero-home__title">
                 Find Your Perfect<br>
-                Stay in <span>Nairobi</span>
+                Stay in <span class="hero-title-accent">Nairobi</span>
             </h1>
             <p class="hero-home__subtitle">
-                Discover handpicked Airbnbs and properties across Kilimani, Westlands,<br>
-                Karen, and beyond — for every occasion and budget.
+                Discover handpicked boutique suites, romantic retreats, and executive villas across Kilimani, Westlands, Kileleshwa, Karen &amp; beyond.
             </p>
+
+            <!-- Floating Quick Search Card -->
+            <div class="hero-home__search-card">
+                <form class="hero-home__search-form" action="airbnbs/" method="GET">
+                    <div class="hero-search-field">
+                        <label for="home-search-loc">Location / Area</label>
+                        <div class="hero-search-input-wrap">
+                            <span class="field-icon">📍</span>
+                            <input type="text" id="home-search-loc" name="location" placeholder="Kilimani, Westlands, Kileleshwa...">
+                        </div>
+                    </div>
+                    <div class="hero-search-field">
+                        <label for="home-search-exp">Experience / Type</label>
+                        <div class="hero-search-input-wrap">
+                            <span class="field-icon">✨</span>
+                            <select id="home-search-exp" name="category">
+                                <option value="all">All Experiences</option>
+                                <option value="romantic">💑 Romantic Stays</option>
+                                <option value="family">👨‍👩‍👧 Family Stays</option>
+                                <option value="business">💼 Business &amp; Work</option>
+                                <option value="luxury">✨ Luxury</option>
+                                <option value="budget">💰 Budget Friendly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="hero-search-submit">
+                        <span>Search</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Action Buttons -->
             <div class="hero-home__actions">
                 <a href="airbnbs/" class="hero-home__btn-primary">
-                    🏠 Browse Airbnbs
+                    <span>🏡 Browse Airbnbs</span>
+                    <span class="btn-arrow">&rarr;</span>
                 </a>
                 <a href="properties/" class="hero-home__btn-secondary">
-                    🏢 View Properties
+                    <span>🏢 View Properties</span>
                 </a>
             </div>
+
+            <!-- Glassmorphism Stats Strip -->
             <div class="hero-home__stats">
                 <div class="hero-stat">
                     <span class="hero-stat__number">50+</span>
-                    <span class="hero-stat__label">Active Listings</span>
+                    <span class="hero-stat__label">Curated Stays</span>
                 </div>
                 <div class="hero-stat">
                     <span class="hero-stat__number">10+</span>
-                    <span class="hero-stat__label">Locations</span>
+                    <span class="hero-stat__label">Prime Neighborhoods</span>
                 </div>
                 <div class="hero-stat">
                     <span class="hero-stat__number">500+</span>
                     <span class="hero-stat__label">Happy Guests</span>
                 </div>
                 <div class="hero-stat">
-                    <span class="hero-stat__number">4.9★</span>
+                    <span class="hero-stat__number">4.98★</span>
                     <span class="hero-stat__label">Average Rating</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Category Teaser Cards -->
+    <!-- Modern Image-Backed Category Cards -->
     <section class="categories-section">
         <div class="container">
             <div class="section-heading">
                 <h2>What Kind of Stay Are You Looking For?</h2>
-                <p>Browse by vibe — we have something for every traveller</p>
+                <p>Curated collections designed for your lifestyle, occasion, and travel style</p>
             </div>
             <div class="categories-grid">
-                <a href="airbnbs/?category=romantic" class="category-card" style="--card-color: #FF5A5F; --card-bg: #FFF0F0;">
-                    <div class="category-card__icon">💑</div>
-                    <h3 class="category-card__title">Romantic Stays</h3>
-                    <p class="category-card__desc">Perfect for couples &amp; honeymoons</p>
-                    <span class="category-card__arrow">Explore →</span>
+                <a href="airbnbs/?category=romantic" class="category-card">
+                    <div class="category-card__bg" style="background-image: url('images/IMG-20251208-WA0014.jpg');"></div>
+                    <div class="category-card__overlay"></div>
+                    <div class="category-card__body">
+                        <span class="category-card__badge">💑 Romantic</span>
+                        <h3 class="category-card__title">Romantic Stays</h3>
+                        <p class="category-card__desc">Intimate studio suites, ambient mood lighting &amp; sunset views.</p>
+                        <span class="category-card__cta">Explore Stays &rarr;</span>
+                    </div>
                 </a>
-                <a href="airbnbs/?category=family" class="category-card" style="--card-color: #4CAF50; --card-bg: #F0FBF0;">
-                    <div class="category-card__icon">👨‍👩‍👧</div>
-                    <h3 class="category-card__title">Family Stays</h3>
-                    <p class="category-card__desc">Spacious homes for the whole family</p>
-                    <span class="category-card__arrow">Explore →</span>
+
+                <a href="airbnbs/?category=family" class="category-card">
+                    <div class="category-card__bg" style="background-image: url('images/IMG-20251208-WA0015.jpg');"></div>
+                    <div class="category-card__overlay"></div>
+                    <div class="category-card__body">
+                        <span class="category-card__badge">👨‍👩‍👧 Family</span>
+                        <h3 class="category-card__title">Family Stays</h3>
+                        <p class="category-card__desc">Spacious 2-4 bedroom apartments for the whole family.</p>
+                        <span class="category-card__cta">Explore Stays &rarr;</span>
+                    </div>
                 </a>
-                <a href="airbnbs/?category=business" class="category-card" style="--card-color: #2196F3; --card-bg: #EEF5FF;">
-                    <div class="category-card__icon">💼</div>
-                    <h3 class="category-card__title">Business Stays</h3>
-                    <p class="category-card__desc">Fast WiFi &amp; work-ready spaces</p>
-                    <span class="category-card__arrow">Explore →</span>
+
+                <a href="airbnbs/?category=business" class="category-card">
+                    <div class="category-card__bg" style="background-image: url('images/IMG-20251208-WA0016.jpg');"></div>
+                    <div class="category-card__overlay"></div>
+                    <div class="category-card__body">
+                        <span class="category-card__badge">💼 Executive</span>
+                        <h3 class="category-card__title">Business Stays</h3>
+                        <p class="category-card__desc">Fast fiber Wi-Fi, work desks &amp; central Nairobi access.</p>
+                        <span class="category-card__cta">Explore Stays &rarr;</span>
+                    </div>
                 </a>
-                <a href="airbnbs/" class="category-card" style="--card-color: #FFB300; --card-bg: #FFF8E1;">
-                    <div class="category-card__icon">🏠</div>
-                    <h3 class="category-card__title">Airbnb Stays</h3>
-                    <p class="category-card__desc">Short-term furnished apartments</p>
-                    <span class="category-card__arrow">Browse All →</span>
+
+                <a href="airbnbs/?category=luxury" class="category-card">
+                    <div class="category-card__bg" style="background-image: url('images/hero-aesthetic-house.jpg');"></div>
+                    <div class="category-card__overlay"></div>
+                    <div class="category-card__body">
+                        <span class="category-card__badge">✨ Premier</span>
+                        <h3 class="category-card__title">Luxury</h3>
+                        <p class="category-card__desc">Heated pools, skyline vistas &amp; designer finishes.</p>
+                        <span class="category-card__cta">Explore Stays &rarr;</span>
+                    </div>
                 </a>
-                <a href="properties/" class="category-card" style="--card-color: #9C27B0; --card-bg: #F5EEF8;">
-                    <div class="category-card__icon">🏢</div>
-                    <h3 class="category-card__title">Properties</h3>
-                    <p class="category-card__desc">Houses &amp; land for sale or rent</p>
-                    <span class="category-card__arrow">View All →</span>
+
+                <a href="properties/" class="category-card">
+                    <div class="category-card__bg" style="background-image: url('images/hero-aesthetic-house-2.jpg');"></div>
+                    <div class="category-card__overlay"></div>
+                    <div class="category-card__body">
+                        <span class="category-card__badge">🏢 Real Estate</span>
+                        <h3 class="category-card__title">Properties</h3>
+                        <p class="category-card__desc">Verified houses, villas &amp; apartments for sale or rent.</p>
+                        <span class="category-card__cta">View Properties &rarr;</span>
+                    </div>
                 </a>
             </div>
         </div>
@@ -492,6 +573,45 @@
     <script src="js/seed-data.js"></script>
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>
+
+    <!-- Aesthetic Wallpaper Carousel Script -->
+    <script>
+        let currentWpIndex = 0;
+        let wpInterval = null;
+        const wpSlides = document.querySelectorAll('.hero-home__wallpaper');
+        const wpDots = document.querySelectorAll('.wallpaper-dot');
+
+        function switchWallpaper(idx) {
+            if (!wpSlides.length) return;
+            currentWpIndex = (idx + wpSlides.length) % wpSlides.length;
+
+            wpSlides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === currentWpIndex);
+            });
+
+            wpDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentWpIndex);
+            });
+        }
+
+        function startWpAutoSlide() {
+            if (wpInterval) clearInterval(wpInterval);
+            wpInterval = setInterval(() => {
+                switchWallpaper(currentWpIndex + 1);
+            }, 6500);
+        }
+
+        if (wpSlides.length > 1) {
+            startWpAutoSlide();
+
+            // Pause auto-slide when hovering controls
+            const controls = document.getElementById('hero-wallpaper-controls');
+            if (controls) {
+                controls.addEventListener('mouseenter', () => clearInterval(wpInterval));
+                controls.addEventListener('mouseleave', startWpAutoSlide);
+            }
+        }
+    </script>
 </body>
 
 </html>
