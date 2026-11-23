@@ -728,9 +728,9 @@ const CATEGORY_CONFIG = [
     },
     {
         id: 'luxury',
-        title: 'Luxury Stays',
+        title: 'Luxury',
         tagline: 'PREMIUM COMFORTS & ELEVATED LIVING',
-        subtitle: 'High-end penthouses, modern aesthetics, swimming pools & premier views',
+        subtitle: 'High-end apartments, modern aesthetics, swimming pools & premier views',
         icon: '✨',
         badge: 'Luxury',
         filter: (item) => {
