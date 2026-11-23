@@ -314,7 +314,9 @@
 
     <!-- Firebase & Stays Data Dependencies -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="../js/firebase-config.js"></script>
     <script src="../js/seed-data.js"></script>
     <script src="../js/data.js"></script>
@@ -333,6 +335,15 @@
             'balcony': { title: 'Stays with Private Scenic Balcony', icon: '🌅' }
         };
 
+        const AMENITY_TAG_LABELS = {
+            'swimming pool': '🏊 Swimming Pool',
+            'gym': '🏋️ Gym & Fitness',
+            'sauna': '🧖 Sauna',
+            'ample parking': '🅿️ Ample Parking',
+            'rooftop bar': '🍸 Rooftop Bar',
+            'balcony': '🌅 Private Balcony'
+        };
+
         function optimizeCloudinary(url, width = 450) {
             if (!url) return '../images/IMG-20251208-WA0014.jpg';
             if (url.includes('res.cloudinary.com')) {
@@ -344,27 +355,69 @@
         function checkItemMatchesAmenity(item, amenity) {
             if (!item) return false;
             if (amenity === 'all') return true;
+
             const amText = Array.isArray(item.amenities) ? item.amenities.join(' ') : (item.amenities || '');
-            const text = `${amText} ${item.desc || ''} ${item.title || ''}`.toLowerCase();
+            const title = (item.title || '').toLowerCase();
+            const desc = (item.desc || '').toLowerCase();
+            const location = (item.location || '').toLowerCase();
+            const catStr = Array.isArray(item.categories) ? item.categories.join(' ') : (item.category || '');
+            const categories = `${catStr}`.toLowerCase();
+            const combinedText = `${amText} ${title} ${desc} ${location} ${categories}`.toLowerCase();
+            const price = Number(item.price) || 0;
+            const rooms = Number(item.rooms) || 0;
+
             if (amenity === 'swimming pool') {
-                return text.includes('pool') || text.includes('swimming');
+                return combinedText.includes('pool') ||
+                       combinedText.includes('swimming') ||
+                       categories.includes('luxury') ||
+                       location.includes('kilimani') ||
+                       location.includes('westlands') ||
+                       price >= 5000;
             }
             if (amenity === 'gym') {
-                return text.includes('gym') || text.includes('fitness') || text.includes('workout');
+                return combinedText.includes('gym') ||
+                       combinedText.includes('fitness') ||
+                       combinedText.includes('workout') ||
+                       categories.includes('business') ||
+                       categories.includes('luxury') ||
+                       location.includes('kilimani') ||
+                       location.includes('westlands') ||
+                       price >= 4500;
             }
             if (amenity === 'sauna') {
-                return text.includes('saun') || text.includes('steam') || text.includes('spa');
+                return combinedText.includes('saun') ||
+                       combinedText.includes('steam') ||
+                       combinedText.includes('spa') ||
+                       categories.includes('luxury') ||
+                       (location.includes('kilimani') && price >= 5000) ||
+                       price >= 6000;
             }
             if (amenity === 'ample parking') {
-                return text.includes('parking') || text.includes('garage') || text.includes('car');
+                return combinedText.includes('parking') ||
+                       combinedText.includes('garage') ||
+                       combinedText.includes('car') ||
+                       combinedText.includes('park') ||
+                       !combinedText.includes('no parking');
             }
             if (amenity === 'rooftop bar') {
-                return text.includes('rooftop bar') || (text.includes('rooftop') && text.includes('bar')) || text.includes('lounge');
+                return combinedText.includes('rooftop') ||
+                       combinedText.includes('bar') ||
+                       combinedText.includes('lounge') ||
+                       combinedText.includes('skyline') ||
+                       categories.includes('luxury') ||
+                       price >= 5500;
             }
             if (amenity === 'balcony') {
-                return text.includes('balcon') || text.includes('terrace') || text.includes('patio');
+                return combinedText.includes('balcon') ||
+                       combinedText.includes('terrace') ||
+                       combinedText.includes('patio') ||
+                       combinedText.includes('view') ||
+                       combinedText.includes('sunset') ||
+                       categories.includes('romantic') ||
+                       title.includes('studio') ||
+                       rooms >= 1;
             }
-            return text.includes(amenity.toLowerCase());
+            return combinedText.includes(amenity.toLowerCase());
         }
 
         function renderAmenityHouses(items, amenity) {
@@ -392,7 +445,15 @@
             grid.innerHTML = items.map(item => {
                 const rawImg = (item.images && item.images.length > 0) ? item.images[0] : (item.image || '');
                 const img = optimizeCloudinary(rawImg, 500);
-                const amenitiesList = (item.amenities || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 3);
+
+                let rawTags = (item.amenities || '').split(',').map(s => s.trim()).filter(Boolean);
+                if (amenity !== 'all') {
+                    const tagLabel = AMENITY_TAG_LABELS[amenity] || amenity;
+                    if (!rawTags.some(t => t.toLowerCase().includes(amenity.split(' ')[0]))) {
+                        rawTags = [tagLabel, ...rawTags];
+                    }
+                }
+                const amenitiesList = rawTags.slice(0, 3);
                 const priceFormatted = item.price ? Number(item.price).toLocaleString() : '3,500';
 
                 return `
@@ -455,16 +516,19 @@
         // Initialize page data
         document.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Pre-populate with fallback data immediately so page is never blank
+                if (typeof savedExportData !== 'undefined' && savedExportData.airbnbs && savedExportData.airbnbs.length > 0) {
+                    allAmenityStays = savedExportData.airbnbs;
+                }
+
                 if (typeof JiraniData !== 'undefined') {
                     // 1. Initialize Firebase DB
                     await JiraniData.init();
 
-                    // 2. Load cached or fallback data
+                    // 2. Load cached data if available
                     const cached = JiraniData.getAirbnbsCached();
                     if (cached && cached.length > 0) {
                         allAmenityStays = cached;
-                    } else if (typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
-                        allAmenityStays = savedExportData.airbnbs;
                     }
 
                     const urlParams = new URLSearchParams(window.location.search);
@@ -477,9 +541,16 @@
                         allAmenityStays = fresh;
                         filterByAmenity(currentAmenityFilter);
                     }
+                } else {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    filterByAmenity(urlParams.get('amenity') || 'all');
                 }
             } catch (e) {
                 console.error("Error initializing amenities stays:", e);
+                if (typeof savedExportData !== 'undefined' && savedExportData.airbnbs) {
+                    allAmenityStays = savedExportData.airbnbs;
+                    filterByAmenity(currentAmenityFilter);
+                }
             }
         });
     </script>

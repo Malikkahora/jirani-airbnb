@@ -42,7 +42,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "pool ,saun ,Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316279/uchzqic3aonqgtjl4ohv.jpg",
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316280/tr3auzjcr38xyfeajbiz.jpg",
@@ -115,7 +115,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "pool,sauna,Wifi, Kitchen, Parking,gym,washing matchine",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony, Washing Machine",
             "images": [
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316295/uzrmn5neiypfowjija9w.jpg",
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316310/tzuwnpsqozpl1wijgxpi.jpg",
@@ -179,7 +179,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "pool,sauna,lift,Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Lift, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316348/ub8mxcsg0pqzljbvz6vf.jpg",
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316349/s3ynmm4foeha6vnvr0e7.jpg",
@@ -247,7 +247,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316367/h1v5v2ketbhkrhqvgr6t.jpg"
             ],
@@ -263,7 +263,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Syokimau",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -277,7 +277,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Roysambu",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -291,7 +291,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "South B",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -305,7 +305,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking,lift",
+            "amenities": "Swimming Pool, Sauna, Lift, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316370/ozwuafzahwfntnsa1mbr.jpg",
                 "https://res.cloudinary.com/dfx52cix9/image/upload/v1767316371/nfiyk2v4se0cwtd4u07j.jpg",
@@ -367,7 +367,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -381,7 +381,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Syokimau",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -395,7 +395,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Roysambu",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -409,7 +409,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "South B",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -423,7 +423,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -479,7 +479,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -493,7 +493,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Syokimau",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -507,7 +507,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Roysambu",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -521,7 +521,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "South B",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -535,7 +535,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -549,7 +549,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Syokimau",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -563,7 +563,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "Roysambu",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -577,7 +577,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "South B",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Wifi, Kitchen, Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]
@@ -591,7 +591,7 @@ const savedExportData = {
             "rating": "4.98",
             "imageColor": "#ddd",
             "location": "kilimani",
-            "amenities": "Wifi, Kitchen, Parking",
+            "amenities": "Swimming Pool, Sauna, Gym, High-Speed Wifi, Modern Kitchen, Ample Parking, Balcony",
             "images": [
                 "images/IMG-20251208-WA0014.jpg"
             ]

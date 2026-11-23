@@ -32,10 +32,16 @@ function initFirebase() {
         firebase.app(); // if already initialized
     }
 
-    // Get instances
-    window.db = firebase.firestore();
-    window.auth = firebase.auth();
-    window.storage = firebase.storage();
+    // Get instances safely
+    if (typeof firebase.firestore === 'function') {
+        window.db = firebase.firestore();
+    }
+    if (typeof firebase.auth === 'function') {
+        window.auth = firebase.auth();
+    }
+    if (typeof firebase.storage === 'function') {
+        window.storage = firebase.storage();
+    }
 
     console.log("Firebase Initialized");
 }
